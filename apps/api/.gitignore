@@ -1,7 +1,3 @@
-node_modules
-dist
-.vscode
-
 # Visual Studio Trace Files
 *.e2e
 
