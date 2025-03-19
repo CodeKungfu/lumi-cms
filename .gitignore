@@ -43,3 +43,6 @@ package-lock.json
 yarn.lock
 
 .vscode
+
+redis-data
+mysql-data

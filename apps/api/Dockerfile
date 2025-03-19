@@ -10,6 +10,16 @@ RUN apk add --no-cache libc6-compat
 # Set working directory
 WORKDIR /app
 RUN yarn global add turbo
+
+# 首先复制 package.json 相关文件
+# COPY package.json .
+# COPY yarn.lock .
+COPY turbo.json .
+COPY apps/api/package.json ./apps/api/
+COPY packages/database/package.json ./packages/database/
+COPY packages/eslint-config/package.json ./packages/eslint-config/
+
+# 然后复制其他源文件
 COPY . .
 RUN turbo prune api --docker
 

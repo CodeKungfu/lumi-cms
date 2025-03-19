@@ -1,47 +1,32 @@
-FROM base AS builder
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk update
-RUN apk add --no-cache libc6-compat
-# Set working directory
-WORKDIR /app
-RUN yarn global add turbo
-COPY . .
-RUN turbo prune web --docker
+# 构建阶段
+FROM node:18-alpine as builder
 
-# Add lockfile and package.json's of isolated subworkspace
-FROM base AS installer
-RUN apk update
-RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# First install the dependencies (as they change less often)
-COPY --from=builder /app/out/json/ .
+# 首先复制 package.json 相关文件
+COPY package.json .
+COPY yarn.lock .
+COPY turbo.json .
+COPY apps/web/package.json ./apps/web/
+COPY packages/database/package.json ./packages/database/
+COPY packages/eslint-config/package.json ./packages/eslint-config/
+
+# 安装依赖
 RUN yarn install
 
-# Build the project
-COPY --from=builder /app/out/full/ .
+# 然后复制源代码
+COPY apps/web ./apps/web
+COPY packages/database ./packages/database
+COPY packages/eslint-config ./packages/eslint-config
 
-# Uncomment and use build args to enable remote caching
-# ARG TURBO_TEAM
-# ENV TURBO_TEAM=$TURBO_TEAM
+# 构建
+RUN yarn --cwd apps/web build
 
-# ARG TURBO_TOKEN
-# ENV TURBO_TOKEN=$TURBO_TOKEN
+# 运行阶段
+FROM nginx:alpine
 
-RUN yarn turbo build
+COPY --from=builder /app/apps/web/dist /usr/share/nginx/html
 
-FROM base AS runner
-WORKDIR /app
+EXPOSE 3000
 
-# Don't run production as root
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-USER nextjs
-
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
-COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
-COPY --from=installer --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
-
-CMD node apps/web/server.js
+CMD ["nginx", "-g", "daemon off;"]

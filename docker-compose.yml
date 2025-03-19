@@ -1,26 +1,61 @@
 version: "3"
 
 services:
-  web:
-    container_name: web
-    build:
-      context: .
-      dockerfile: ./apps/web/Dockerfile
+  # web:
+  #   container_name: web
+  #   build:
+  #     context: .
+  #     dockerfile: ./apps/web/Dockerfile
+  #   restart: always
+  #   ports:
+  #     - 3000:3000
+  #   networks:
+  #     - app_network
+  # api:
+  #   container_name: api
+  #   build:
+  #     context: .
+  #     dockerfile: ./apps/api/Dockerfile
+  #   restart: always
+  #   ports:
+  #     - 3001:3001
+  #   environment:
+  #     - MYSQL_HOST=mysql
+  #     - REDIS_HOST=redis
+  #   depends_on:
+  #     - mysql
+  #     - redis
+  #   networks:
+  #     - app_network
+
+  mysql:
+    container_name: mysql
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
     restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=nest-ruoyi-prisma
     ports:
-      - 3000:3000
+      - 3366:3306
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+      - ./apps/api/deploy/sql:/docker-entrypoint-initdb.d
     networks:
       - app_network
-  api:
-    container_name: api
-    build:
-      context: .
-      dockerfile: ./apps/api/Dockerfile
+
+  redis:
+    container_name: redis
+    image: redis:6.2
     restart: always
+    command: redis-server --requirepass 123456
     ports:
-      - 3001:3001
+      - 6379:6379
+    volumes:
+      - ./redis-data:/data
     networks:
       - app_network
+
 networks:
   app_network:
     external: true
