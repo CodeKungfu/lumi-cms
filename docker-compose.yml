@@ -20,13 +20,13 @@ services:
     ports:
       - 3001:7071
     environment:
-      - DATABASE_URL=mysql://root:123456@mysql:3306/nest-ruoyi-prisma
+      - DATABASE_URL=mysql://root:123456@mysql:3366/nest-ruoyi-prisma
       - SERVER_PORT=7071
       - WS_PORT=7072
       - WS_PATH=/ws-api
       - SWAGGER_PATH=swagger-api
       - MYSQL_HOST=mysql
-      - MYSQL_PORT=3306
+      - MYSQL_PORT=3366
       - MYSQL_DATABASE=nest-ruoyi-prisma
       - MYSQL_USERNAME=root
       - MYSQL_PASSWORD=123456

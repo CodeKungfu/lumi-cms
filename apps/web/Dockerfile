@@ -4,8 +4,8 @@ FROM node:18-alpine as builder
 WORKDIR /app
 
 # 首先复制 package.json 相关文件
-COPY package.json .
-COPY yarn.lock .
+# COPY package.json .
+# COPY yarn.lock .
 COPY turbo.json .
 COPY apps/web/package.json ./apps/web/
 COPY packages/database/package.json ./packages/database/
