@@ -1,57 +1,49 @@
-FROM node:18-alpine AS base
-
-# The web Dockerfile is copy-pasted into our main docs at /docs/handbook/deploying-with-docker.
-# Make sure you update this Dockerfile, the Dockerfile in the web workspace and copy that over to Dockerfile in the docs.
+FROM node:20-alpine AS base
 
 FROM base AS builder
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk update
-RUN apk add --no-cache libc6-compat
-# Set working directory
+# 安装必要的依赖
+RUN apk update && apk add --no-cache \
+    libc6-compat \
+    openssl \
+    openssl-dev \
+    openssl-libs-static
 WORKDIR /app
-RUN yarn global add turbo
 
-# 首先复制 package.json 相关文件
-# COPY package.json .
-# COPY yarn.lock .
+# 复制 package.json 相关文件
 COPY turbo.json .
 COPY apps/api/package.json ./apps/api/
 COPY packages/database/package.json ./packages/database/
 COPY packages/eslint-config/package.json ./packages/eslint-config/
 
-# 然后复制其他源文件
-COPY . .
-RUN turbo prune api --docker
-
-# Add lockfile and package.json's of isolated subworkspace
-FROM base AS installer
-RUN apk update
-RUN apk add --no-cache libc6-compat
-WORKDIR /app
-
-# First install dependencies (as they change less often)
-COPY --from=builder /app/out/json/ .
+# 安装依赖
 RUN yarn install
 
-# Build the project and its dependencies
-COPY --from=builder /app/out/full/ .
+# 复制源代码
+COPY . .
 
-# Uncomment and use build args to enable remote caching
-# ARG TURBO_TEAM
-# ENV TURBO_TEAM=$TURBO_TEAM
+# 生成 Prisma 客户端
+RUN cd apps/api && yarn db:gen
 
-# ARG TURBO_TOKEN
-# ENV TURBO_TOKEN=$TURBO_TOKEN
-
-RUN yarn turbo build
+# 构建项目
+RUN cd apps/api && yarn build
 
 FROM base AS runner
 WORKDIR /app
 
-# Don't run production as root
-RUN addgroup --system --gid 1001 expressjs
-RUN adduser --system --uid 1001 expressjs
-USER expressjs
-COPY --from=installer /app .
+# 安装运行时需要的依赖
+RUN apk add --no-cache \
+    openssl \
+    openssl-dev
 
-CMD node apps/api/dist/index.js
+# 创建非 root 用户
+RUN addgroup --system --gid 1001 api
+RUN adduser --system --uid 1001 api
+USER api
+
+# 只复制必要的文件
+COPY --from=builder /app/apps/api/dist ./dist
+COPY --from=builder /app/apps/api/node_modules ./node_modules
+COPY --from=builder /app/apps/api/package.json .
+
+# 启动应用
+CMD ["node", "dist/main.js"]
