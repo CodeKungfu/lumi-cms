@@ -4,8 +4,6 @@ FROM node:18-alpine as builder
 WORKDIR /app
 
 # 首先复制 package.json 相关文件
-# COPY package.json .
-# COPY yarn.lock .
 COPY turbo.json .
 COPY apps/web/package.json ./apps/web/
 COPY packages/database/package.json ./packages/database/
@@ -19,14 +17,15 @@ COPY apps/web ./apps/web
 COPY packages/database ./packages/database
 COPY packages/eslint-config ./packages/eslint-config
 
-# 构建
-RUN yarn --cwd apps/web build
+# 构建 - 使用 npx 运行 vite
+RUN cd apps/web && npx vite build --mode docker
 
 # 运行阶段
 FROM nginx:alpine
 
 COPY --from=builder /app/apps/web/dist /usr/share/nginx/html
+COPY apps/web/default.conf.template /etc/nginx/templates/
 
-EXPOSE 3000
+EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]

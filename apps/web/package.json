@@ -8,6 +8,7 @@
     "dev": "vite",
     "build:prod": "vite build",
     "build:stage": "vite build --mode staging",
+    "build:docker": "vite build --mode docker",
     "preview": "vite preview"
   },
   "repository": {
