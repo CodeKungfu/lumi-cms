@@ -23,6 +23,7 @@ services:
       - 3001:7071
       - 3002:7072
     environment:
+      - JWT_SECRET=123456
       # 修正 MySQL 连接字符串中的端口
       - DATABASE_URL=mysql://root:123456@mysql:3306/nest-ruoyi-prisma
       - SERVER_PORT=7071

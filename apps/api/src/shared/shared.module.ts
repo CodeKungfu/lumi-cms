@@ -27,7 +27,8 @@ const providers = [UtilService, RedisService, ExcelService];
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
-        secret: configService.get<string>('jwt.secret'),
+        // 优先使用环境变量，其次使用配置服务
+        secret: process.env.JWT_SECRET || configService.get<string>('jwt.secret'),
       }),
       inject: [ConfigService],
     }),
