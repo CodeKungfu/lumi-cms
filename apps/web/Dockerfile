@@ -10,7 +10,7 @@ COPY packages/database/package.json ./packages/database/
 COPY packages/eslint-config/package.json ./packages/eslint-config/
 
 # 安装依赖
-RUN yarn install
+RUN  cd apps/web && yarn install
 
 # 然后复制源代码
 COPY apps/web ./apps/web
@@ -18,7 +18,7 @@ COPY packages/database ./packages/database
 COPY packages/eslint-config ./packages/eslint-config
 
 # 构建 - 使用 npx 运行 vite
-RUN cd apps/web && npx vite build --mode docker
+RUN cd apps/web && yarn build:docker
 
 # 运行阶段
 FROM nginx:alpine

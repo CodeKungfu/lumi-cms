@@ -1,16 +1,18 @@
 version: "3"
 
 services:
-  # web:
-  #   container_name: web
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/web/Dockerfile
-  #   restart: always
-  #   ports:
-  #     - 3000:80
-  #   networks:
-  #     - app_network
+  web:
+    container_name: web
+    build:
+      context: .
+      dockerfile: ./apps/web/Dockerfile
+    restart: always
+    ports:
+      - 3000:80
+    environment:
+      - VITE_APP_BASE_API=/prod-api
+    networks:
+      - app_network
   api:
     container_name: api
     build:

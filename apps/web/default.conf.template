@@ -28,7 +28,7 @@ server {
     try_files $uri $uri/ /index.html;
   }
   
-  # 添加 API 代理
+  # 添加 API 代理配置，保留 /prod-api 前缀
   location /prod-api/ {
     proxy_pass http://api:7071/;
     proxy_set_header Host $host;

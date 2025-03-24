@@ -8,11 +8,18 @@ dist
 build
 **/build
 
-# 环境文件
+# 环境文件 - 排除 .env.docker
 .env
 **/.env
-.env.*
-**/.env.*
+.env.development
+**/.env.development
+.env.production
+**/.env.production
+.env.staging
+**/.env.staging
+# 不忽略 .env.docker
+!.env.docker
+!**/.env.docker
 
 # 版本控制
 .git
