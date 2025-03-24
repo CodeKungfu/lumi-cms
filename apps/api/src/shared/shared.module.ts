@@ -33,12 +33,17 @@ const providers = [UtilService, RedisService, ExcelService];
     }),
     RedisModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        host: configService.get<string>('redis.host'),
-        port: configService.get<number>('redis.port'),
-        password: configService.get<string>('redis.password'),
-        db: configService.get<number>('redis.db'),
-      }),
+      useFactory: (configService: ConfigService) => {
+        // 优先使用环境变量，其次使用配置服务
+        const host = process.env.REDIS_HOST || configService.get<string>('redis.host');
+        // console.log('使用的Redis主机:', host);
+        return {
+          host,
+          port: parseInt(process.env.REDIS_PORT || configService.get<string>('redis.port')),
+          password: process.env.REDIS_PASSWORD || configService.get<string>('redis.password'),
+          db: parseInt(process.env.REDIS_DB || configService.get<string>('redis.db')),
+        };
+      },
       inject: [ConfigService],
     }),
   ],

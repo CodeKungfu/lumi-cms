@@ -44,6 +44,11 @@ USER api
 COPY --from=builder /app/apps/api/dist ./dist
 COPY --from=builder /app/apps/api/node_modules ./node_modules
 COPY --from=builder /app/apps/api/package.json .
+COPY --from=builder /app/apps/api/prisma ./prisma
+
+# 设置环境变量增加日志详细程度
+# ENV NODE_ENV=production
+# ENV DEBUG=*
 
 # 启动应用
 CMD ["node", "dist/main.js"]
