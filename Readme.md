@@ -162,7 +162,7 @@ npx prisma migrate dev --name <migration-name>
 5. 创建 Pull Request
 
 ## 联系
-- 作者: Trae
+- 作者: CodeKungfu
 - 邮箱:
 
 ## 📄 许可证
