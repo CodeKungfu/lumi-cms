@@ -11,6 +11,9 @@ importers:
       cron-parser:
         specifier: ^5.0.6
         version: 5.0.6
+      cross-env:
+        specifier: ^7.0.3
+        version: 7.0.3
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -4358,7 +4361,6 @@ packages:
     hasBin: true
     dependencies:
       cross-spawn: 7.0.6
-    dev: true
 
   /cross-spawn@5.1.0:
     resolution: {integrity: sha512-pTgQJ5KC0d2hcY8eyL1IzlBPYjTkyH72XRZPnLyKus2mBfNjQs3klqbJU2VILqZryAZUt9JOb3h/mWMy23/f5A==}

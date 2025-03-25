@@ -12,24 +12,23 @@ RUN apk update && apk add --no-cache \
     openssl-libs-static
 WORKDIR /app
 
-# 复制 pnpm 工作空间配置
-COPY pnpm-workspace.yaml ./
-COPY package.json ./
-COPY turbo.json ./
+# 配置 pnpm 使用淘宝镜像源并增加网络超时时间
+RUN pnpm config set registry https://registry.npmmirror.com
+RUN pnpm config set network-timeout 300000
 
-# 复制所有 package.json 文件
-COPY apps/api/package.json ./apps/api/
-COPY packages/database/package.json ./packages/database/
-COPY packages/eslint-config/package.json ./packages/eslint-config/
-
-# 安装依赖
-RUN pnpm install --frozen-lockfile
+# 全局安装 cross-env
+RUN npm install -g cross-env
 
 # 复制源代码
 COPY . .
 
+# 安装依赖 - 修正命令行参数
+RUN pnpm install --filter @repo/database
 # 生成 Prisma 客户端
 RUN pnpm --filter @repo/database db:gen
+
+# 安装依赖 - 修正命令行参数
+RUN pnpm install --filter api
 
 # 构建项目
 RUN pnpm --filter api build
@@ -51,8 +50,6 @@ USER api
 COPY --from=builder /app/apps/api/dist ./dist
 COPY --from=builder /app/apps/api/node_modules ./node_modules
 COPY --from=builder /app/apps/api/package.json .
-# 删除下面这行
-# COPY --from=builder /app/apps/api/prisma ./prisma
 
 # 设置环境变量
 ENV NODE_ENV=production

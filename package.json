@@ -23,6 +23,7 @@
   "packageManager": "pnpm@8.10.0",
   "dependencies": {
     "cron-parser": "^5.0.6",
+    "cross-env": "^7.0.3",
     "lodash": "^4.17.21",
     "socket.io": "^4.8.1"
   }
