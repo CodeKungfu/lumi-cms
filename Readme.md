@@ -24,7 +24,7 @@
 项目采用 pnpm workspace 管理的 monorepo 结构，便于代码共享和统一管理。
 
 ## 🏗️ 项目结构
-
+```
 nest-ruoyi-prisma/
 ├── apps/                      # 应用目录
 │   ├── api/                   # 后端 Nest.js 应用
@@ -35,7 +35,7 @@ nest-ruoyi-prisma/
 ├── docker-compose.all.yml     # Docker Compose 配置文件
 ├── pnpm-workspace.yaml        # pnpm 工作区配置
 └── README.md                  # 项目文档
-
+```
 ## 🛠️ 技术栈
 
 <details>
