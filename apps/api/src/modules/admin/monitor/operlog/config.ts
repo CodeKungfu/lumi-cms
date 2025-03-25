@@ -1,4 +1,4 @@
-import { sys_oper_log } from '@prisma/client';
+import { sys_oper_log } from '@repo/database';
 import { ADMIN_PREFIX } from 'src/modules/admin/admin.constants';
 export { ADMIN_PREFIX };
 export const keyStr = '操作日志';

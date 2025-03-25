@@ -1,24 +1,31 @@
 # 构建阶段
-FROM node:18-alpine as builder
+FROM node:22-alpine as builder
+
+# 启用 Corepack 来管理 pnpm
+RUN corepack enable
 
 WORKDIR /app
 
-# 首先复制 package.json 相关文件
-COPY turbo.json .
+# 复制 pnpm 工作空间配置
+COPY pnpm-workspace.yaml ./
+COPY package.json ./
+COPY turbo.json ./
+
+# 复制所有 package.json 文件
 COPY apps/web/package.json ./apps/web/
 COPY packages/database/package.json ./packages/database/
 COPY packages/eslint-config/package.json ./packages/eslint-config/
 
 # 安装依赖
-RUN  cd apps/web && yarn install
+RUN pnpm install --frozen-lockfile
 
-# 然后复制源代码
+# 复制源代码
 COPY apps/web ./apps/web
 COPY packages/database ./packages/database
 COPY packages/eslint-config ./packages/eslint-config
 
-# 构建 - 使用 npx 运行 vite
-RUN cd apps/web && yarn build:docker
+# 构建
+RUN pnpm --filter web build:docker
 
 # 运行阶段
 FROM nginx:alpine

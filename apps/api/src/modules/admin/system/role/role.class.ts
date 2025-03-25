@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { sys_role_dept, sys_role_menu, sys_role } from '@prisma/client';
+import { sys_role_dept, sys_role_menu, sys_role } from '@repo/database';
 
 export class RoleInfo {
   @ApiProperty()

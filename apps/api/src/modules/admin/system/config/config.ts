@@ -1,4 +1,4 @@
-import { sys_config } from '@prisma/client';
+import { sys_config } from '@repo/database';
 import { ADMIN_PREFIX } from 'src/modules/admin/admin.constants';
 export const keyStr = '配置管理';
 export const tableName = 'sys_config';

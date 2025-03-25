@@ -27,7 +27,10 @@ export class IsCronExpression implements ValidatorConstraintInterface {
       if (isEmpty(value)) {
         throw new Error('cron expression is empty');
       }
-      parser.parseExpression(value);
+
+      // 然后使用
+      // parser.parseExpression(value);
+      parser.CronExpressionParser.parse(value);
       return true;
     } catch (e) {
       return false;

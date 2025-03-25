@@ -1,0 +1,29 @@
+{
+  "name": "nest-ruoyi-prisma-monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Nest Ruoyi Prisma Monorepo",
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "db:gen": "pnpm --filter @repo/database db:gen"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.17.16",
+    "@types/socket.io": "^3.0.2",
+    "prettier": "^3.0.0",
+    "turbo": "latest"
+  },
+  "packageManager": "pnpm@8.10.0",
+  "dependencies": {
+    "cron-parser": "^5.0.6",
+    "lodash": "^4.17.21",
+    "socket.io": "^4.8.1"
+  }
+}

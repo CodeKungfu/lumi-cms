@@ -8,7 +8,7 @@ import { SysRoleService } from '../role/role.service';
 import { MenuItemAndParentInfoResult } from './menu.class';
 import { CreateMenuDto } from './menu.dto';
 import { prisma } from 'src/prisma';
-import { sys_menu } from '@prisma/client';
+import { sys_menu } from '@repo/database';
 
 @Injectable()
 export class SysMenuService {

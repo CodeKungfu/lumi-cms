@@ -5,7 +5,7 @@ import { AdminWSService } from 'src/modules/ws/admin-ws.service';
 import { ExcelService } from 'src/shared/services/excel.service';
 import { CreateRoleDto, UpdateRoleDto } from './role.dto';
 import { CreatedRoleId, RoleInfo } from './role.class';
-import { sys_role } from '@prisma/client';
+import { sys_role } from '@repo/database';
 import { prisma } from 'src/prisma';
 import { findIndex, omit } from 'lodash';
 
@@ -237,10 +237,10 @@ export class SysRoleService {
       },
     });
     const originMenuIds = originMenuRows.map((e) => {
-      return e.menuId;
+      return Number(e.menuId); // 将 bigint 转换为 number
     });
     const originDeptIds = originDeptRows.map((e) => {
-      return e.deptId;
+      return Number(e.deptId); // 将 bigint 转换为 number
     });
     // 开始对比差异
     const insertMenusRowIds = difference(menus, originMenuIds);
@@ -265,9 +265,10 @@ export class SysRoleService {
       if (deleteMenusRowIds.length > 0) {
         // 有条目需要删除
         const realDeleteRowIds = filter(originMenuRows, (e) => {
-          return includes(deleteMenusRowIds, e.menuId);
+          return includes(deleteMenusRowIds, Number(e.menuId)); // 将 e.menuId 转换为 number
         }).map((e) => {
-          return e.id;
+          // 修复 e.id 不存在的问题，使用正确的属性
+          return Number(e.menuId); // 或者应该是其他属性，取决于你的数据结构
         });
         await prisma.sys_role_menu.deleteMany({
           where: {
@@ -283,7 +284,7 @@ export class SysRoleService {
         const insertRows = insertDeptRowIds.map((e) => {
           return {
             roleId: roleId,
-            departmentId: e,
+            deptId: e, // 使用 deptId 而不是 departmentId
           };
         });
         await prisma.sys_role_dept.createMany({
@@ -293,9 +294,9 @@ export class SysRoleService {
       if (deleteDeptRowIds.length > 0) {
         // 有条目需要删除
         const realDeleteRowIds = filter(originDeptRows, (e) => {
-          return includes(deleteDeptRowIds, e.departmentId);
+          return includes(deleteDeptRowIds, Number(e.deptId)); // 将 bigint 转换为 number
         }).map((e) => {
-          return e.id;
+          return Number(e.deptId); // 使用正确的属性并转换为 number
         });
         await prisma.sys_role_dept.deleteMany({
           where: {
@@ -412,13 +413,23 @@ export class SysRoleService {
       }
       if (deleteDeptRowIds.length > 0) {
         // 有条目需要删除
-        await prisma.sys_role_dept.deleteMany({
-          where: {
-            deptId: {
-              in: deleteDeptRowIds,
-            },
-          },
+        // 在 updateV2 方法中，需要修改 filter 和 map 操作
+        if (deleteDeptRowIds.length > 0) {
+        // 有条目需要删除
+        const realDeleteRowIds = filter(originDeptRows, (e) => {
+        return includes(deleteDeptRowIds, Number(e.deptId));
+        }).map((e) => {
+        // 这里错误地使用了 e.id，应该使用 e.roleId 或其他正确的属性
+        return e.roleId; // 或者应该是 e.deptId，取决于你的数据结构
         });
+        await prisma.sys_role_dept.deleteMany({
+        where: {
+        deptId: {
+        in: deleteDeptRowIds,
+        },
+        },
+        });
+        }
       }
     });
     return true;

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { sys_menu } from '@prisma/client';
+import { sys_menu } from '@repo/database';
 
 export class ImageCaptcha {
   @ApiProperty({

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-// import { sys_user } from '@prisma/client';
+// import { sys_user } from '@repo/database';
 
 export class AccountInfo {
   @ApiProperty()

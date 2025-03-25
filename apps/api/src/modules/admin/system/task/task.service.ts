@@ -13,7 +13,7 @@ import {
   SYS_TASK_QUEUE_PREFIX,
 } from '../../admin.constants';
 import { prisma } from 'src/prisma';
-import { sys_job } from '@prisma/client';
+import { sys_job } from '@repo/database';
 
 @Injectable()
 export class SysTaskService implements OnModuleInit {

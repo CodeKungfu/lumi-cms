@@ -11,8 +11,12 @@ import { SYS_USER_INITPASSWORD } from 'src/common/contants/param-config.contants
 import { AccountInfo, PageSearchUserInfo } from './user.class';
 import { CreateUserDto, PageSearchUserDto, UpdatePasswordDto, UpdateUserDto, UpdateUserInfoDto } from './user.dto';
 import { omit } from 'lodash';
-import { prisma } from 'src/prisma';
-import { sys_user } from '@prisma/client';
+import { prisma } from '@repo/database';
+
+// 使用更简单的方式定义 sys_user 类型
+type sys_user = Awaited<ReturnType<typeof prisma.sys_user.findUnique>>;
+
+// 定义 sys_user 类型
 
 // 能用1
 // const transData = (jsonArr, roleId) => {

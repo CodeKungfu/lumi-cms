@@ -11,7 +11,7 @@ import {
   FORBIDDEN_OP_MENU_ID_INDEX,
 } from 'src/modules/admin/admin.constants';
 import { ApiException } from 'src/common/exceptions/api.exception';
-import { sys_menu } from '@prisma/client';
+import { sys_menu } from '@repo/database';
 import { IAdminUser } from '../../admin.interface';
 import { AdminUser } from '../../core/decorators/admin-user.decorator';
 import { MenuItemAndParentInfoResult } from './menu.class';

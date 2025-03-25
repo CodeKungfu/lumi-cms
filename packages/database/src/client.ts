@@ -1,7 +1,10 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 
-export const prisma = global.prisma || new PrismaClient();
+// 创建 Prisma 客户端实例
+export const prisma = new PrismaClient();
 
-if (process.env.NODE_ENV !== "production") global.prisma = prisma;
+// 导出 PrismaClient 类型
+export { PrismaClient };
 
-export * from "@prisma/client";
+// 导出所有 Prisma 生成的类型
+export * from '@prisma/client';

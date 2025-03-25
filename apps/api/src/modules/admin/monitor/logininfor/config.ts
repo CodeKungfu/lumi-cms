@@ -1,4 +1,4 @@
-import { sys_logininfor } from '@prisma/client';
+import { sys_logininfor } from '@repo/database';
 import { ADMIN_PREFIX } from 'src/modules/admin/admin.constants';
 export { ADMIN_PREFIX };
 export const keyStr = '操作日志';
