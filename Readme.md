@@ -69,7 +69,7 @@ nest-ruoyi-prisma/
 
 ## 📋 环境要求
 
-- Node.js 16+
+- Node.js 18+
 - pnpm 7+
 - MySQL 8.0+
 - Redis 6.2+
