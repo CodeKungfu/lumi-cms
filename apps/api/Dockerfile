@@ -12,12 +12,9 @@ RUN apk update && apk add --no-cache \
     openssl-libs-static
 WORKDIR /app
 
-# 配置 pnpm 使用淘宝镜像源并增加网络超时时间
-RUN pnpm config set registry https://registry.npmmirror.com
+# 配置 pnpm 使用官方镜像源并增加网络超时时间
+RUN pnpm config set registry https://registry.npmjs.org/
 RUN pnpm config set network-timeout 300000
-
-# 全局安装 cross-env
-RUN npm install -g cross-env
 
 # 复制工作区配置
 COPY pnpm-workspace.yaml ./
@@ -38,8 +35,13 @@ RUN pnpm --filter @repo/database db:gen
 # 构建项目
 RUN pnpm --filter api build
 
-# 在构建阶段检查 @nestjs/common 是否存在
-RUN find /app -name "@nestjs" -type d
+
+# 创建生产环境依赖 - 继续使用 pnpm
+RUN pnpm --filter api deploy --prod ./prod
+
+# 确保 node_modules 中有 @repo/database 目录（使用复制而非链接）
+RUN mkdir -p /app/prod/node_modules/@repo && \
+    cp -r /app/packages/database /app/prod/node_modules/@repo/database
 
 FROM base AS runner
 WORKDIR /app
@@ -49,25 +51,13 @@ RUN apk add --no-cache \
     openssl \
     openssl-dev
 
-# 创建非 root 用户
-RUN addgroup --system --gid 1001 api
-RUN adduser --system --uid 1001 api
-
-# 复制整个 node_modules 目录（包括根目录和子项目的）
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/apps/api/node_modules ./apps/api/node_modules
+# 复制构建产物和依赖
+COPY --from=builder /app/prod/node_modules ./node_modules
 COPY --from=builder /app/apps/api/dist ./dist
 COPY --from=builder /app/apps/api/package.json ./
 
-# 复制 Prisma 客户端
-COPY --from=builder /app/packages/database/node_modules/.prisma ./node_modules/.prisma
-
 # 设置环境变量
 ENV NODE_ENV=production
-ENV PATH="/app/node_modules/.bin:${PATH}"
-
-# 切换到非 root 用户
-USER api
 
 # 启动应用
 CMD ["node", "dist/main.js"]
