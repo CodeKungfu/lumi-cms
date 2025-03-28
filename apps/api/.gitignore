@@ -1,10 +1,6 @@
-node_modules
-dist
-.vscode
-
 # Visual Studio Trace Files
 *.e2e
-app-test
+
 # Click-Once directory
 publish/
 
@@ -43,8 +39,3 @@ package-lock.json
 yarn.lock
 
 .vscode
-
-redis-data
-mysql-data
-
-.turbo

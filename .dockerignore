@@ -1,0 +1,71 @@
+# 依赖目录
+node_modules
+**/node_modules
+.pnpm-store
+
+# 构建输出
+dist
+**/dist
+build
+**/build
+
+# 环境文件 - 排除 .env.docker
+.env
+**/.env
+.env.development
+**/.env.development
+.env.production
+**/.env.production
+.env.staging
+**/.env.staging
+# 不忽略 .env.docker
+!.env.docker
+!**/.env.docker
+
+# 版本控制
+.git
+.gitignore
+
+# 日志
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# 缓存
+.npm
+.yarn
+.pnp.*
+.cache
+**/.cache
+
+# 测试
+coverage
+**/__tests__
+**/*.spec.ts
+**/*.test.ts
+
+# 编辑器配置
+.idea
+.vscode
+*.swp
+*.swo
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 数据卷
+mysql-data
+redis-data
+
+# 其他
+README.md
+LICENSE
+*.md
+
+# 确保不忽略 pnpm 相关文件
+!pnpm-lock.yaml
+!pnpm-workspace.yaml

@@ -1,0 +1,4 @@
+{
+  "include": ["**/*.ts", "**/*.tsx", "tsup.config.ts"],
+  "exclude": ["node_modules"]
+}
