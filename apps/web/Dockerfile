@@ -6,11 +6,10 @@ RUN corepack enable
 
 WORKDIR /app
 
-
-
-
 # 复制源代码
 COPY . .
+
+RUN rm -rf /app/apps/api
 
 # 修改这一行
 RUN pnpm install --filter web
