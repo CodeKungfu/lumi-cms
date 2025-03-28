@@ -105,6 +105,9 @@ importers:
       ioredis:
         specifier: ^5.3.2
         version: 5.6.0
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
       nanoid:
         specifier: ^3.3.7
         version: 3.3.11
@@ -117,6 +120,9 @@ importers:
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
+      socket.io:
+        specifier: ^4.8.1
+        version: 4.8.1
       svg-captcha:
         specifier: ^1.4.0
         version: 1.4.0
@@ -160,9 +166,15 @@ importers:
       '@types/jest':
         specifier: ^29.5.2
         version: 29.5.14
+      '@types/lodash':
+        specifier: ^4.14.202
+        version: 4.17.16
       '@types/node':
         specifier: ^20.3.1
         version: 20.17.27
+      '@types/socket.io':
+        specifier: ^3.0.2
+        version: 3.0.2
       '@types/supertest':
         specifier: ^2.0.12
         version: 2.0.16
@@ -296,6 +308,9 @@ importers:
       dotenv:
         specifier: ^16.3.1
         version: 16.4.5
+      prisma:
+        specifier: ^6.5.0
+        version: 6.5.0(typescript@5.5.4)
     devDependencies:
       '@repo/eslint-config':
         specifier: workspace:*
@@ -303,9 +318,6 @@ importers:
       eslint:
         specifier: ^8.57.0
         version: 8.57.1
-      prisma:
-        specifier: ^6.5.0
-        version: 6.5.0(typescript@5.5.4)
       rimraf:
         specifier: ^5.0.5
         version: 5.0.10
@@ -2099,12 +2111,15 @@ packages:
       esbuild-register: 3.6.0(esbuild@0.25.1)
     transitivePeerDependencies:
       - supports-color
+    dev: false
 
   /@prisma/debug@6.5.0:
     resolution: {integrity: sha512-fc/nusYBlJMzDmDepdUtH9aBsJrda2JNErP9AzuHbgUEQY0/9zQYZdNlXmKoIWENtio+qarPNe/+DQtrX5kMcQ==}
+    dev: false
 
   /@prisma/engines-version@6.5.0-73.173f8d54f8d52e692c7e27e72a88314ec7aeff60:
     resolution: {integrity: sha512-iK3EmiVGFDCmXjSpdsKGNqy9hOdLnvYBrJB61far/oP03hlIxrb04OWmDjNTwtmZ3UZdA5MCvI+f+3k2jPTflQ==}
+    dev: false
 
   /@prisma/engines@6.5.0:
     resolution: {integrity: sha512-FVPQYHgOllJklN9DUyujXvh3hFJCY0NX86sDmBErLvoZjy2OXGiZ5FNf3J/C4/RZZmCypZBYpBKEhx7b7rEsdw==}
@@ -2114,6 +2129,7 @@ packages:
       '@prisma/engines-version': 6.5.0-73.173f8d54f8d52e692c7e27e72a88314ec7aeff60
       '@prisma/fetch-engine': 6.5.0
       '@prisma/get-platform': 6.5.0
+    dev: false
 
   /@prisma/fetch-engine@6.5.0:
     resolution: {integrity: sha512-3LhYA+FXP6pqY8FLHCjewyE8pGXXJ7BxZw2rhPq+CZAhvflVzq4K8Qly3OrmOkn6wGlz79nyLQdknyCG2HBTuA==}
@@ -2121,11 +2137,13 @@ packages:
       '@prisma/debug': 6.5.0
       '@prisma/engines-version': 6.5.0-73.173f8d54f8d52e692c7e27e72a88314ec7aeff60
       '@prisma/get-platform': 6.5.0
+    dev: false
 
   /@prisma/get-platform@6.5.0:
     resolution: {integrity: sha512-xYcvyJwNMg2eDptBYFqFLUCfgi+wZLcj6HDMsj0Qw0irvauG4IKmkbywnqwok0B+k+W+p+jThM2DKTSmoPCkzw==}
     dependencies:
       '@prisma/debug': 6.5.0
+    dev: false
 
   /@rollup/pluginutils@5.1.4:
     resolution: {integrity: sha512-USm05zrsFxYLPdWWq+K3STlWiT/3ELn3RcV5hJMghpeAIhxfsUIg6mt12CBJBInWMV4VneoV7SfGv8xIwo2qNQ==}
@@ -5099,6 +5117,7 @@ packages:
       esbuild: 0.25.1
     transitivePeerDependencies:
       - supports-color
+    dev: false
 
   /esbuild-sunos-64@0.15.18:
     resolution: {integrity: sha512-On22LLFlBeLNj/YF3FT+cXcyKPEI263nflYlAhz5crxtp3yRG1Ugfr7ITyxmCmjm4vbN/dGrb/B7w7U8yJR9yw==}
@@ -8593,6 +8612,7 @@ packages:
       fsevents: 2.3.3
     transitivePeerDependencies:
       - supports-color
+    dev: false
 
   /process-nextick-args@2.0.1:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
