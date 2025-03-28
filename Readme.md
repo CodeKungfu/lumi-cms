@@ -13,8 +13,9 @@
 </div>
 
 <div align="center">
-<span>[English](https://github.com/CodeKungfu/nest-ruoyi-prisma/blob/main/README.en.md) | 简体中文</span>
+<span>[English](https://github.com/CodeKungfu/nest-ruoyi-prisma/blob/main/Readme.en.md) | 简体中文</span>
 </div>
+
 ## 🏢 平台简介
 
 特别鸣谢Ruoyi 原版开发者无私开源及支持我的伙伴们。让我有很大的动力去开发一版基于Nodejs的Ruoyi。目前还是处于（WIP）, 早期的一个状态，欢迎大家提建议, 提issue, 提PullRequest。
