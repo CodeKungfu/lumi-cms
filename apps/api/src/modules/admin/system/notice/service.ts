@@ -12,8 +12,8 @@ export class Service {
   /**
    * 根据获取信息
    */
-  async info(id: number): Promise<tableType> {
-    const resultInfo: tableType = await prisma[tableName].findFirst({
+  async info(id: number): Promise<any> {
+    const resultInfo: any = await prisma[tableName].findFirst({
       where: {
         noticeId: Number(id),
       },
@@ -21,6 +21,7 @@ export class Service {
     if (isEmpty(resultInfo)) {
       throw new ApiException(10017);
     }
+    resultInfo.noticeContent = Buffer.from(resultInfo.noticeContent).toString('utf-8');
 
     return resultInfo;
   }
@@ -42,6 +43,7 @@ export class Service {
    */
   async update(body: any): Promise<tableType> {
     const updateObj = omit(body, ['noticeId', 'createTime']);
+    updateObj.noticeContent = Buffer.from(updateObj.noticeContent);
     const resultInfo: tableType = await prisma[tableName].update({
       data: updateObj,
       where: {
@@ -55,6 +57,7 @@ export class Service {
    * 新增信息
    */
   async create(body: any): Promise<any> {
+    body.noticeContent = Buffer.from(body.noticeContent);
     const resultInfo: tableType = await prisma[tableName].create({
       data: body,
     });
@@ -70,6 +73,9 @@ export class Service {
       skip: (Number(dto.pageNum) - 1) * Number(dto.pageSize),
       take: Number(dto.pageSize),
       where: queryObj,
+    });
+    result.map((item: any) => {
+      item.noticeContent = Buffer.from(item.noticeContent).toString('utf-8');
     });
     const countNum: any = await prisma[tableName].count({
       where: queryObj,
