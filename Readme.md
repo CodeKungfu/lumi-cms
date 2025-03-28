@@ -12,13 +12,18 @@
   <p>基于 Nest.js、Prisma 和 RuoYi 的全栈应用项目，采用 monorepo 结构管理多个应用和包。</p>
 </div>
 
+<div align="center">
+<span>[English](https://github.com/CodeKungfu/nest-ruoyi-prisma/blob/main/README.en.md) | 简体中文</span>
+</div>
 ## 🏢 平台简介
 
 特别鸣谢Ruoyi 原版开发者无私开源及支持我的伙伴们。让我有很大的动力去开发一版基于Nodejs的Ruoyi。目前还是处于（WIP）, 早期的一个状态，欢迎大家提建议, 提issue, 提PullRequest。
 
 Java版若依是一套流行的快速开发平台, 但是对于不熟悉或不擅长Java但是擅长Nodejs或前端的开发人员来，本项目可以作为一个学习和参考。
 
-本项目代码是个人开发，未经大量测试和专业测试，不建议用于生产环境。
+本项目代码是个人开发，未经大量测试和专业测试，不建议用于生产环境。也因为如此，现在做了一个重构，把前端和后端代码放在同一个项目中，也是前端和后端分离的模式，后续功能会主要在这里开发升级，除非有相关人员提issue 要求同步的情况下，我会抽空同步并关闭issue。
+
+对于只想要后端的同学，代码在backend-single的分支中，对应前端代码在  [RuoYi-Vue](https://github.com/CodeKungfu/ruoyi-vue3)仓库中。
 
 ## 📖 项目介绍
 
