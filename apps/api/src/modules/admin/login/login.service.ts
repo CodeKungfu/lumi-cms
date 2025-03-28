@@ -44,6 +44,25 @@ const transData = (jsonArr) => {
         };
         parent.children = getchilds(param.menu_id, params); // 获取子节点
         result.push(parent);
+      } else {
+        const children = getchilds(param.menu_id, params); // 获取子节点
+        if (children.length > 0) {
+          children.map((item) => {
+            item.children = [];
+          });
+          const name = capitalizeFirstLetter(param.path);
+          // 找到name 相同的
+          result.reduce((map, item) => {
+            item.children = item.children || [];
+            item.children.reduce((map0, item0) => {
+              if (item0.name === name) {
+                item0.children = children;
+              }
+              return map0;
+            }, {});
+            return map;
+          }, {});
+        }
       }
     }
     return result;
@@ -59,6 +78,8 @@ const transData = (jsonArr) => {
           path: arr.path,
           hidden: false,
           component: arr.component,
+          // 添加menu_id属性，确保能够正确递归查找子节点
+          id: arr.menu_id,
           meta: {
             title: arr.menu_name,
             icon: arr.icon,

@@ -79,7 +79,7 @@ const queryParams = ref({
 function getList() {
   loading.value = true;
   initData(queryParams.value).then(response => {
-    onlineList.value = response.rows;
+    onlineList.value = response.data;
     total.value = response.total;
     loading.value = false;
   });
