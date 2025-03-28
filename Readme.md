@@ -12,9 +12,8 @@
   <p>基于 Nest.js、Prisma 和 RuoYi 的全栈应用项目，采用 monorepo 结构管理多个应用和包。</p>
 </div>
 
-<div align="center">
+
 <span>[English](https://github.com/CodeKungfu/nest-ruoyi-prisma/blob/main/Readme.en.md) | 简体中文</span>
-</div>
 
 ## 🏢 平台简介
 

@@ -12,9 +12,7 @@
    <p>A full-stack application based on Nest.js, Prisma, and RuoYi, using a monorepo structure to manage multiple applications and packages.</p>
 </div>
 
-<div align="center">
-<span> English | [简体中文] (https://github.com/CodeKungfu/nest-ruoyi-prisma/blob/main/README.md)</span>
-</div>
+<span> English | [简体中文](https://github.com/CodeKungfu/nest-ruoyi-prisma/blob/main/README.md)</span>
 
 ## 🏢 Platform Introduction
 
