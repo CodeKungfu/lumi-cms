@@ -20,9 +20,9 @@ Special thanks to the original RuoYi developers for their open-source contributi
 
 The Java version of RuoYi is a popular rapid development platform, but this project serves as a learning reference for developers who are more familiar with Node.js or frontend development rather than Java.
 
-This project is developed by an individual and has not undergone extensive or professional testing, so it is not recommended for production environments. For this reason, I've restructured the project to place both frontend and backend code in the same repository while maintaining a frontend-backend separation model. Future features will primarily be developed and upgraded here, unless someone raises an issue requesting synchronization, in which case I'll make time to sync and close the issue.
+This project is developed by an individual and has not undergone extensive or professional testing, so it is not recommended for production environments. For this reason, I've restructured the project to place both frontend and backend code in the same repository while maintaining a frontend-backend separation model. Future features will primarily be developed and upgraded here.
 
-For those interested only in the backend, the code is available in the backend-single branch, with the corresponding frontend code in the [RuoYi-Vue](https://github.com/CodeKungfu/ruoyi-vue3) repository.
+For those interested only in the backend, the code is available in the [backend-single branch](https://github.com/CodeKungfu/nest-ruoyi-prisma/tree/backend-single), with the corresponding frontend code in the [RuoYi-Vue](https://github.com/CodeKungfu/ruoyi-vue3) repository.
 
 ## 📖 Project Introduction
 
