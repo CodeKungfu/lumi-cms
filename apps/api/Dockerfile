@@ -36,7 +36,7 @@ RUN pnpm --filter @repo/database db:gen
 RUN pnpm --filter api build
 
 # 创建生产环境依赖 - 继续使用 pnpm
-RUN pnpm --filter api deploy --prod ./prod
+# RUN pnpm --filter api deploy --prod ./prod
 
 # 设置环境变量
 ENV NODE_ENV=production
