@@ -30,6 +30,10 @@ export class Service {
    * 根据获取信息
    */
   async delete(id: any): Promise<any> {
+    if (id === 'clean') {
+      await prisma[tableName].deleteMany({});
+      return { count: 0 };
+    }
     const result: any = await prisma[tableName].deleteMany({
       where: {
         infoId: {
