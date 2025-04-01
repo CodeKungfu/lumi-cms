@@ -77,7 +77,7 @@ export class OperlogInterceptor implements NestInterceptor {
   }) {
     const { method, url, body } = request;
     // 使用类型断言获取用户信息
-    const user = (request as any).user;
+    const user = (request as any).user || (request as any).adminUser;
     const costTime = Date.now() - startTime;
 
     try {
@@ -90,28 +90,30 @@ export class OperlogInterceptor implements NestInterceptor {
 
       // 确定业务类型
       const businessType = this.getBusinessType(method);
-
-      // 保存操作日志 - 使用驼峰命名法匹配Prisma模型
-      await prisma.sys_oper_log.create({
-        data: {
-          title: url.split('?')[0] || '',
-          businessType: businessType,
-          method: request.route ? request.route.path : url,
-          requestMethod: method,
-          operatorType: 1,
-          operName: operName,
-          deptName: deptName,
-          operUrl: url,
-          operIp: ip,
-          operLocation: '',
-          operParam: JSON.stringify(body).length > 1900 ? JSON.stringify(body).substring(0, 1900) : JSON.stringify(body),
-          jsonResult: data ? (JSON.stringify(data).length > 1900 ? JSON.stringify(data).substring(0, 1900) : JSON.stringify(data)) : '',
-          status,
-          errorMsg: errorMsg,
-          operTime: new Date(),
-          costTime: costTime,
-        },
-      });
+      if (body) { // 只针对POST/PUT请求
+        // 保存操作日志 - 使用驼峰命名法匹配Prisma模型
+        await prisma.sys_oper_log.create({
+          data: {
+            title: url.split('?')[0] || '',
+            businessType: businessType,
+            method: request.route ? request.route.path : url,
+            requestMethod: method,
+            operatorType: 1,
+            operName: operName,
+            deptName: deptName,
+            operUrl: url,
+            operIp: ip,
+            operLocation: '',
+            operParam: JSON.stringify(body).length > 1900 ? JSON.stringify(body).substring(0, 1900) : JSON.stringify(body),
+            jsonResult: data ? (JSON.stringify(data).length > 1900 ? JSON.stringify(data).substring(0, 1900) : JSON.stringify(data)) : '',
+            status,
+            errorMsg: errorMsg,
+            operTime: new Date(),
+            costTime: costTime,
+          },
+        });
+      }
+      
     } catch (error) {
       console.error('保存操作日志失败:', error);
     }
