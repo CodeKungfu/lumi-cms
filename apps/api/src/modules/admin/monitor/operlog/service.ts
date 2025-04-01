@@ -65,11 +65,16 @@ export class Service {
    * 分页查询信息
    */
   async pageDto(dto: any): Promise<any> {
-    const queryObj = omit(dto, ['pageNum', 'pageSize']);
+    const { orderByColumn, isAsc } = dto;
+    const orderBy = orderByColumn ? {
+      [orderByColumn]: isAsc === 'ascending' ? 'asc' : 'desc'
+    } : {};
+  const queryObj = omit(dto, ['pageNum', 'pageSize', 'orderByColumn', 'isAsc']);
     const result: any = await prisma[tableName].findMany({
       skip: (Number(dto.pageNum) - 1) * Number(dto.pageSize),
       take: Number(dto.pageSize),
       where: queryObj,
+      orderBy,
     });
     const countNum: any = await prisma[tableName].count({
       where: queryObj,

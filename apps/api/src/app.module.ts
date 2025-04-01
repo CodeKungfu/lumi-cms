@@ -9,6 +9,8 @@ import { MissionModule } from './mission/mission.module';
 import { WSModule } from './modules/ws/ws.module';
 import { LoggerModule } from './shared/logger/logger.module';
 import { WinstonLogLevel } from './shared/logger/logger.interface';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { OperlogInterceptor } from './common/interceptors/operlog.interceptor';
 
 @Module({
   imports: [
@@ -47,6 +49,12 @@ import { WinstonLogLevel } from './shared/logger/logger.interface';
     AdminModule,
     // websocket module
     WSModule,
+  ],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: OperlogInterceptor,
+    },
   ],
 })
 export class AppModule {}

@@ -59,7 +59,7 @@ yarn dev
 6. Dictionary Management: Maintaining some frequently used and relatively fixed data in the system. (Supported)
 7. Parameter Management: Dynamic configuration of commonly used parameters in the system. (Supported)
 8. Notice Management: Publishing and maintaining system notification messages. (Supported)
-9. Operation Log: Recording and querying normal operation logs and abnormal information logs of the system.
+9. Operation Log: Recording and querying normal operation logs and abnormal information logs of the system.  (Supported)
 10. Login Log: Recording and querying system login logs, including login exceptions.
 11. Online Users: Monitoring the status of active users in the current system.
 12. Scheduled Tasks: Online (adding, modifying, deleting) task scheduling including execution result logs.
