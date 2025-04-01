@@ -5,3 +5,9 @@ export const keyStr = '操作日志';
 export const tableName = 'sys_logininfor';
 export const controllerName = 'logininfor';
 export type tableType = sys_logininfor;
+export type tableQueryType = sys_logininfor & {
+    pageSize?: number;
+    pageNum?: number;
+    orderByColumn?: string;
+    isAsc?: string;
+  };

@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, Query, Param, Put, Delete } from '@nestjs/
 import { ApiOperation, ApiOkResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { Keep, RequiresPermissions } from 'src/common/decorators';
 import { Service } from './service';
-import { keyStr, controllerName, ADMIN_PREFIX } from './config';
+import { keyStr, controllerName, ADMIN_PREFIX, tableQueryType } from './config';
 
 @ApiSecurity(ADMIN_PREFIX)
 @ApiTags(`${keyStr}模块`)
@@ -14,7 +14,7 @@ export class MyController {
   @ApiOperation({ summary: `分页查询${keyStr}` })
   @Keep()
   @Get('list')
-  async page(@Query() dto: any): Promise<any> {
+  async page(@Query() dto: tableQueryType): Promise<any> {
     const rows = await this.service.pageDto(dto);
     return {
       rows: rows.result,
