@@ -1,14 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ApiException } from 'src/common/exceptions/api.exception';
-import { difference, filter, includes, isEmpty, map, findIndex, omit } from 'lodash';
+import { difference, filter, includes, isEmpty, map, findIndex, omit, forEach } from 'lodash';
 import { prisma } from 'src/prisma';
-import { tableType, tableName } from './config';
+import { tableType, tableName, tableQueryType } from './config';
+import { processPageQuery } from 'src/common/utils/query-helper';
 
 @Injectable()
 export class Service {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor() {}
-
   /**
    * 根据获取信息
    */
@@ -64,20 +64,16 @@ export class Service {
   /**
    * 分页查询信息
    */
-  async pageDto(dto: any): Promise<any> {
-    const { orderByColumn, isAsc } = dto;
-    const orderBy = orderByColumn ? {
-      [orderByColumn]: isAsc === 'ascending' ? 'asc' : 'desc'
-    } : {};
-  const queryObj = omit(dto, ['pageNum', 'pageSize', 'orderByColumn', 'isAsc']);
+  async pageDto(dto: tableQueryType): Promise<any> {
+    const { processedQuery, orderBy } = processPageQuery(tableName, dto);
     const result: any = await prisma[tableName].findMany({
       skip: (Number(dto.pageNum) - 1) * Number(dto.pageSize),
       take: Number(dto.pageSize),
-      where: queryObj,
+      where: processedQuery,
       orderBy,
     });
     const countNum: any = await prisma[tableName].count({
-      where: queryObj,
+      where: processedQuery,
     });
     return {
       result,
