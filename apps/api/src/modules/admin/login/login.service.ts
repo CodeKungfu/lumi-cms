@@ -10,6 +10,7 @@ import { SysUserService } from '../system/user/user.service';
 import { SysMenuService } from '../system/menuBack/menu.service';
 import { ImageCaptchaDto } from './login.dto';
 import { ImageCaptcha, PermMenuInfo } from './login.class';
+import { prisma } from 'src/prisma';
 
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -176,7 +177,16 @@ export class LoginService {
     if (Number(user.userId) === 1) {
       const oldToken = await this.getRedisTokenById(Number(user.userId));
       if (oldToken) {
-        this.logService.saveLoginLog(Number(user.userId), ip, ua);
+        // this.logService.saveLoginLog(Number(user.userId), ip, ua);
+        await prisma.sys_logininfor.create({
+          data: {
+            ipaddr: ip,
+            userName: user.userName,
+            status: '0',
+            msg: '登录成功',
+            accessTime: new Date(),
+          },
+        });
         return oldToken;
       }
     }
@@ -199,7 +209,16 @@ export class LoginService {
     await this.redisService
       .getRedis()
       .set(`admin:perms:${user.userId}`, JSON.stringify(perms));
-    await this.logService.saveLoginLog(Number(user.userId), ip, ua);
+    // await this.logService.saveLoginLog(Number(user.userId), ip, ua);
+    await prisma.sys_logininfor.create({
+      data: {
+        ipaddr: ip,
+        userName: user.userName,
+        status: '0',
+        msg: '登录成功',
+        accessTime: new Date(),
+      },
+    });
     return jwtSign;
   }
 
