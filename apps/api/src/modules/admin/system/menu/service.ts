@@ -1,9 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ROOT_ROLE_ID } from 'src/modules/admin/admin.constants';
 import { ApiException } from 'src/common/exceptions/api.exception';
-import { difference, filter, includes, isEmpty, map, findIndex, omit } from 'lodash';
+import { concat, difference, filter, includes, isEmpty, map, findIndex, omit } from 'lodash';
 import { prisma } from 'src/prisma';
 import { tableType, tableName } from './config';
+import { RedisService } from 'src/shared/services/redis.service';
+import { AdminWSService } from 'src/modules/ws/admin-ws.service';
+import { SysRoleService } from '../role/role.service';
 
 const transData = (jsonArr) => {
   // 如果roleId存在，筛选出相关项目，否则直接使用原数组
@@ -46,7 +49,10 @@ const transData = (jsonArr) => {
 export class Service {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor(
-    @Inject(ROOT_ROLE_ID) private rootRoleId: number
+    private redisService: RedisService,
+    @Inject(ROOT_ROLE_ID) private rootRoleId: number,
+    private roleService: SysRoleService,
+    private adminWSService: AdminWSService,
   ) {}
 
   /**
@@ -150,6 +156,7 @@ export class Service {
         menuId: Number(id),
       },
     });
+    this.adminWSService.noticeUserToUpdateMenusByRoleIds([this.rootRoleId]);
     return resultInfo;
   }
 
@@ -164,6 +171,7 @@ export class Service {
         menuId: body.menuId,
       },
     });
+    this.adminWSService.noticeUserToUpdateMenusByRoleIds([this.rootRoleId]);
     return resultInfo;
   }
 
@@ -174,6 +182,7 @@ export class Service {
     const resultInfo: tableType = await prisma[tableName].create({
       data: body,
     });
+    this.adminWSService.noticeUserToUpdateMenusByRoleIds([this.rootRoleId]);
     return resultInfo;
   }
 
@@ -194,5 +203,114 @@ export class Service {
       result,
       countNum,
     };
+  }
+
+  /**
+   * 获取当前用户的所有权限
+   */
+  async getPerms(uid: number): Promise<string[]> {
+    const roleIds = await this.roleService.getRoleIdByUser(uid);
+    let perms: any = [];
+    let result: any = null;
+    if (includes(roleIds, this.rootRoleId)) {
+      // root find all perms
+      // result = await prisma.sys_menu.findMany({
+      //   where: {
+      //     perms: {
+      //       not: null,
+      //     },
+      //     menuType: '2',
+      //   },
+      // });
+      return ['*:*:*'];
+    } else {
+      // result = await this.menuRepository
+      //   .createQueryBuilder('menu')
+      //   .innerJoinAndSelect(
+      //     'sys_role_menu',
+      //     'role_menu',
+      //     'menu.id = role_menu.menu_id',
+      //   )
+      //   .andWhere('role_menu.role_id IN (:...roldIds)', { roldIds: roleIds })
+      //   .andWhere('menu.type = 2')
+      //   .andWhere('menu.perms IS NOT NULL')
+      //   .getMany();
+      result =
+        await prisma.$queryRaw`SELECT distinct menu.perms FROM sys_menu menu LEFT JOIN sys_role_menu role_menu ON menu.menu_id = role_menu.menu_id where role_menu.role_id IN (${roleIds.join(
+          ',',
+        )}) and menu.status = '0' and  menu.perms IS NOT NULL`;
+      if (!isEmpty(result)) {
+        result.forEach((e) => {
+          if (e && e.perms) {
+            perms = concat(perms, e.perms);
+          }
+        });
+        // perms = uniq(perms);
+      }
+      // console.log(perms);
+      return perms;
+    }
+    // return result || perms;
+  }
+
+  /**
+   * 刷新指定用户ID的权限
+   */
+  async refreshPerms(uid: number): Promise<void> {
+    const perms = await this.getPerms(uid);
+    const online = await this.redisService.getRedis().get(`admin:token:${uid}`);
+    if (online) {
+      // 判断是否在线
+      await this.redisService
+        .getRedis()
+        .set(`admin:perms:${uid}`, JSON.stringify(perms));
+    }
+  }
+
+  /**
+   * 刷新所有在线用户的权限
+   */
+  async refreshOnlineUserPerms(): Promise<void> {
+    const onlineUserIds: string[] = await this.redisService
+      .getRedis()
+      .keys('admin:token:*');
+    if (onlineUserIds && onlineUserIds.length > 0) {
+      for (let i = 0; i < onlineUserIds.length; i++) {
+        const uid = onlineUserIds[i].split('admin:token:')[1];
+        const perms = await this.getPerms(parseInt(uid));
+        await this.redisService
+          .getRedis()
+          .set(`admin:perms:${uid}`, JSON.stringify(perms));
+      }
+    }
+  }
+
+  /**
+   * 根据角色获取所有菜单
+   */
+  async getMenus(uid: number): Promise<tableType[]> {
+    const roleIds = await this.roleService.getRoleIdByUser(uid);
+    let menus: tableType[] = [];
+    if (includes(roleIds, this.rootRoleId)) {
+      // root find all
+      menus =
+        await prisma.$queryRaw`select distinct m.menu_id, m.parent_id, m.menu_name, m.path, m.component, m.query, m.visible, m.status, ifnull(m.perms,'') as perms, m.is_frame, m.is_cache, m.menu_type, m.icon, m.order_num, m.create_time
+        from sys_menu m where m.menu_type in ('M', 'C') and m.status = 0
+        order by m.parent_id, m.order_num
+        `;
+    } else {
+      // [ 1, 2, 3 ] role find
+      menus =
+        await prisma.$queryRaw`SELECT distinct m.menu_id, m.parent_id, m.menu_name, m.path, m.component, m.query, m.visible, m.status, ifnull(m.perms,'') as perms, m.is_frame, m.is_cache, m.menu_type, m.icon, m.order_num, m.create_time
+        from sys_menu m 
+        left join sys_role_menu rm on m.menu_id = rm.menu_id 
+        left join sys_user_role ur on rm.role_id = ur.role_id 
+        left join sys_role ro on ur.role_id = ro.role_id 
+        left join sys_user u on ur.user_id = u.user_id 
+        where u.user_id = ${uid} and m.menu_type in ('M', 'C') and m.status = 0  AND ro.status = 0 
+        order by m.parent_id, m.order_num
+        `;
+    }
+    return menus;
   }
 }

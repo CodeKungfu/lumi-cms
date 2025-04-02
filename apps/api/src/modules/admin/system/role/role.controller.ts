@@ -4,7 +4,7 @@ import { ADMIN_PREFIX } from 'src/modules/admin/admin.constants';
 import { ApiException } from 'src/common/exceptions/api.exception';
 import { AdminUser } from '../../core/decorators/admin-user.decorator';
 import { IAdminUser } from '../../admin.interface';
-import { SysMenuService } from '../menuBack/menu.service';
+import * as SysMenuService from '../menu/service';
 import { RoleInfo } from './role.class';
 import { CreateRoleDto, DeleteRoleDto, InfoRoleDto, UpdateRoleDto } from './role.dto';
 import { SysRoleService } from './role.service';
@@ -15,7 +15,7 @@ import { ExcelFileCleanupInterceptor } from 'src/common/interceptors/excel.inter
 @ApiTags('角色模块')
 @Controller('role')
 export class SysRoleController {
-  constructor(private roleService: SysRoleService, private menuService: SysMenuService) {}
+  constructor(private roleService: SysRoleService, private menuService: SysMenuService.Service) {}
 
   @RequiresPermissions('system:role:list')
   @ApiOperation({ summary: '获取角色列表' })

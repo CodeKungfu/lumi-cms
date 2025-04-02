@@ -6,8 +6,6 @@ import { WSModule } from 'src/modules/ws/ws.module';
 import { rootRoleIdProvider } from '../core/provider/root-role-id.provider';
 import { SysLogController } from './log/log.controller';
 import { SysLogService } from './log/log.service';
-import { SysMenuController } from './menuBack/menu.controller';
-import { SysMenuService } from './menuBack/menu.service';
 import { SysRoleController } from './role/role.controller';
 import { SysRoleService } from './role/role.service';
 import { SysUserController } from './user/user.controller';
@@ -62,7 +60,6 @@ import * as menuService from './menu/service';
   controllers: [
     SysUserController,
     SysRoleController,
-    SysMenuController,
     menuController.MyController,
     deptController.MyController,
     SysLogController,
@@ -79,7 +76,6 @@ import * as menuService from './menu/service';
     rootRoleIdProvider(),
     SysUserService,
     SysRoleService,
-    SysMenuService,
     menuService.Service,
     deptService.Service,
     SysLogService,
@@ -93,6 +89,6 @@ import * as menuService from './menu/service';
     noticeService.Service,
     postService.Service,
   ],
-  exports: [ROOT_ROLE_ID, SysUserService, SysMenuService, SysLogService, SysOnlineService],
+  exports: [ROOT_ROLE_ID, SysUserService, menuService.Service, SysLogService, SysOnlineService],
 })
 export class SystemModule {}

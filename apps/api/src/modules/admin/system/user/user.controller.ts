@@ -3,7 +3,7 @@ import { ApiOkResponse, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagg
 import { ADMIN_PREFIX } from '../../admin.constants';
 import { IAdminUser } from '../../admin.interface';
 import { AdminUser } from '../../core/decorators/admin-user.decorator';
-import { SysMenuService } from '../menuBack/menu.service';
+import * as SysMenuService from '../menu/service';
 import { ExcelFileCleanupInterceptor } from 'src/common/interceptors/excel.interceptor';
 import { CreateUserDto, DeleteUserDto, InfoUserDto, PageSearchUserDto, PasswordUserDto, UpdateUserDto } from './user.dto';
 import { PageSearchUserInfo } from './user.class';
@@ -14,7 +14,7 @@ import { Keep, RequiresPermissions } from 'src/common/decorators';
 @ApiTags('管理员模块')
 @Controller('user')
 export class SysUserController {
-  constructor(private userService: SysUserService, private menuService: SysMenuService) {}
+  constructor(private userService: SysUserService, private menuService: SysMenuService.Service) {}
 
   /**
    * 获取用户列表

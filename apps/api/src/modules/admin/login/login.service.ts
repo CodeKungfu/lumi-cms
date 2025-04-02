@@ -7,7 +7,7 @@ import { ApiException } from 'src/common/exceptions/api.exception';
 import { RedisService } from 'src/shared/services/redis.service';
 import { SysLogService } from '../system/log/log.service';
 import { SysUserService } from '../system/user/user.service';
-import { SysMenuService } from '../system/menuBack/menu.service';
+import * as SysMenuService from '../system/menu/service';
 import { ImageCaptchaDto } from './login.dto';
 import { ImageCaptcha, PermMenuInfo } from './login.class';
 import { prisma } from 'src/prisma';
@@ -106,7 +106,7 @@ const transData = (jsonArr) => {
 export class LoginService {
   constructor(
     private redisService: RedisService,
-    private menuService: SysMenuService,
+    private menuService: SysMenuService.Service,
     private userService: SysUserService,
     private logService: SysLogService,
     private util: UtilService,
