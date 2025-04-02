@@ -1,4 +1,4 @@
-# Nest-RuoYi-Prisma
+# Lumi-CMS
 
 <div align="center">
   <img src="https://img.shields.io/badge/nestjs-%23E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white" alt="NestJS" />
@@ -12,7 +12,7 @@
    <p>A full-stack application based on Nest.js, Prisma, and RuoYi, using a monorepo structure to manage multiple applications and packages.</p>
 </div>
 
-<span> English | [简体中文](https://github.com/CodeKungfu/nest-ruoyi-prisma/blob/main/Readme.md)</span>
+<span> English | [简体中文](https://github.com/CodeKungfu/lumi-cms/blob/main/Readme.md)</span>
 
 ## 🏢 Platform Introduction
 
@@ -21,8 +21,6 @@ Special thanks to the original RuoYi developers for their open-source contributi
 The Java version of RuoYi is a popular rapid development platform, but this project serves as a learning reference for developers who are more familiar with Node.js or frontend development rather than Java.
 
 This project is developed by an individual and has not undergone extensive or professional testing, so it is not recommended for production environments. For this reason, I've restructured the project to place both frontend and backend code in the same repository while maintaining a frontend-backend separation model. Future features will primarily be developed and upgraded here.
-
-For those interested only in the backend, the code is available in the [backend-single branch](https://github.com/CodeKungfu/nest-ruoyi-prisma/tree/backend-single), with the corresponding frontend code in the [RuoYi-Vue](https://github.com/CodeKungfu/ruoyi-vue3) repository.
 
 ## 📖 Project Introduction
 
@@ -37,7 +35,7 @@ The project uses a pnpm workspace managed monorepo structure for easy code shari
 
 ## 🏗️ Project Structure
 ```
-nest-ruoyi-prisma/
+lumi-cms/
 ├── apps/                      # Applications directory
 │   ├── api/                   # Backend Nest.js application
 │   └── web/                   # Frontend Vue application

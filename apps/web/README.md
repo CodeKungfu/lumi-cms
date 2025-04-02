@@ -1,4 +1,4 @@
-<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">RuoYi v0.1.0</h1>
+<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">LumiCMS v0.1.0</h1>
 <h4 align="center">基于Nestjs+Vue3前后端分离的Nodejs快速开发框架</h4>
 <p align="center">
 	<a href="https://github.com/CodeKungfu/ruoyi-vue3/blob/master/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg"></a>
@@ -7,24 +7,23 @@
 ## 平台简介
 
 * 本仓库为前端技术栈 [Vue3](https://v3.cn.vuejs.org) + [Element Plus](https://element-plus.org/zh-CN) + [Vite](https://cn.vitejs.dev) 版本。
-* 配套后端代码仓库地址[RuoYi-Vue](https://github.com/CodeKungfu/nest-ruoyi-prisma)版本。
-* 特别鸣谢Ruoyi 原版开发者。由于个人能力和精力有限，只能在某个代码提交记录上切出来修改，用来适配自己参考Rouyi Java 版源码进行Nodejs 版本的开发出的后端。
+* 特别鸣谢Ruoyi 原版开发者。
 
 
 ## 前端运行
 
 ```bash
 # 克隆项目
-git clone https://github.com/CodeKungfu/ruoyi-vue3.git
+git clone https://github.com/CodeKungfu/lumi-cms.git
 
 # 进入项目目录
-cd ruoyi-vue3
+cd lumi-cms/apps/web
 
 # 安装依赖
 yarn --registry=https://registry.npmmirror.com
 
 # 启动服务
-yarn dev
+pnpm run dev
 
 # 构建测试环境 yarn build:stage
 # 构建生产环境 yarn build:prod

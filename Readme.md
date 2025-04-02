@@ -1,4 +1,4 @@
-# Nest-RuoYi-Prisma
+# Lumi-CMS
 
 <div align="center">
   <img src="https://img.shields.io/badge/nestjs-%23E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white" alt="NestJS" />
@@ -9,11 +9,11 @@
 </div>
 
 <div align="center">
-  <p>基于 Nest.js、Prisma 和 RuoYi 的全栈应用项目，采用 monorepo 结构管理多个应用和包。</p>
+  <p>Lumi-CMS 是一个基于 Nest.js、Prisma 和 Vue3 的现代化内容管理系统，采用 monorepo 结构管理多个应用和包。</p>
 </div>
 
 
-<span>[English](https://github.com/CodeKungfu/nest-ruoyi-prisma/blob/main/Readme.en.md) | 简体中文</span>
+<span>[English](https://github.com/CodeKungfu/lumi-cms/blob/main/Readme.en.md) | 简体中文</span>
 
 ## 🏢 平台简介
 
@@ -22,8 +22,6 @@
 Java版若依是一套流行的快速开发平台, 但是对于不熟悉或不擅长Java但是擅长Nodejs或前端的开发人员来，本项目可以作为一个学习和参考。
 
 本项目代码是个人开发，未经大量测试和专业测试，不建议用于生产环境。也因为如此，现在做了一个重构，把前端和后端代码放在同一个项目中，也是前端和后端分离的模式，后续功能会主要在这里开发升级。
-
-对于只想要后端的同学，代码在[backend-single](https://github.com/CodeKungfu/nest-ruoyi-prisma/tree/backend-single)的分支中，对应前端代码在  [RuoYi-Vue](https://github.com/CodeKungfu/ruoyi-vue3)仓库中。
 
 ## 📖 项目介绍
 
@@ -38,7 +36,7 @@ Java版若依是一套流行的快速开发平台, 但是对于不熟悉或不�
 
 ## 🏗️ 项目结构
 ```
-nest-ruoyi-prisma/
+lumi-cms/
 ├── apps/                      # 应用目录
 │   ├── api/                   # 后端 Nest.js 应用
 │   └── web/                   # 前端 Vue 应用

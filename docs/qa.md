@@ -2,7 +2,7 @@
 
 ··· bash
 # 运行容器并保持后台运行（即使应用启动失败）
-docker run -d --name temp-debug nest-ruoyi-prisma-api tail -f /dev/null
+docker run -d --name temp-debug lumi-cms-api tail -f /dev/null
 
 # 进入容器shell
 docker exec -it temp-debug /bin/sh

@@ -1,10 +1,10 @@
-<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">RuoYiNode v0.1.0</h1>
+<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">LumiCMS v0.1.0</h1>
 <h4 align="center">A rapid development framework for Node.js based on NestJS and Vue 3 with front-end and back-end separation (WIP)</h4>
 <p align="center">
 	<a href="https://github.com/CodeKungfu/ruoyi-vue3/blob/master/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg"></a>
 </p>
 
-English | [简体中文](https://github.com/CodeKungfu/nest-ruoyi-prisma/blob/main/README.md)
+English | [简体中文](https://github.com/CodeKungfu/lumi-cms/blob/main/README.md)
 
 # Rewrite the Ruoyi CMS using Node.js (NestJS)
 
@@ -17,18 +17,18 @@ Special thanks to the original developer of Ruoyi for their generous open-source
 
 The Java version of Ruoyi is a popular rapid development platform, but for developers who are not familiar with or proficient in Java but excel in Node.js or front-end development, this project can serve as a learning resource and reference.
 
-* It adopts a front-end and back-end separation model, with the front end based on [RuoYi-Vue](https://github.com/CodeKungfu/ruoyi-vue3)
+* It adopts a front-end and back-end separation model, with the front end based on [Vue](https://github.com/CodeKungfu/lumi-cms)
 * The back end uses NestJS (Node.js) + Prisma + MySQL + Redis.
-* The technology stack includes [Vue 3](https://v3.cn.vuejs.org), [Element Plus](https://element-plus.org/zh-CN), and [Vite](https://cn.vitejs.dev). The project version [RuoYi-Vue3](https://github.com/CodeKungfu/ruoyi-vue3) is kept in sync with updates.
+* The technology stack includes [Vue 3](https://v3.cn.vuejs.org), [Element Plus](https://element-plus.org/zh-CN), and [Vite](https://cn.vitejs.dev).
 
 ## Program Execution
 
 ```bash
 # Clone the project
-git clone https://github.com/CodeKungfu/nest-ruoyi-prisma.git
+git clone https://github.com/CodeKungfu/lumi-cms.git
 
 # Enter the project directory
-cd nest-ruoyi-prisma
+cd lumi-cms
 
 # Install the ry_20231130.sql file located in the deploy directory into your specified MySQL database
 

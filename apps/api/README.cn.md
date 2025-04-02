@@ -1,10 +1,10 @@
-<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">RuoYi v0.1.0</h1>
+<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">LumiCMS v0.1.0</h1>
 <h4 align="center">基于Nestjs+Vue3前后端分离的Nodejs快速开发框架（WIP）</h4>
 <p align="center">
-	<a href="https://github.com/CodeKungfu/ruoyi-vue3/blob/master/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg"></a>
+	<a href="https://github.com/CodeKungfu/lumi-cms/blob/master/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg"></a>
 </p>
 
-[English](https://github.com/CodeKungfu/nest-ruoyi-prisma/blob/main/README.md) | 简体中文
+[English](https://github.com/CodeKungfu/lumi-cms/blob/main/README.md) | 简体中文
 
 # 用nodejs（nestjs） 重写若依cms
 
@@ -16,18 +16,18 @@
 
 Java版若依是一套流行的快速开发平台, 但是对于不熟悉或不擅长Java但是擅长Nodejs或前端的开发人员来，本项目可以作为一个学习和参考。
 
-* 采用前后端分离的模式，前端(基于 [RuoYi-Vue](https://github.com/CodeKungfu/ruoyi-vue3))。
+* 采用前后端分离的模式，前端(基于 [Vue](https://github.com/CodeKungfu/lumi-cms))。
 * 后端采用Nestjs(nodejs) + prisma + mysql + redis。
-* 提供了技术栈（[Vue3](https://v3.cn.vuejs.org) [Element Plus](https://element-plus.org/zh-CN) [Vite](https://cn.vitejs.dev)）版本[RuoYi-Vue3](https://github.com/CodeKungfu/ruoyi-vue3)，保持同步更新。
+* 提供了技术栈（[Vue3](https://v3.cn.vuejs.org) [Element Plus](https://element-plus.org/zh-CN) [Vite]。
 
 ## 程序运行
 
 ```bash
 # 克隆项目
-git clone https://github.com/CodeKungfu/nest-ruoyi-prisma.git
+git clone https://github.com/CodeKungfu/lumi-cms.git
 
 # 进入项目目录
-cd nest-ruoyi-prisma
+cd lumi-cms
 
 # 把 deploy目录的ry_20231130.sql 安装到你指定的mysql 数据库
 

@@ -2,7 +2,7 @@
   "name": "api",
   "private": true,
   "version": "1.0.0",
-  "description": "Nest Ruoyi Prisma repository",
+  "description": "Nest Prisma repository",
   "license": "MIT",
   "scripts": {
     "build": "cross-env NODE_ENV=production nest build",

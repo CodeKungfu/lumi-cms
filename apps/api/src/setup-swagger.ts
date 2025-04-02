@@ -18,7 +18,7 @@ export function setupSwagger(app: INestApplication): void {
   const swaggerConfig = new DocumentBuilder()
     .setTitle(configService.get<string>('swagger.title'))
     .setDescription(configService.get<string>('swagger.desc'))
-    .setLicense('MIT', 'https://github.com/CodeKungfu/nest-ruoyi-prisma')
+    .setLicense('MIT', 'https://github.com/CodeKungfu/lumi-cms')
     // JWT鉴权
     .addSecurity(ADMIN_PREFIX, {
       description: '后台管理接口授权',

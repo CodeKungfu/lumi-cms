@@ -1,8 +1,8 @@
 {
-  "name": "nest-ruoyi-prisma-monorepo",
+  "name": "lumi-cms-monorepo",
   "private": true,
   "version": "1.0.0",
-  "description": "Nest Ruoyi Prisma Monorepo",
+  "description": "Nest Prisma Monorepo",
   "engines": {
     "node": ">=22.0.0",
     "pnpm": ">=8.0.0"
