@@ -1,8 +1,8 @@
 {
   "name": "web",
   "version": "3.8.6",
-  "description": "若依管理系统",
-  "author": "若依",
+  "description": "Lumi管理系统",
+  "author": "Lumi",
   "license": "MIT",
   "scripts": {
     "dev": "vite",
