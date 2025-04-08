@@ -10,6 +10,7 @@ import { ADMIN_PREFIX } from '../../admin.constants';
 import { IAdminUser } from '../../admin.interface';
 import { AdminUser } from '../../core/decorators/admin-user.decorator';
 import { LogDisabled } from '../../core/decorators/log-disabled.decorator';
+import { RequiresPermissions } from 'src/common/decorators';
 import { OnlineUserInfo } from './online.class';
 import { KickDto } from './online.dto';
 import { SysOnlineService } from './online.service';
@@ -22,13 +23,14 @@ export class SysOnlineController {
 
   @ApiOperation({ summary: '查询当前在线用户' })
   @ApiOkResponse({ type: [OnlineUserInfo] })
-  @LogDisabled()
+  @RequiresPermissions('monitor:online:list')
   @Get('list')
   async list(@AdminUser() user: IAdminUser): Promise<OnlineUserInfo[]> {
     return await this.onlineService.listOnlineUser(user.uid);
   }
 
   @ApiOperation({ summary: '下线指定在线用户' })
+  @RequiresPermissions('monitor:online:forceLogout')
   @Post('kick')
   async kick(
     @Body() dto: KickDto,

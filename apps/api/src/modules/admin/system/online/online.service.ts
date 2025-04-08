@@ -1,87 +1,94 @@
 import { Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { ApiException } from 'src/common/exceptions/api.exception';
-import { AdminWSService } from 'src/modules/ws/admin-ws.service';
-import { AdminWSGateway } from 'src/modules/ws/admin-ws.gateway';
-import { EVENT_KICK } from 'src/modules/ws/ws.event';
-import { UAParser } from 'ua-parser-js';
-import { SysUserService } from '../user/user.service';
+import { RedisService } from 'src/shared/services/redis.service';
 import { OnlineUserInfo } from './online.class';
 import { prisma } from 'src/prisma';
+import { ApiException } from 'src/common/exceptions/api.exception';
+import { UAParser } from 'ua-parser-js';
+import { SysUserService } from '../user/user.service';
 
 @Injectable()
 export class SysOnlineService {
   constructor(
+    private redisService: RedisService,
     private userService: SysUserService,
-    private adminWsGateWay: AdminWSGateway,
-    private adminWSService: AdminWSService,
-    private jwtService: JwtService,
   ) {}
 
   /**
-   * 罗列在线用户列表
+   * 获取在线用户列表
    */
   async listOnlineUser(currentUid: number): Promise<OnlineUserInfo[]> {
-    const onlineSockets = await this.adminWSService.getOnlineSockets();
-    if (!onlineSockets || onlineSockets.length <= 0) {
+    // 从Redis获取所有在线token
+    const tokens = await this.redisService.getRedis().keys('admin:token:*');
+    if (!tokens || tokens.length === 0) {
       return [];
     }
-    const onlineIds = onlineSockets.map((socket) => {
-      const token = socket.handshake.query?.token as string;
-      return this.jwtService.verify(token).uid;
-    });
-    return await this.findLastLoginInfoList(onlineIds, currentUid);
+
+    // 获取用户ID列表
+    const userIds = tokens.map(key => parseInt(key.split(':')[2]));
+    
+    // 获取最近登录信息
+    return this.findLastLoginInfoList(userIds, currentUid);
   }
 
   /**
-   * 下线当前用户
+   * 强制下线用户
    */
   async kickUser(uid: number, currentUid: number): Promise<void> {
     const rootUserId = await this.userService.findRootUserId();
-    const currentUserInfo = await this.userService.getAccountInfo(currentUid);
     if (uid === Number(rootUserId)) {
       throw new ApiException(10013);
     }
-    // reset redis keys
-    await this.userService.forbidden(uid);
-    // socket emit
-    const socket = await this.adminWSService.findSocketIdByUid(uid);
-    if (socket) {
-      // socket emit event
-      this.adminWsGateWay.socketServer
-        .to(socket.id)
-        .emit(EVENT_KICK, { operater: currentUserInfo.name });
-      // close socket
-      socket.disconnect();
-    }
+
+    // 清除用户Token
+    await this.redisService.getRedis().del(`admin:token:${uid}`);
+    // 清除用户权限缓存
+    await this.redisService.getRedis().del(`admin:perms:${uid}`);
+    // 更新密码版本，使之前的token失效
+    await this.userService.upgradePasswordV(uid);
   }
 
   /**
-   * 根据用户id列表查找最近登录信息和用户信息
+   * 获取用户最近登录信息
    */
-  async findLastLoginInfoList(
+  private async findLastLoginInfoList(
     ids: number[],
     currentUid: number,
   ): Promise<OnlineUserInfo[]> {
     const rootUserId = await this.userService.findRootUserId();
-    const result: any =
-      await prisma.$queryRaw`SELECT sys_logininfor.created_at, sys_logininfor.ip, sys_logininfor.ua, sys_user.id, sys_user.username, sys_user.name
-    FROM sys_logininfor 
-    INNER JOIN sys_user ON sys_logininfor.user_id = sys_user.id 
-    WHERE sys_logininfor.created_at IN (SELECT MAX(created_at) as createdAt FROM sys_logininfor GROUP BY user_id)
-      AND sys_user.id IN (${ids.join(',')})`;
+    const result: any = await prisma.$queryRaw`
+      SELECT 
+        sys_logininfor.info_id as sessionId,
+        sys_logininfor.login_time as loginTime, 
+        sys_logininfor.ipaddr as ip, 
+        sys_logininfor.browser,
+        sys_logininfor.os,
+        sys_logininfor.login_location as loginLocation,
+        sys_user.user_id as id,
+        sys_user.user_name as userName,
+        sys_user.nick_name as name,
+        sys_dept.dept_name as deptName
+      FROM sys_logininfor 
+      INNER JOIN sys_user ON sys_logininfor.user_name = sys_user.user_name 
+      LEFT JOIN sys_dept ON sys_user.dept_id = sys_dept.dept_id
+      WHERE sys_logininfor.login_time IN (
+        SELECT MAX(login_time) FROM sys_logininfor GROUP BY user_name
+      )
+      AND sys_user.user_id IN (${ids.join(',')})
+    `;
+
     if (result) {
-      const parser = new UAParser();
       return result.map((e) => {
-        const u = parser.setUA(e.ua).getResult();
         return {
+          tokenId: e.sessionId,  // 添加会话编号
           id: e.id,
-          ip: e.ip,
-          username: `${e.name}（${e.username}）`,
+          ipaddr: e.ip,
+          userName: `${e.name}（${e.userName}）`,
+          deptName: e.deptName || '-',
+          loginLocation: e.loginLocation || '-',
           isCurrent: currentUid === e.id,
-          time: e.created_at,
-          os: `${u.os.name} ${u.os.version}`,
-          browser: `${u.browser.name} ${u.browser.version}`,
+          loginTime: e.loginTime,
+          os: e.os || '-',
+          browser: e.browser || '-',
           disable: currentUid === e.id || e.id === rootUserId,
         };
       });

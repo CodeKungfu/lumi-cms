@@ -11,6 +11,7 @@ import * as SysMenuService from '../system/menu/service';
 import { ImageCaptchaDto } from './login.dto';
 import { ImageCaptcha, PermMenuInfo } from './login.class';
 import { prisma } from 'src/prisma';
+import { UAParser } from 'ua-parser-js';
 
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -174,17 +175,21 @@ export class LoginService {
     }
     const perms = await this.menuService.getPerms(Number(user.userId));
     // TODO 系统管理员开放多点登录
+    // 修改管理员登录部分的日志记录
     if (Number(user.userId) === 1) {
       const oldToken = await this.getRedisTokenById(Number(user.userId));
       if (oldToken) {
-        // this.logService.saveLoginLog(Number(user.userId), ip, ua);
+        const parser = new UAParser(ua);
         await prisma.sys_logininfor.create({
           data: {
             ipaddr: ip,
             userName: user.userName,
             status: '0',
             msg: '登录成功',
-            accessTime: new Date(),
+            loginTime: new Date(),
+            browser: parser.getBrowser().name || '',
+            os: parser.getOS().name || '',
+            loginLocation: '',
           },
         });
         return oldToken;
@@ -210,13 +215,17 @@ export class LoginService {
       .getRedis()
       .set(`admin:perms:${user.userId}`, JSON.stringify(perms));
     // await this.logService.saveLoginLog(Number(user.userId), ip, ua);
+    // 修改这两处 create 调用
     await prisma.sys_logininfor.create({
       data: {
         ipaddr: ip,
         userName: user.userName,
         status: '0',
         msg: '登录成功',
-        accessTime: new Date(),
+        loginTime: new Date(),
+        browser: new UAParser(ua).getBrowser().name || '',
+        os: new UAParser(ua).getOS().name || '',
+        loginLocation: '',  // 如果需要获取地理位置，可以通过 IP 查询服务获取
       },
     });
     return jwtSign;

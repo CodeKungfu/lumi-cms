@@ -12,7 +12,8 @@
     "build": "turbo build",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "db:gen": "pnpm --filter @repo/database db:gen"
+    "db:gen": "pnpm --filter @repo/database db:gen",
+    "db:pull": "pnpm --filter @repo/database db:pull"
   },
   "devDependencies": {
     "@types/lodash": "^4.17.16",

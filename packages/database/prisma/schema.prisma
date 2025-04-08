@@ -155,14 +155,17 @@ model sys_job_log {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model sys_logininfor {
-  infoId     BigInt    @id @default(autoincrement()) @map("info_id")
-  userName   String?   @default("") @map("user_name") @db.VarChar(50)
-  ipaddr     String?   @default("") @db.VarChar(128)
-  status     String?   @default("0") @db.Char(1)
-  msg        String?   @default("") @db.VarChar(255)
-  accessTime DateTime? @map("access_time") @db.DateTime(0)
+  infoId         BigInt    @id @default(autoincrement()) @map("info_id")
+  userName       String?   @default("") @map("user_name") @db.VarChar(50)
+  ipaddr         String?   @default("") @db.VarChar(128)
+  loginLocation  String?   @map("login_location") @default("") @db.VarChar(255)
+  browser        String?   @default("") @db.VarChar(50)
+  os             String?   @default("") @db.VarChar(50)
+  status         String?   @default("0") @db.Char(1)
+  msg            String?   @default("") @db.VarChar(255)
+  loginTime     DateTime? @map("login_time") @db.DateTime(0)
 
-  @@index([accessTime], map: "idx_sys_logininfor_lt")
+  @@index([loginTime], map: "idx_sys_logininfor_lt")
   @@index([status], map: "idx_sys_logininfor_s")
 }
 
@@ -313,4 +316,160 @@ model sys_user_role {
   roleId BigInt @map("role_id")
 
   @@id([userId, roleId])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model QRTZ_BLOB_TRIGGERS {
+  sched_name    String        @db.VarChar(120)
+  trigger_name  String        @db.VarChar(200)
+  trigger_group String        @db.VarChar(200)
+  blob_data     Bytes?        @db.Blob
+  QRTZ_TRIGGERS QRTZ_TRIGGERS @relation(fields: [sched_name, trigger_name, trigger_group], references: [sched_name, trigger_name, trigger_group], onDelete: NoAction, onUpdate: NoAction, map: "qrtz_blob_triggers_ibfk_1")
+
+  @@id([sched_name, trigger_name, trigger_group])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model QRTZ_CALENDARS {
+  sched_name    String @db.VarChar(120)
+  calendar_name String @db.VarChar(200)
+  calendar      Bytes  @db.Blob
+
+  @@id([sched_name, calendar_name])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model QRTZ_CRON_TRIGGERS {
+  sched_name      String        @db.VarChar(120)
+  trigger_name    String        @db.VarChar(200)
+  trigger_group   String        @db.VarChar(200)
+  cron_expression String        @db.VarChar(200)
+  time_zone_id    String?       @db.VarChar(80)
+  QRTZ_TRIGGERS   QRTZ_TRIGGERS @relation(fields: [sched_name, trigger_name, trigger_group], references: [sched_name, trigger_name, trigger_group], onDelete: NoAction, onUpdate: NoAction, map: "qrtz_cron_triggers_ibfk_1")
+
+  @@id([sched_name, trigger_name, trigger_group])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model QRTZ_FIRED_TRIGGERS {
+  sched_name        String  @db.VarChar(120)
+  entry_id          String  @db.VarChar(95)
+  trigger_name      String  @db.VarChar(200)
+  trigger_group     String  @db.VarChar(200)
+  instance_name     String  @db.VarChar(200)
+  fired_time        BigInt
+  sched_time        BigInt
+  priority          Int
+  state             String  @db.VarChar(16)
+  job_name          String? @db.VarChar(200)
+  job_group         String? @db.VarChar(200)
+  is_nonconcurrent  String? @db.VarChar(1)
+  requests_recovery String? @db.VarChar(1)
+
+  @@id([sched_name, entry_id])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model QRTZ_JOB_DETAILS {
+  sched_name        String          @db.VarChar(120)
+  job_name          String          @db.VarChar(200)
+  job_group         String          @db.VarChar(200)
+  description       String?         @db.VarChar(250)
+  job_class_name    String          @db.VarChar(250)
+  is_durable        String          @db.VarChar(1)
+  is_nonconcurrent  String          @db.VarChar(1)
+  is_update_data    String          @db.VarChar(1)
+  requests_recovery String          @db.VarChar(1)
+  job_data          Bytes?          @db.Blob
+  QRTZ_TRIGGERS     QRTZ_TRIGGERS[]
+
+  @@id([sched_name, job_name, job_group])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model QRTZ_LOCKS {
+  sched_name String @db.VarChar(120)
+  lock_name  String @db.VarChar(40)
+
+  @@id([sched_name, lock_name])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model QRTZ_PAUSED_TRIGGER_GRPS {
+  sched_name    String @db.VarChar(120)
+  trigger_group String @db.VarChar(200)
+
+  @@id([sched_name, trigger_group])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model QRTZ_SCHEDULER_STATE {
+  sched_name        String @db.VarChar(120)
+  instance_name     String @db.VarChar(200)
+  last_checkin_time BigInt
+  checkin_interval  BigInt
+
+  @@id([sched_name, instance_name])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model QRTZ_SIMPLE_TRIGGERS {
+  sched_name      String        @db.VarChar(120)
+  trigger_name    String        @db.VarChar(200)
+  trigger_group   String        @db.VarChar(200)
+  repeat_count    BigInt
+  repeat_interval BigInt
+  times_triggered BigInt
+  QRTZ_TRIGGERS   QRTZ_TRIGGERS @relation(fields: [sched_name, trigger_name, trigger_group], references: [sched_name, trigger_name, trigger_group], onDelete: NoAction, onUpdate: NoAction, map: "qrtz_simple_triggers_ibfk_1")
+
+  @@id([sched_name, trigger_name, trigger_group])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model QRTZ_SIMPROP_TRIGGERS {
+  sched_name    String        @db.VarChar(120)
+  trigger_name  String        @db.VarChar(200)
+  trigger_group String        @db.VarChar(200)
+  str_prop_1    String?       @db.VarChar(512)
+  str_prop_2    String?       @db.VarChar(512)
+  str_prop_3    String?       @db.VarChar(512)
+  int_prop_1    Int?
+  int_prop_2    Int?
+  long_prop_1   BigInt?
+  long_prop_2   BigInt?
+  dec_prop_1    Decimal?      @db.Decimal(13, 4)
+  dec_prop_2    Decimal?      @db.Decimal(13, 4)
+  bool_prop_1   String?       @db.VarChar(1)
+  bool_prop_2   String?       @db.VarChar(1)
+  QRTZ_TRIGGERS QRTZ_TRIGGERS @relation(fields: [sched_name, trigger_name, trigger_group], references: [sched_name, trigger_name, trigger_group], onDelete: NoAction, onUpdate: NoAction, map: "qrtz_simprop_triggers_ibfk_1")
+
+  @@id([sched_name, trigger_name, trigger_group])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model QRTZ_TRIGGERS {
+  sched_name            String                 @db.VarChar(120)
+  trigger_name          String                 @db.VarChar(200)
+  trigger_group         String                 @db.VarChar(200)
+  job_name              String                 @db.VarChar(200)
+  job_group             String                 @db.VarChar(200)
+  description           String?                @db.VarChar(250)
+  next_fire_time        BigInt?
+  prev_fire_time        BigInt?
+  priority              Int?
+  trigger_state         String                 @db.VarChar(16)
+  trigger_type          String                 @db.VarChar(8)
+  start_time            BigInt
+  end_time              BigInt?
+  calendar_name         String?                @db.VarChar(200)
+  misfire_instr         Int?                   @db.SmallInt
+  job_data              Bytes?                 @db.Blob
+  QRTZ_BLOB_TRIGGERS    QRTZ_BLOB_TRIGGERS?
+  QRTZ_CRON_TRIGGERS    QRTZ_CRON_TRIGGERS?
+  QRTZ_SIMPLE_TRIGGERS  QRTZ_SIMPLE_TRIGGERS?
+  QRTZ_SIMPROP_TRIGGERS QRTZ_SIMPROP_TRIGGERS?
+  QRTZ_JOB_DETAILS      QRTZ_JOB_DETAILS       @relation(fields: [sched_name, job_name, job_group], references: [sched_name, job_name, job_group], onDelete: NoAction, onUpdate: NoAction, map: "qrtz_triggers_ibfk_1")
+
+  @@id([sched_name, trigger_name, trigger_group])
+  @@index([sched_name, job_name, job_group], map: "sched_name")
 }
