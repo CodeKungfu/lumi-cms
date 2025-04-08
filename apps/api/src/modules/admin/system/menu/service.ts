@@ -5,7 +5,6 @@ import { concat, difference, filter, includes, isEmpty, map, findIndex, omit } f
 import { prisma } from 'src/prisma';
 import { tableType, tableName } from './config';
 import { RedisService } from 'src/shared/services/redis.service';
-import { AdminWSService } from 'src/modules/ws/admin-ws.service';
 import { SysRoleService } from '../role/role.service';
 
 const transData = (jsonArr) => {
@@ -52,7 +51,6 @@ export class Service {
     private redisService: RedisService,
     @Inject(ROOT_ROLE_ID) private rootRoleId: number,
     private roleService: SysRoleService,
-    private adminWSService: AdminWSService,
   ) {}
 
   /**
@@ -156,7 +154,6 @@ export class Service {
         menuId: Number(id),
       },
     });
-    this.adminWSService.noticeUserToUpdateMenusByRoleIds([this.rootRoleId]);
     return resultInfo;
   }
 
@@ -171,7 +168,6 @@ export class Service {
         menuId: body.menuId,
       },
     });
-    this.adminWSService.noticeUserToUpdateMenusByRoleIds([this.rootRoleId]);
     return resultInfo;
   }
 
@@ -182,7 +178,6 @@ export class Service {
     const resultInfo: tableType = await prisma[tableName].create({
       data: body,
     });
-    this.adminWSService.noticeUserToUpdateMenusByRoleIds([this.rootRoleId]);
     return resultInfo;
   }
 

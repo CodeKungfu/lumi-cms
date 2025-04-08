@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { difference, filter, includes, isEmpty, map } from 'lodash';
 import { ROOT_ROLE_ID } from 'src/modules/admin/admin.constants';
-import { AdminWSService } from 'src/modules/ws/admin-ws.service';
 import { ExcelService } from 'src/shared/services/excel.service';
 import { CreateRoleDto, UpdateRoleDto } from './role.dto';
 import { CreatedRoleId, RoleInfo } from './role.class';
@@ -50,7 +49,6 @@ const transData = (jsonArr) => {
 export class SysRoleService {
   constructor(
     @Inject(ROOT_ROLE_ID) private rootRoleId: number,
-    private adminWSService: AdminWSService,
     private excelService: ExcelService,
   ) {}
 
@@ -308,9 +306,9 @@ export class SysRoleService {
       }
     });
     // 如果勾选了新的菜单或取消勾选了原有的菜单，则通知前端重新获取权限菜单
-    if ([insertMenusRowIds, deleteMenusRowIds].some((n) => n.length)) {
-      this.adminWSService.noticeUserToUpdateMenusByRoleIds([roleId]);
-    }
+    // if ([insertMenusRowIds, deleteMenusRowIds].some((n) => n.length)) {
+    //   this.adminWSService.noticeUserToUpdateMenusByRoleIds([roleId]);
+    // }
 
     return role;
   }
@@ -373,9 +371,9 @@ export class SysRoleService {
       }
     });
     // 如果勾选了新的菜单或取消勾选了原有的菜单，则通知前端重新获取权限菜单
-    if ([insertMenusRowIds, deleteMenusRowIds].some((n) => n.length)) {
-      this.adminWSService.noticeUserToUpdateMenusByRoleIds([roleId]);
-    }
+    // if ([insertMenusRowIds, deleteMenusRowIds].some((n) => n.length)) {
+    //   this.adminWSService.noticeUserToUpdateMenusByRoleIds([roleId]);
+    // }
 
     return role;
   }
