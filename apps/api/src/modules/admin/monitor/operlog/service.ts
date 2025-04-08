@@ -64,7 +64,7 @@ export class Service {
   /**
    * 分页查询信息
    */
-  async pageDto(dto: tableQueryType): Promise<any> {
+  async pageDto(dto:  InstanceType<typeof tableQueryType>): Promise<any> {
     const { processedQuery, orderBy } = processPageQuery(tableName, dto);
     const result: any = await prisma[tableName].findMany({
       skip: (Number(dto.pageNum) - 1) * Number(dto.pageSize),

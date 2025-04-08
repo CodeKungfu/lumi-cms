@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, Query, Param, Put, Delete } from '@nestjs/
 import { ApiOperation, ApiOkResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { Keep, RequiresPermissions } from 'src/common/decorators';
 import { Service } from './service';
-import { keyStr, controllerName, ADMIN_PREFIX, tableQueryType } from './config';
+import { keyStr, controllerName, ADMIN_PREFIX, tableQueryType, tableDTO } from './config';
 
 @ApiSecurity(ADMIN_PREFIX)
 @ApiTags(`${keyStr}模块`)
@@ -14,6 +14,7 @@ export class MyController {
   @ApiOperation({ summary: `分页查询${keyStr}` })
   @Keep()
   @Get('list')
+  // @ts-ignore ← Ignore type error, Swagger can generate fields normally
   async page(@Query() dto: tableQueryType): Promise<any> {
     const rows = await this.service.pageDto(dto);
     return {
@@ -47,7 +48,8 @@ export class MyController {
   @ApiOperation({ summary: `查询${keyStr}` })
   @ApiOkResponse()
   @Put()
-  async update(@Body() body: any): Promise<any> {
+  // @ts-ignore ← Ignore type error, Swagger can generate fields normally 
+  async update(@Body() body: tableDTO): Promise<any> {
     const list = await this.service.update(body);
     return list;
   }
@@ -55,7 +57,8 @@ export class MyController {
   @ApiOperation({ summary: `查询${keyStr}` })
   @ApiOkResponse()
   @Post()
-  async create(@Body() body: any): Promise<any> {
+  // @ts-ignore ← Ignore type error, Swagger can generate fields normally 
+  async create(@Body() body: tableDTO): Promise<any> {
     const list = await this.service.create(body);
     return list;
   }

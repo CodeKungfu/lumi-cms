@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ApiException } from 'src/common/exceptions/api.exception';
 import { difference, filter, includes, isEmpty, map, findIndex, omit } from 'lodash';
 import { prisma } from 'src/prisma';
-import { tableType, tableName, tableQueryType } from './config';
+import { tableType, tableName, tableQueryDTO } from './config';
 import { processPageQuery } from 'src/common/utils/query-helper';
 
 @Injectable()
@@ -71,7 +71,7 @@ export class Service {
   /**
    * 分页查询信息
    */
-  async pageDto(dto: tableQueryType): Promise<any> {
+  async pageDto(dto: InstanceType<typeof tableQueryDTO>): Promise<any> {
     const { processedQuery, orderBy } = processPageQuery(tableName, dto);
     const result: any = await prisma[tableName].findMany({
       skip: (Number(dto.pageNum) - 1) * Number(dto.pageSize),
