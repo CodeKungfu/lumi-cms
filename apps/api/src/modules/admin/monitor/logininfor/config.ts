@@ -1,6 +1,6 @@
 import { sys_logininfor } from '@repo/database';
 import { ADMIN_PREFIX } from 'src/modules/admin/admin.constants';
-import { generatePageDto, generateDto } from 'src/common/utils/dto-generator';
+import { generatePageDto, generateDto, InfoDto } from 'src/common/utils/dto-generator';
 export { ADMIN_PREFIX };
 export const keyStr = '登录日志';
 export const tableName = 'sys_logininfor';
@@ -8,3 +8,4 @@ export const controllerName = 'logininfor';
 export type tableType = sys_logininfor;
 export const tableQueryDTO = generatePageDto(tableName);
 export const tableDTO = generateDto(tableName);
+export { InfoDto };

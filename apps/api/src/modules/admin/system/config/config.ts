@@ -5,3 +5,7 @@ export const tableName = 'sys_config';
 export const controllerName = 'config';
 export type tableType = sys_config;
 export { ADMIN_PREFIX };
+import { generatePageDto, generateDto, InfoDto } from 'src/common/utils/dto-generator';
+export const tableQueryDTO = generatePageDto(tableName);
+export const tableDTO = generateDto(tableName);
+export { InfoDto };

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsInt, Min, IsOptional, IsString } from 'class-validator';
+import { IsInt, Min, IsOptional, IsString, IsNumber } from 'class-validator';
 import { prisma } from 'src/prisma';
 
 export function generatePageDto(tableName: string) {
@@ -92,4 +92,12 @@ export function generateDto(tableName: string) {
   }
 
   return DynamicDto;
+}
+
+export class InfoDto {
+  @ApiProperty({
+    description: 'id',
+  })
+  @IsNumber()
+  id: number;
 }

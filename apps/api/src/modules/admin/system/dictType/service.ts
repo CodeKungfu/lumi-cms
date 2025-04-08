@@ -24,7 +24,7 @@ export class Service {
   /**
    * 根据获取信息
    */
-  async info(id: string): Promise<tableType> {
+  async info(id: number): Promise<tableType> {
     const resultInfo: tableType = await prisma[tableName].findFirst({
       where: {
         dictId: Number(id),

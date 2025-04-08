@@ -4,6 +4,7 @@ import { Keep } from 'src/common/decorators/keep.decorator';
 import { ADMIN_PREFIX } from 'src/modules/admin/admin.constants';
 import { Service } from './service';
 import { keyStr, controllerName } from './config';
+import { tableQueryDTO, tableDTO, InfoDto } from './config';
 
 @ApiSecurity(ADMIN_PREFIX)
 @ApiTags(`${keyStr}模块`)
@@ -14,7 +15,8 @@ export class MyController {
   @ApiOperation({ summary: `分页查询${keyStr}` })
   @Keep()
   @Get('list')
-  async page(@Query() dto: any): Promise<any> {
+  // @ts-ignore ← Ignore type error, Swagger can generate fields normally
+  async page(@Query() dto: tableQueryDTO): Promise<any> {
     const rows = await this.service.pageDto(dto);
     return {
       rows: rows.result,
@@ -30,7 +32,7 @@ export class MyController {
   @ApiOperation({ summary: `查询${keyStr}` })
   @ApiOkResponse()
   @Get(':id')
-  async info1(@Param() params: any): Promise<any> {
+  async info1(@Param() params: InfoDto): Promise<any> {
     const list = await this.service.info(params.id);
     return list;
   }
@@ -38,7 +40,7 @@ export class MyController {
   @ApiOperation({ summary: `查询${keyStr}` })
   @ApiOkResponse()
   @Delete(':id')
-  async delete(@Param() params: any): Promise<any> {
+  async delete(@Param() params: InfoDto): Promise<any> {
     const list = await this.service.delete(params.id);
     return list;
   }
@@ -46,7 +48,8 @@ export class MyController {
   @ApiOperation({ summary: `查询${keyStr}` })
   @ApiOkResponse()
   @Put()
-  async update(@Body() body: any): Promise<any> {
+  // @ts-ignore ← Ignore type error, Swagger can generate fields normally
+  async update(@Body() body: tableDTO): Promise<any> {
     const list = await this.service.update(body);
     return list;
   }
@@ -54,7 +57,8 @@ export class MyController {
   @ApiOperation({ summary: `查询${keyStr}` })
   @ApiOkResponse()
   @Post()
-  async create(@Body() body: any): Promise<any> {
+  // @ts-ignore ← Ignore type error, Swagger can generate fields normally
+  async create(@Body() body: tableDTO): Promise<any> {
     const list = await this.service.create(body);
     return list;
   }
