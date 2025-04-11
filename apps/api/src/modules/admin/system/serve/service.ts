@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import * as si from 'systeminformation';
-import { Disk, ServeStatInfo } from './serve.class';
+import { Disk, ServeStatInfo } from 'src/common/dto';
 
 @Injectable()
-export class SysServeService {
+export class Service {
   /**
    * 获取服务器信息
    */

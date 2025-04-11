@@ -10,9 +10,11 @@ import { SysUserService } from './user/user.service';
 import { SysTaskController } from './task/task.controller';
 import { SysTaskService } from './task/task.service';
 import { SysTaskConsumer } from './task/task.processor';
-import { SysServeController } from './serve/serve.controller';
-import { SysServeService } from './serve/serve.service';
+// import { SysServeController } from './serve/serve.controller';
+// import { SysServeService } from './serve/serve.service';
 
+import * as serveController from './serve/controller';
+import * as serveService from './serve/service';
 
 import  * as roleController from './role/controller';
 import * as roleService from './role/service';
@@ -66,7 +68,7 @@ import * as menuService from './menu/service';
     SysLogController,
     SysTaskController,
     onlineController.MyController,
-    SysServeController,
+    serveController.MyController,
     dictController.MyController,
     dictDataController.MyController,
     configController.MyController,
@@ -83,7 +85,7 @@ import * as menuService from './menu/service';
     SysTaskService,
     SysTaskConsumer,
     onlineService.Service,
-    SysServeService,
+    serveService.Service,
     dictService.Service,
     dictDataService.Service,
     configService.Service,
