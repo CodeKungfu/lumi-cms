@@ -1,4 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsInt } from 'class-validator';
+
+export class KickDto {
+  @ApiProperty({ description: '需要下线的角色ID' })
+  @IsInt()
+  id: number;
+}
 
 export class OnlineUserInfo {
   @ApiProperty({ description: '最近的一条登录日志ID' })

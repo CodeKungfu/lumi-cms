@@ -9,16 +9,15 @@ import { ApiException } from 'src/common/exceptions/api.exception';
 import { ADMIN_PREFIX } from '../../admin.constants';
 import { IAdminUser } from '../../admin.interface';
 import { AdminUser } from '../../core/decorators/admin-user.decorator';
-import { LogDisabled } from '../../core/decorators/log-disabled.decorator';
 import { RequiresPermissions } from 'src/common/decorators';
-import { OnlineUserInfo } from './online.class';
-import { KickDto } from './online.dto';
-import { SysOnlineService } from './online.service';
+import { OnlineUserInfo } from 'src/common/dto';
+import { KickDto } from 'src/common/dto';
+import { Service as SysOnlineService } from './service';
 
 @ApiSecurity(ADMIN_PREFIX)
 @ApiTags('在线用户模块')
 @Controller('online')
-export class SysOnlineController {
+export class MyController {
   constructor(private onlineService: SysOnlineService) {}
 
   @ApiOperation({ summary: '查询当前在线用户' })

@@ -12,10 +12,11 @@ import { SysUserService } from './user/user.service';
 import { SysTaskController } from './task/task.controller';
 import { SysTaskService } from './task/task.service';
 import { SysTaskConsumer } from './task/task.processor';
-import { SysOnlineController } from './online/online.controller';
-import { SysOnlineService } from './online/online.service';
 import { SysServeController } from './serve/serve.controller';
 import { SysServeService } from './serve/serve.service';
+
+import * as onlineController from './online/controller';
+import * as onlineService from './online/service';
 
 import * as dictController from './dictType/controller';
 import * as dictService from './dictType/service';
@@ -62,7 +63,7 @@ import * as menuService from './menu/service';
     deptController.MyController,
     SysLogController,
     SysTaskController,
-    SysOnlineController,
+    onlineController.MyController,
     SysServeController,
     dictController.MyController,
     dictDataController.MyController,
@@ -79,7 +80,7 @@ import * as menuService from './menu/service';
     SysLogService,
     SysTaskService,
     SysTaskConsumer,
-    SysOnlineService,
+    onlineService.Service,
     SysServeService,
     dictService.Service,
     dictDataService.Service,
@@ -87,6 +88,6 @@ import * as menuService from './menu/service';
     noticeService.Service,
     postService.Service,
   ],
-  exports: [ROOT_ROLE_ID, SysUserService, menuService.Service, SysLogService, SysOnlineService],
+  exports: [ROOT_ROLE_ID, SysUserService, menuService.Service, SysLogService, onlineService.Service],
 })
 export class SystemModule {}

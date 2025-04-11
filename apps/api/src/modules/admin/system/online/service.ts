@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { RedisService } from 'src/shared/services/redis.service';
-import { OnlineUserInfo } from './online.class';
+import { OnlineUserInfo } from 'src/common/dto';
 import { prisma } from 'src/prisma';
 import { ApiException } from 'src/common/exceptions/api.exception';
 import { UAParser } from 'ua-parser-js';
 import { SysUserService } from '../user/user.service';
 
 @Injectable()
-export class SysOnlineService {
+export class Service {
   constructor(
     private redisService: RedisService,
     private userService: SysUserService,
