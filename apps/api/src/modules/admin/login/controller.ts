@@ -2,15 +2,15 @@ import { Body, Controller, Get, Headers, Post, Query, Req } from '@nestjs/common
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { FastifyRequest } from 'fastify';
 import { UtilService } from 'src/shared/services/util.service';
+import { ImageCaptcha, LoginToken, ImageCaptchaDto, LoginInfoDto } from 'src/common/dto';
+
 import { Authorize } from '../core/decorators/authorize.decorator';
 import { LogDisabled } from '../core/decorators/log-disabled.decorator';
-import { ImageCaptchaDto, LoginInfoDto } from './login.dto';
-import { ImageCaptcha, LoginToken } from './login.class';
-import { LoginService } from './login.service';
+import { Service as LoginService } from './service';
 
 @ApiTags('登录模块')
 @Controller()
-export class LoginController {
+export class MyController {
   constructor(private loginService: LoginService, private utils: UtilService) {}
 
   @ApiOperation({

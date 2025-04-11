@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Optional } from '@nestjs/common';
 import { Type } from 'class-transformer';
 import * as parser from 'cron-parser';
 import {
@@ -24,7 +25,98 @@ import {
 } from 'class-validator';
 import { isEmpty } from 'lodash';
 
-import { sys_role_dept, sys_role_menu, sys_role } from '@repo/database';
+import { sys_role_dept, sys_role_menu, sys_role, sys_menu } from '@repo/database';
+
+export class UpdatePersonInfoDto {
+  @ApiProperty({ description: '管理员昵称', required: false })
+  @IsString()
+  @Optional()
+  nickName: string;
+
+  @ApiProperty({ description: '邮箱', required: false })
+  @IsString()
+  @Optional()
+  email: string;
+
+  @ApiProperty({ description: '手机', required: false })
+  @IsString()
+  @Optional()
+  phone: string;
+
+  @ApiProperty({ description: '备注', required: false })
+  @IsString()
+  @Optional()
+  remark: string;
+}
+
+export class ImageCaptchaDto {
+  @ApiProperty({
+    required: false,
+    default: 100,
+    description: '验证码宽度',
+  })
+  @Type(() => Number)
+  @IsInt()
+  @IsOptional()
+  readonly width: number = 100;
+
+  @ApiProperty({
+    required: false,
+    default: 50,
+    description: '验证码高度',
+  })
+  @Type(() => Number)
+  @IsInt()
+  @IsOptional()
+  readonly height: number = 50;
+}
+
+export class LoginInfoDto {
+  @ApiProperty({ description: '管理员用户名' })
+  @IsString()
+  @MinLength(1)
+  username: string;
+
+  @ApiProperty({ description: '管理员密码' })
+  @IsString()
+  @MinLength(4)
+  password: string;
+
+  @ApiProperty({ description: '验证码标识' })
+  @IsString()
+  captchaId: string;
+
+  @ApiProperty({ description: '用户输入的验证码' })
+  @IsString()
+  @MinLength(4)
+  @MaxLength(4)
+  verifyCode: string;
+}
+
+export class ImageCaptcha {
+  @ApiProperty({
+    description: 'base64格式的svg图片',
+  })
+  img: string;
+
+  @ApiProperty({
+    description: '验证码对应的唯一ID',
+  })
+  id: string;
+}
+
+export class LoginToken {
+  @ApiProperty({ description: 'JWT身份Token' })
+  token: string;
+}
+
+export class PermMenuInfo {
+  @ApiProperty({ description: '菜单列表', type: [] })
+  menus: sys_menu[];
+
+  @ApiProperty({ description: '权限列表', type: [String] })
+  perms: string[];
+}
 
 // cron 表达式验证，bull lib下引用了cron-parser
 @ValidatorConstraint({ name: 'isCronExpression', async: false })

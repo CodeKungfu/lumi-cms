@@ -6,7 +6,7 @@ import { isEmpty } from 'lodash';
 import { ApiException } from 'src/common/exceptions/api.exception';
 import { REQUIRES_PERMISSIONS_METADATA } from 'src/common/contants/decorator.contants';
 import { ADMIN_PREFIX, ADMIN_USER, PERMISSION_OPTIONAL_KEY_METADATA, AUTHORIZE_KEY_METADATA } from 'src/modules/admin/admin.constants';
-import { LoginService } from 'src/modules/admin/login/login.service';
+import { Service as LoginService } from 'src/modules/admin/login/service';
 
 /**
  * admin perm check guard

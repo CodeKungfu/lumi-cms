@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
 import { SystemModule } from '../system/system.module';
-import { LoginController } from './login.controller';
-import { LoginService } from './login.service';
+
+import * as loginController from './controller';
+import * as loginService from './service';
 
 @Module({
   imports: [SystemModule],
-  controllers: [LoginController],
-  providers: [LoginService],
-  exports: [LoginService],
+  controllers: [loginController.MyController],
+  providers: [loginService.Service],
+  exports: [loginService.Service],
 })
 export class LoginModule {}

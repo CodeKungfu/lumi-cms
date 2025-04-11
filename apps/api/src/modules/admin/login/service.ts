@@ -5,11 +5,11 @@ import * as svgCaptcha from 'svg-captcha';
 import { UtilService } from 'src/shared/services/util.service';
 import { ApiException } from 'src/common/exceptions/api.exception';
 import { RedisService } from 'src/shared/services/redis.service';
+import { ImageCaptchaDto, ImageCaptcha, PermMenuInfo } from 'src/common/dto';
+
 import { Service as SysLogService } from '../system/log/service';
 import { Service as SysUserService } from '../system/user/service';
 import * as SysMenuService from '../system/menu/service';
-import { ImageCaptchaDto } from './login.dto';
-import { ImageCaptcha, PermMenuInfo } from './login.class';
 import { prisma } from 'src/prisma';
 import { UAParser } from 'ua-parser-js';
 
@@ -104,7 +104,7 @@ const transData = (jsonArr) => {
 };
 
 @Injectable()
-export class LoginService {
+export class Service {
   constructor(
     private redisService: RedisService,
     private menuService: SysMenuService.Service,
