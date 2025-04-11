@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { SysLogService } from 'src/modules/admin/system/log/log.service';
+import { Service as SysLogService } from 'src/modules/admin/system/log/service';
 import { Mission } from '../mission.decorator';
 
 /**

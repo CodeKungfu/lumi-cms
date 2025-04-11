@@ -12,6 +12,71 @@ import {
 } from 'class-validator';
 import { sys_role_dept, sys_role_menu, sys_role } from '@repo/database';
 
+export class PageOptionsDto {
+  @ApiProperty({
+    description: '当前页包含数量',
+    required: false,
+    default: 10,
+  })
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  readonly limit: number = 10;
+
+  @ApiProperty({
+    description: '当前页包含数量',
+    required: false,
+    default: 1,
+  })
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  readonly page: number = 1;
+}
+
+export class LoginLogInfo {
+  @ApiProperty({ description: '日志编号' })
+  id: number;
+
+  @ApiProperty({ description: '登录ip' })
+  ip: string;
+
+  @ApiProperty({ description: '系统' })
+  os: string;
+
+  @ApiProperty({ description: '浏览器' })
+  browser: string;
+
+  @ApiProperty({ description: '时间' })
+  time: string;
+
+  @ApiProperty({ description: '登录用户名' })
+  username: string;
+}
+
+export class TaskLogInfo {
+  @ApiProperty({ description: '日志编号' })
+  id: number;
+
+  @ApiProperty({ description: '任务编号' })
+  taskId: number;
+
+  @ApiProperty({ description: '任务名称' })
+  name: string;
+
+  @ApiProperty({ description: '创建时间' })
+  createdAt: string;
+
+  @ApiProperty({ description: '耗时' })
+  consumeTime: number;
+
+  @ApiProperty({ description: '执行信息' })
+  detail: string;
+
+  @ApiProperty({ description: '任务执行状态' })
+  status: number;
+}
+
 export class Runtime {
   @ApiProperty({ description: '系统' })
   os?: string;

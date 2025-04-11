@@ -3,15 +3,15 @@ import { BullModule } from '@nestjs/bull';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ROOT_ROLE_ID, SYS_TASK_QUEUE_NAME, SYS_TASK_QUEUE_PREFIX } from 'src/modules/admin/admin.constants';
 import { rootRoleIdProvider } from '../core/provider/root-role-id.provider';
-import { SysLogController } from './log/log.controller';
-import { SysLogService } from './log/log.service';
+
 import { SysUserController } from './user/user.controller';
 import { SysUserService } from './user/user.service';
 import { SysTaskController } from './task/task.controller';
 import { SysTaskService } from './task/task.service';
 import { SysTaskConsumer } from './task/task.processor';
-// import { SysServeController } from './serve/serve.controller';
-// import { SysServeService } from './serve/serve.service';
+
+import * as logController from './log/controller';
+import * as logService from './log/service';
 
 import * as serveController from './serve/controller';
 import * as serveService from './serve/service';
@@ -65,7 +65,7 @@ import * as menuService from './menu/service';
     roleController.MyController,
     menuController.MyController,
     deptController.MyController,
-    SysLogController,
+    logController.MyController,
     SysTaskController,
     onlineController.MyController,
     serveController.MyController,
@@ -81,7 +81,7 @@ import * as menuService from './menu/service';
     roleService.Service,
     menuService.Service,
     deptService.Service,
-    SysLogService,
+    logService.Service,
     SysTaskService,
     SysTaskConsumer,
     onlineService.Service,
@@ -92,6 +92,6 @@ import * as menuService from './menu/service';
     noticeService.Service,
     postService.Service,
   ],
-  exports: [ROOT_ROLE_ID, SysUserService, menuService.Service, SysLogService, onlineService.Service],
+  exports: [ROOT_ROLE_ID, SysUserService, menuService.Service, logService.Service, onlineService.Service],
 })
 export class SystemModule {}

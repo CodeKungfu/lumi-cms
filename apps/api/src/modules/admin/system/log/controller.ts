@@ -1,24 +1,16 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import {
-  ApiOkResponse,
-  ApiOperation,
-  ApiSecurity,
-  ApiTags,
-} from '@nestjs/swagger';
-import {
-  ApiOkResponsePaginated,
-  PaginatedResponseDto,
-} from 'src/common/class/res.class';
+import { ApiOkResponse, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponsePaginated, PaginatedResponseDto } from 'src/common/class/res.class';
 import { PageOptionsDto } from 'src/common/dto';
+import { LoginLogInfo, TaskLogInfo } from 'src/common/dto';
 import { ADMIN_PREFIX } from '../../admin.constants';
 import { LogDisabled } from '../../core/decorators/log-disabled.decorator';
-import { LoginLogInfo, TaskLogInfo } from './log.class';
-import { SysLogService } from './log.service';
+import { Service as SysLogService } from './service';
 
 @ApiSecurity(ADMIN_PREFIX)
 @ApiTags('日志模块')
 @Controller('log')
-export class SysLogController {
+export class MyController {
   constructor(private logService: SysLogService) {}
 
   @ApiOperation({ summary: '分页查询登录日志' })

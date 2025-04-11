@@ -7,7 +7,7 @@ import {
 } from '@nestjs/swagger';
 import { isEmpty } from 'lodash';
 import { PaginatedResponseDto } from 'src/common/class/res.class';
-import { PageOptionsDto } from 'src/common/dto/page.dto';
+import { PageOptionsDto } from 'src/common/dto';
 import { ApiException } from 'src/common/exceptions/api.exception';
 import { sys_job } from '@repo/database';
 import { ADMIN_PREFIX } from '../../admin.constants';
