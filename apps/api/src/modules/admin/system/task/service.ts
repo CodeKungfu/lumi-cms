@@ -8,15 +8,12 @@ import { MISSION_KEY_METADATA } from 'src/common/contants/decorator.contants';
 import { ApiException } from 'src/common/exceptions/api.exception';
 import { LoggerService } from 'src/shared/logger/logger.service';
 import { RedisService } from 'src/shared/services/redis.service';
-import {
-  SYS_TASK_QUEUE_NAME,
-  SYS_TASK_QUEUE_PREFIX,
-} from '../../admin.constants';
+import { SYS_TASK_QUEUE_NAME, SYS_TASK_QUEUE_PREFIX } from '../../admin.constants';
 import { prisma } from 'src/prisma';
 import { sys_job } from '@repo/database';
 
 @Injectable()
-export class SysTaskService implements OnModuleInit {
+export class Service implements OnModuleInit {
   constructor(
     @InjectQueue(SYS_TASK_QUEUE_NAME) private taskQueue: Queue,
     private moduleRef: ModuleRef,
@@ -46,7 +43,7 @@ export class SysTaskService implements OnModuleInit {
       .exec();
     if (result[0][1] === 0) {
       // 存在锁则直接跳过防止重复初始化
-      this.logger.log('Init task is lock', SysTaskService.name);
+      this.logger.log('Init task is lock', Service.name);
       return;
     }
     const jobs = await this.taskQueue.getJobs([

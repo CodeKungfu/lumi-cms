@@ -8,16 +8,16 @@ import {
 import { isEmpty } from 'lodash';
 import { PaginatedResponseDto } from 'src/common/class/res.class';
 import { PageOptionsDto } from 'src/common/dto';
+import { CheckIdTaskDto, CreateTaskDto, UpdateTaskDto } from 'src/common/dto';
 import { ApiException } from 'src/common/exceptions/api.exception';
 import { sys_job } from '@repo/database';
 import { ADMIN_PREFIX } from '../../admin.constants';
-import { CheckIdTaskDto, CreateTaskDto, UpdateTaskDto } from './task.dto';
-import { SysTaskService } from './task.service';
+import { Service as SysTaskService } from './service';
 
 @ApiSecurity(ADMIN_PREFIX)
 @ApiTags('任务调度模块')
 @Controller('task')
-export class SysTaskController {
+export class MyController {
   constructor(private taskService: SysTaskService) {}
 
   @ApiOperation({ summary: '获取任务列表' })

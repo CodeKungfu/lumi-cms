@@ -4,9 +4,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ROOT_ROLE_ID, SYS_TASK_QUEUE_NAME, SYS_TASK_QUEUE_PREFIX } from 'src/modules/admin/admin.constants';
 import { rootRoleIdProvider } from '../core/provider/root-role-id.provider';
 
-import { SysTaskController } from './task/task.controller';
-import { SysTaskService } from './task/task.service';
-import { SysTaskConsumer } from './task/task.processor';
+import { SysTaskConsumer } from './task/processor';
+
+import * as taskController from './task/controller';
+import * as taskService from './task/service';
 
 import * as userController from './user/controller';
 import * as userService from './user/service';
@@ -67,7 +68,7 @@ import * as menuService from './menu/service';
     menuController.MyController,
     deptController.MyController,
     logController.MyController,
-    SysTaskController,
+    taskController.MyController,
     onlineController.MyController,
     serveController.MyController,
     dictController.MyController,
@@ -83,7 +84,7 @@ import * as menuService from './menu/service';
     menuService.Service,
     deptService.Service,
     logService.Service,
-    SysTaskService,
+    taskService.Service,
     SysTaskConsumer,
     onlineService.Service,
     serveService.Service,
