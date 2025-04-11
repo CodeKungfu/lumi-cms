@@ -2,8 +2,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import { difference, filter, includes, isEmpty, map } from 'lodash';
 import { ROOT_ROLE_ID } from 'src/modules/admin/admin.constants';
 import { ExcelService } from 'src/shared/services/excel.service';
-import { CreateRoleDto, UpdateRoleDto } from './role.dto';
-import { CreatedRoleId, RoleInfo } from './role.class';
+import { CreateRoleDto, UpdateRoleDto } from 'src/common/dto';
+import { CreatedRoleId, RoleInfo } from 'src/common/dto';
 import { sys_role } from '@repo/database';
 import { prisma } from 'src/prisma';
 import { findIndex, omit } from 'lodash';
@@ -46,7 +46,7 @@ const transData = (jsonArr) => {
 };
 
 @Injectable()
-export class SysRoleService {
+export class Service {
   constructor(
     @Inject(ROOT_ROLE_ID) private rootRoleId: number,
     private excelService: ExcelService,

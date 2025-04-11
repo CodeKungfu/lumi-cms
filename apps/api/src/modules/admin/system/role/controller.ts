@@ -2,19 +2,19 @@ import { Body, Controller, Get, Post, Query, Param, Put, Delete, Res, UseInterce
 import { ApiOperation, ApiOkResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { ADMIN_PREFIX } from 'src/modules/admin/admin.constants';
 import { ApiException } from 'src/common/exceptions/api.exception';
+import { Keep, RequiresPermissions } from 'src/common/decorators';
+import { ExcelFileCleanupInterceptor } from 'src/common/interceptors/excel.interceptor';
+import { RoleInfo } from 'src/common/dto';
+import { CreateRoleDto, DeleteRoleDto, InfoRoleDto, UpdateRoleDto } from 'src/common/dto';
 import { AdminUser } from '../../core/decorators/admin-user.decorator';
 import { IAdminUser } from '../../admin.interface';
 import * as SysMenuService from '../menu/service';
-import { RoleInfo } from './role.class';
-import { CreateRoleDto, DeleteRoleDto, InfoRoleDto, UpdateRoleDto } from './role.dto';
-import { SysRoleService } from './role.service';
-import { Keep, RequiresPermissions } from 'src/common/decorators';
-import { ExcelFileCleanupInterceptor } from 'src/common/interceptors/excel.interceptor';
+import { Service as SysRoleService } from './service';
 
 @ApiSecurity(ADMIN_PREFIX)
 @ApiTags('角色模块')
 @Controller('role')
-export class SysRoleController {
+export class MyController {
   constructor(private roleService: SysRoleService, private menuService: SysMenuService.Service) {}
 
   @RequiresPermissions('system:role:list')

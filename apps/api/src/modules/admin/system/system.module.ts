@@ -5,8 +5,6 @@ import { ROOT_ROLE_ID, SYS_TASK_QUEUE_NAME, SYS_TASK_QUEUE_PREFIX } from 'src/mo
 import { rootRoleIdProvider } from '../core/provider/root-role-id.provider';
 import { SysLogController } from './log/log.controller';
 import { SysLogService } from './log/log.service';
-import { SysRoleController } from './role/role.controller';
-import { SysRoleService } from './role/role.service';
 import { SysUserController } from './user/user.controller';
 import { SysUserService } from './user/user.service';
 import { SysTaskController } from './task/task.controller';
@@ -14,6 +12,10 @@ import { SysTaskService } from './task/task.service';
 import { SysTaskConsumer } from './task/task.processor';
 import { SysServeController } from './serve/serve.controller';
 import { SysServeService } from './serve/serve.service';
+
+
+import  * as roleController from './role/controller';
+import * as roleService from './role/service';
 
 import * as onlineController from './online/controller';
 import * as onlineService from './online/service';
@@ -58,7 +60,7 @@ import * as menuService from './menu/service';
   ],
   controllers: [
     SysUserController,
-    SysRoleController,
+    roleController.MyController,
     menuController.MyController,
     deptController.MyController,
     SysLogController,
@@ -74,7 +76,7 @@ import * as menuService from './menu/service';
   providers: [
     rootRoleIdProvider(),
     SysUserService,
-    SysRoleService,
+    roleService.Service,
     menuService.Service,
     deptService.Service,
     SysLogService,

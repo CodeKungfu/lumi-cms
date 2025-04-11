@@ -5,7 +5,7 @@ import { concat, difference, filter, includes, isEmpty, map, findIndex, omit } f
 import { prisma } from 'src/prisma';
 import { tableType, tableName } from './config';
 import { RedisService } from 'src/shared/services/redis.service';
-import { SysRoleService } from '../role/role.service';
+import { Service as SysRoleService } from '../role/service';
 
 const transData = (jsonArr) => {
   // 如果roleId存在，筛选出相关项目，否则直接使用原数组
