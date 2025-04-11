@@ -1,19 +1,22 @@
 import { Body, Controller, Get, Post, Query, Param, Put, Delete, UseInterceptors, Res, StreamableFile } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { Keep, RequiresPermissions } from 'src/common/decorators';
+import { ExcelFileCleanupInterceptor } from 'src/common/interceptors/excel.interceptor';
+import { PageSearchUserInfo } from 'src/common/dto';
+import { CreateUserDto, DeleteUserDto, InfoUserDto, PageSearchUserDto, PasswordUserDto, UpdateUserDto } from 'src/common/dto';
+
 import { ADMIN_PREFIX } from '../../admin.constants';
 import { IAdminUser } from '../../admin.interface';
 import { AdminUser } from '../../core/decorators/admin-user.decorator';
+
 import * as SysMenuService from '../menu/service';
-import { ExcelFileCleanupInterceptor } from 'src/common/interceptors/excel.interceptor';
-import { CreateUserDto, DeleteUserDto, InfoUserDto, PageSearchUserDto, PasswordUserDto, UpdateUserDto } from './user.dto';
-import { PageSearchUserInfo } from './user.class';
-import { SysUserService } from './user.service';
-import { Keep, RequiresPermissions } from 'src/common/decorators';
+import { Service as SysUserService } from './service';
+
 
 @ApiSecurity(ADMIN_PREFIX)
 @ApiTags('管理员模块')
 @Controller('user')
-export class SysUserController {
+export class MyController {
   constructor(private userService: SysUserService, private menuService: SysMenuService.Service) {}
 
   /**

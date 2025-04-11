@@ -3,14 +3,15 @@ import { ApiOkResponse, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagg
 import { ADMIN_PREFIX } from 'src/modules/admin/admin.constants';
 import { FastifyRequest } from 'fastify';
 import { UtilService } from 'src/shared/services/util.service';
+import { AccountInfo } from 'src/common/dto';
+import { UpdatePasswordDto } from 'src/common/dto';
+
 import { IAdminUser } from '../admin.interface';
 import { AdminUser } from '../core/decorators/admin-user.decorator';
 import { PermissionOptional } from '../core/decorators/permission-optional.decorator';
 import { PermMenuInfo } from '../login/login.class';
 import { LoginService } from '../login/login.service';
-import { AccountInfo } from '../system/user/user.class';
-import { UpdatePasswordDto } from '../system/user/user.dto';
-import { SysUserService } from '../system/user/user.service';
+import { Service as SysUserService } from '../system/user/service';
 import { UpdatePersonInfoDto } from './account.dto';
 
 @ApiTags('账户模块')

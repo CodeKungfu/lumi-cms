@@ -8,8 +8,8 @@ import { ROOT_ROLE_ID } from 'src/modules/admin/admin.constants';
 import { RedisService } from 'src/shared/services/redis.service';
 import { SYS_USER_INITPASSWORD } from 'src/common/contants/param-config.contants';
 // import { SysParamConfigService } from '../param-config/param-config.service';
-import { AccountInfo, PageSearchUserInfo } from './user.class';
-import { CreateUserDto, PageSearchUserDto, UpdatePasswordDto, UpdateUserDto, UpdateUserInfoDto } from './user.dto';
+import { AccountInfo, PageSearchUserInfo } from 'src/common/dto';
+import { CreateUserDto, PageSearchUserDto, UpdatePasswordDto, UpdateUserDto, UpdateUserInfoDto } from 'src/common/dto';
 import { omit } from 'lodash';
 import { prisma } from '@repo/database';
 
@@ -157,7 +157,7 @@ const transData = (jsonArr, roleId) => {
 };
 
 @Injectable()
-export class SysUserService {
+export class Service {
   constructor(
     private redisService: RedisService,
     // private paramConfigService: SysParamConfigService,

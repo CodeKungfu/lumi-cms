@@ -4,11 +4,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ROOT_ROLE_ID, SYS_TASK_QUEUE_NAME, SYS_TASK_QUEUE_PREFIX } from 'src/modules/admin/admin.constants';
 import { rootRoleIdProvider } from '../core/provider/root-role-id.provider';
 
-import { SysUserController } from './user/user.controller';
-import { SysUserService } from './user/user.service';
 import { SysTaskController } from './task/task.controller';
 import { SysTaskService } from './task/task.service';
 import { SysTaskConsumer } from './task/task.processor';
+
+import * as userController from './user/controller';
+import * as userService from './user/service';
 
 import * as logController from './log/controller';
 import * as logService from './log/service';
@@ -61,7 +62,7 @@ import * as menuService from './menu/service';
     }),
   ],
   controllers: [
-    SysUserController,
+    userController.MyController,
     roleController.MyController,
     menuController.MyController,
     deptController.MyController,
@@ -77,7 +78,7 @@ import * as menuService from './menu/service';
   ],
   providers: [
     rootRoleIdProvider(),
-    SysUserService,
+    userService.Service,
     roleService.Service,
     menuService.Service,
     deptService.Service,
@@ -92,6 +93,6 @@ import * as menuService from './menu/service';
     noticeService.Service,
     postService.Service,
   ],
-  exports: [ROOT_ROLE_ID, SysUserService, menuService.Service, logService.Service, onlineService.Service],
+  exports: [ROOT_ROLE_ID, userService.Service, menuService.Service, logService.Service, onlineService.Service],
 })
 export class SystemModule {}

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UAParser } from 'ua-parser-js';
-import { LoginLogInfo, TaskLogInfo } from './log.class';
+import { LoginLogInfo, TaskLogInfo } from 'src/common/dto';
 import { prisma } from 'src/prisma';
 import { UtilService } from 'src/shared/services/util.service';
 
