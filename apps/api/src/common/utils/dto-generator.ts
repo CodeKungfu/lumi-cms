@@ -99,12 +99,9 @@ export function generateDto(tableName: string) {
 
   const prismaFields = prisma[tableName].fields;
 
-  const numericFields = Object.keys(prismaFields).filter(field =>
-    ['Int', 'BigInt', 'Float', 'Decimal'].includes(prismaFields[field].typeName)
-  );
-
   for (const fieldName of Object.keys(prismaFields)) {
-    const isNumber = numericFields.includes(fieldName);
+    const fieldType = prismaFields[fieldName].typeName;
+    const isNumber = ['Int', 'BigInt', 'Float', 'Decimal'].includes(fieldType);
 
     // 不再使用 defineProperty，不设置默认值
     ApiProperty({
