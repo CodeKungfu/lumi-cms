@@ -17,9 +17,7 @@ export class MyController {
   @ApiOkResponsePaginated(LoginLogInfo)
   @LogDisabled()
   @Get('login/page')
-  async loginLogPage(
-    @Query() dto: PageOptionsDto,
-  ): Promise<PaginatedResponseDto<LoginLogInfo>> {
+  async loginLogPage(@Query() dto: PageOptionsDto): Promise<PaginatedResponseDto<LoginLogInfo>> {
     const list = await this.logService.pageGetLoginLog(dto.page - 1, dto.limit);
     const count = await this.logService.countLoginLog();
     return {
@@ -36,9 +34,7 @@ export class MyController {
   @ApiOkResponse({ type: [TaskLogInfo] })
   @LogDisabled()
   @Get('task/page')
-  async taskPage(
-    @Query() dto: PageOptionsDto,
-  ): Promise<PaginatedResponseDto<TaskLogInfo>> {
+  async taskPage(@Query() dto: PageOptionsDto): Promise<PaginatedResponseDto<TaskLogInfo>> {
     const list = await this.logService.page(dto.page - 1, dto.limit);
     const count = await this.logService.countTaskLog();
     return {

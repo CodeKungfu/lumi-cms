@@ -1,10 +1,5 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
-import {
-  ApiOkResponse,
-  ApiOperation,
-  ApiSecurity,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { ApiException } from 'src/common/exceptions/api.exception';
 import { ADMIN_PREFIX } from '../../admin.constants';
 import { IAdminUser } from '../../admin.interface';
@@ -31,10 +26,7 @@ export class MyController {
   @ApiOperation({ summary: '下线指定在线用户' })
   @RequiresPermissions('monitor:online:forceLogout')
   @Post('kick')
-  async kick(
-    @Body() dto: KickDto,
-    @AdminUser() user: IAdminUser,
-  ): Promise<void> {
+  async kick(@Body() dto: KickDto, @AdminUser() user: IAdminUser): Promise<void> {
     if (dto.id === user.uid) {
       throw new ApiException(10012);
     }
