@@ -98,6 +98,7 @@ export class InfoDto {
   @ApiProperty({
     description: 'id',
   })
+  @Type(() => Number)
   @IsNumber()
   id: number;
 }
