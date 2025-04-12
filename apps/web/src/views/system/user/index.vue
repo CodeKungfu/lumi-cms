@@ -417,7 +417,7 @@ function getDeptTree() {
 /** 查询用户列表 */
 function getList() {
   loading.value = true;
-  listUser(proxy.addDateRange(queryParams.value, dateRange.value)).then(res => {
+  listUser(proxy.addDateRange(queryParams.value, dateRange.value, 'createTime')).then(res => {
     loading.value = false;
     userList.value = res.rows;
     total.value = res.total;

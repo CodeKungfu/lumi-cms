@@ -209,7 +209,7 @@ const { queryParams, form, rules } = toRefs(data);
 /** 查询字典类型列表 */
 function getList() {
   loading.value = true;
-  listType(proxy.addDateRange(queryParams.value, dateRange.value)).then(response => {
+  listType(proxy.addDateRange(queryParams.value, dateRange.value, 'createTime')).then(response => {
     typeList.value = response.rows;
     total.value = response.total;
     loading.value = false;

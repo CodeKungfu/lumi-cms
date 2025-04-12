@@ -11,6 +11,11 @@ export function processQueryObject(tableName: string, queryObj: Record<string, a
   const numericFields = Object.keys(prisma[tableName].fields).filter(field => 
     ['Int', 'BigInt', 'Float', 'Decimal'].includes(prisma[tableName].fields[field].typeName)
   );
+
+  // 获取数字类型字段
+  const dataTimeFields = Object.keys(prisma[tableName].fields).filter(field => 
+    ['DateTime'].includes(prisma[tableName].fields[field].typeName)
+  );
   
   // 转换数字类型字段
   const processedObj = { ...queryObj };
@@ -19,7 +24,17 @@ export function processQueryObject(tableName: string, queryObj: Record<string, a
       processedObj[field] = Number(processedObj[field]);
     }
   }
-  
+  // 转换 DateTime 类型字段
+  for (const field of dataTimeFields) {
+    if (field in processedObj && processedObj[field]!== undefined && processedObj[field]!== null) {
+      if (Array.isArray(processedObj[field])) {
+        processedObj[field] = {
+          gte: new Date(processedObj[field][0]),
+          lte: new Date(processedObj[field][1])
+        }
+      }
+    }
+  }
   return processedObj;
 }
 

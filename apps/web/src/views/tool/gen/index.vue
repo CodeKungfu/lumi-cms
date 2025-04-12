@@ -199,7 +199,7 @@ onActivated(() => {
 /** 查询表集合 */
 function getList() {
   loading.value = true;
-  listTable(proxy.addDateRange(queryParams.value, dateRange.value)).then(response => {
+  listTable(proxy.addDateRange(queryParams.value, dateRange.value, 'createTime')).then(response => {
     tableList.value = response.rows;
     total.value = response.total;
     loading.value = false;

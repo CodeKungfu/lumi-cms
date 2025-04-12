@@ -233,7 +233,7 @@ const { queryParams, form } = toRefs(data);
 /** 查询登录日志 */
 function getList() {
   loading.value = true;
-  list(proxy.addDateRange(queryParams.value, dateRange.value)).then(response => {
+  list(proxy.addDateRange(queryParams.value, dateRange.value, 'operTime')).then(response => {
     operlogList.value = response.rows;
     total.value = response.total;
     loading.value = false;

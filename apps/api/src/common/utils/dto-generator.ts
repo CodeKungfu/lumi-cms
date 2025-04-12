@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsInt, Min, IsOptional, IsString, IsNumber } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsInt, Min, IsOptional, IsString, IsNumber, IsArray, IsDate } from 'class-validator';
 import { prisma } from 'src/prisma';
 
 export function generatePageDto(tableName: string) {
@@ -36,21 +37,47 @@ export function generatePageDto(tableName: string) {
   });
 
   const prismaFields = prisma[tableName].fields;
-  const numericFields = Object.keys(prismaFields).filter(field =>
-    ['Int', 'BigInt', 'Float', 'Decimal'].includes(prismaFields[field].typeName)
-  );
 
   for (const key of Object.keys(prismaFields)) {
-    const desc = key;
+    const fieldType = prismaFields[key].typeName;
+    const isNumber = ['Int', 'BigInt', 'Float', 'Decimal'].includes(fieldType);
+    const isDate = fieldType === 'DateTime';
 
-    // ✨ 关键点：不设置 prototype 默认值，而是仅添加装饰器
-    ApiProperty({ description: desc, required: false })(DynamicDto.prototype, key);
-    Type(() => numericFields.includes(key) ? Number : String)(DynamicDto.prototype, key);
+    // ✅ 特别处理 DateTime 为数组范围查询
+    if (isDate) {
+      ApiProperty({
+        description: `${key} 时间范围`,
+        required: false,
+        type: [Date],
+      })(DynamicDto.prototype, key);
+      Transform(({ value }) => {
+        if (!value) return [];
+        try {
+          const arr = typeof value === 'string' ? JSON.parse(value) : value;
+          return Array.isArray(arr) ? arr.map(item => new Date(item)) : [];
+        } catch (e) {
+          return [];
+        }
+      })(DynamicDto.prototype, key);
+      IsOptional()(DynamicDto.prototype, key);
+      IsArray()(DynamicDto.prototype, key);
+      IsDate({ each: true })(DynamicDto.prototype, key);
+      continue;
+    }
+
+    ApiProperty({
+      description: key,
+      required: false,
+      type: () => (isNumber ? Number : String),
+    })(DynamicDto.prototype, key);
+
+    Type(() => (isNumber ? Number : String))(DynamicDto.prototype, key);
     IsOptional()(DynamicDto.prototype, key);
 
-    // 注意：这里根据字段类型设置不同验证器
-    if (numericFields.includes(key)) {
-      IsInt()(DynamicDto.prototype, key); // 你也可以用 IsNumber() 更宽松
+    if (['Int', 'BigInt'].includes(fieldType)) {
+      IsInt()(DynamicDto.prototype, key);
+    } else if (['Float', 'Decimal'].includes(fieldType)) {
+      IsNumber()(DynamicDto.prototype, key);
     } else {
       IsString()(DynamicDto.prototype, key);
     }

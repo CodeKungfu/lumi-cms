@@ -299,7 +299,7 @@ const { queryParams, form, rules } = toRefs(data);
 /** 查询角色列表 */
 function getList() {
   loading.value = true;
-  listRole(proxy.addDateRange(queryParams.value, dateRange.value)).then(response => {
+  listRole(proxy.addDateRange(queryParams.value, dateRange.value, 'createTime')).then(response => {
     roleList.value = response.rows;
     total.value = response.total;
     loading.value = false;

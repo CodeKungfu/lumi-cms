@@ -56,14 +56,12 @@ export function resetForm(refName) {
 // 添加日期范围
 export function addDateRange(params, dateRange, propName) {
   let search = params;
-  search.params = typeof (search.params) === 'object' && search.params !== null && !Array.isArray(search.params) ? search.params : {};
+  search[propName] = typeof (search[propName]) === 'object' && search[propName] !== null && !Array.isArray(search[propName]) ? search[propName] : {};
   dateRange = Array.isArray(dateRange) ? dateRange : [];
   if (typeof (propName) === 'undefined') {
-    search.params['beginTime'] = dateRange[0];
-    search.params['endTime'] = dateRange[1];
+    search['createTime'] = dateRange.length > 0 ? JSON.stringify(dateRange) : '';
   } else {
-    search.params['begin' + propName] = dateRange[0];
-    search.params['end' + propName] = dateRange[1];
+    search[propName] = dateRange.length > 0 ? JSON.stringify(dateRange) : '';
   }
   return search;
 }

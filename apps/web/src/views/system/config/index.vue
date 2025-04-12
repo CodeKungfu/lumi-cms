@@ -202,7 +202,7 @@ const { queryParams, form, rules } = toRefs(data);
 /** 查询参数列表 */
 function getList() {
   loading.value = true;
-  listConfig(proxy.addDateRange(queryParams.value, dateRange.value)).then(response => {
+  listConfig(proxy.addDateRange(queryParams.value, dateRange.value, 'createTime')).then(response => {
     configList.value = response.rows;
     total.value = response.total;
     loading.value = false;
