@@ -37,7 +37,7 @@ export class Service {
     const result: any = await prisma[tableName].deleteMany({
       where: {
         infoId: {
-          in: map(id.split(','), Number),
+          in: map(id.toString().split(','), Number),
         },
       },
     });

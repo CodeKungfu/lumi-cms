@@ -131,3 +131,24 @@ export class InfoDto {
   @IsNumber()
   id: number;
 }
+
+export class DeleteDto {
+  @ApiProperty({
+    description: 'id (支持单个ID或逗号分隔的多个ID)',
+    example: '1 / 1,2,3'
+  })
+  @Transform(({ value }) => {
+    if (typeof value === 'string') {
+      // 处理逗号分隔的ID字符串
+      if (value.includes(',')) {
+        return value.split(',').map(id => Number(id.trim()));
+      }
+      // 单个ID
+      return Number(value);
+    }
+    // 已经是数字
+    return value;
+  })
+  @IsOptional()
+  id: number | number[];
+}

@@ -4,7 +4,7 @@ import { Keep } from 'src/common/decorators/keep.decorator';
 import { ADMIN_PREFIX } from 'src/modules/admin/admin.constants';
 import { Service } from './service';
 import { keyStr, controllerName } from './config';
-import { tableQueryDTO, tableDTO, InfoDto } from './config';
+import { tableQueryDTO, tableDTO, InfoDto, DeleteDto } from './config';
 
 @ApiSecurity(ADMIN_PREFIX)
 @ApiTags(`${keyStr}模块`)
@@ -40,7 +40,7 @@ export class MyController {
   @ApiOperation({ summary: `查询${keyStr}` })
   @ApiOkResponse()
   @Delete(':id')
-  async delete(@Param() params: InfoDto): Promise<any> {
+  async delete(@Param() params: DeleteDto): Promise<any> {
     const list = await this.service.delete(params.id);
     return list;
   }
