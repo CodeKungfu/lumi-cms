@@ -1,16 +1,7 @@
-import {
-  DynamicModule,
-  Module,
-  OnModuleDestroy,
-  Provider,
-} from '@nestjs/common';
+import { DynamicModule, Module, OnModuleDestroy, Provider } from '@nestjs/common';
 import IORedis, { Redis, Cluster } from 'ioredis';
 import { isEmpty } from 'lodash';
-import {
-  REDIS_CLIENT,
-  REDIS_DEFAULT_CLIENT_KEY,
-  REDIS_MODULE_OPTIONS,
-} from './redis.constants';
+import { REDIS_CLIENT, REDIS_DEFAULT_CLIENT_KEY, REDIS_MODULE_OPTIONS } from './redis.constants';
 import { RedisModuleAsyncOptions, RedisModuleOptions } from './redis.interface';
 
 @Module({})
