@@ -21,8 +21,8 @@ export class MyController {
   @ApiOperation({ summary: `分页查询${keyStr}` })
   @Keep()
   @Get('list')
-  async list(): Promise<any> {
-    const rows = await this.service.list();
+  async list(@Query() dto: any): Promise<any> {
+    const rows = await this.service.list(dto);
     return {
       data: rows,
     };

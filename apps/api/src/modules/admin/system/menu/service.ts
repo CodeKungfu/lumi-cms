@@ -56,8 +56,10 @@ export class Service {
   /**
    * 获取所有部门
    */
-  async list(): Promise<tableType[]> {
+  async list(dto: any): Promise<tableType[]> {
+    const queryObj = omit(dto, ['pageNum', 'pageSize']);
     return await prisma[tableName].findMany({
+      where: queryObj,
       orderBy: {
         orderNum: 'desc',
       },

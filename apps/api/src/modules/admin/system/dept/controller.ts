@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Param, Put, Delete } from '@nestjs/common';
+import { Body, Controller, Get, Post, Param, Put, Delete, Query } from '@nestjs/common';
 import { ApiOperation, ApiOkResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { Keep, RequiresPermissions } from 'src/common/decorators';
 import { Service } from './service';
@@ -18,8 +18,8 @@ export class MyController {
   @ApiOperation({ summary: `分页查询${keyStr}` })
   @Keep()
   @Get('list')
-  async list(): Promise<any> {
-    const rows = await this.service.list();
+  async list(@Query() dto: any): Promise<any> {
+    const rows = await this.service.list(dto);
     return {
       data: rows,
     };
