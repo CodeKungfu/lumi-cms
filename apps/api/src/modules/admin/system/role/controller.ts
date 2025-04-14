@@ -22,10 +22,16 @@ export class MyController {
   @ApiOkResponse()
   @Keep()
   @Get('list')
-  async list(): Promise<any> {
-    const rows = await this.roleService.list();
+  async list(@Query() dto: any={}): Promise<any> {
+    const rows = await this.roleService.pageDto2(dto);
     return {
-      rows,
+      rows: rows.result,
+      total: rows.countNum,
+      pagination: {
+        size: dto.pageSize,
+        page: dto.pageNum,
+        total: rows.countNum,
+      },
     };
   }
 
@@ -77,7 +83,18 @@ export class MyController {
     const list = await this.roleService.updateV1(body);
     return list;
   }
-
+  /**
+   * 修改角色状态
+   * changeStatus
+   */
+  @RequiresPermissions('system:role:changeStatus')
+  @ApiOperation({ summary: `获取角色信息` })
+  @ApiOkResponse()
+  @Put('changeStatus')
+  async changeStatus(@Body() body: any): Promise<any> {
+    const list = await this.roleService.changeStatus(body);
+    return list;
+  }
   /**
    * 删除角色
    */

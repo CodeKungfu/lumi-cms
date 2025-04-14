@@ -54,7 +54,7 @@ export function processQueryObject(tableName: string, queryObj: Record<string, a
  * @returns 处理后的查询对象和排序对象
  */
 export function processPageQuery(tableName: string, dto: any) {
-    const { orderByColumn, isAsc, pageNum = 1, pageSize = 10, ...rest } = dto;
+    const { orderByColumn = '', isAsc, pageNum = 1, pageSize = 10, ...rest } = dto;
     
     return {
       processedQuery: processQueryObject(tableName, rest),

@@ -7,6 +7,7 @@ import { CreatedRoleId, RoleInfo } from 'src/common/dto';
 import { sys_role } from '@repo/database';
 import { prisma } from 'src/prisma';
 import { findIndex, omit } from 'lodash';
+import { processPageQuery } from 'src/common/utils/query-helper';
 
 const transData = (jsonArr) => {
   // 如果roleId存在，筛选出相关项目，否则直接使用原数组
@@ -51,6 +52,26 @@ export class Service {
     @Inject(ROOT_ROLE_ID) private rootRoleId: number,
     private excelService: ExcelService,
   ) {}
+
+  /**
+   * 分页查询信息
+   */
+  async pageDto2(dto: any={}): Promise<any> {
+    const { processedQuery, orderBy } = processPageQuery('sys_role', dto);
+    const result: any = await prisma['sys_role'].findMany({
+      skip: (Number(dto.pageNum) - 1) * Number(dto.pageSize),
+      take: Number(dto.pageSize),
+      where: processedQuery,
+      orderBy: orderBy,
+    });
+    const countNum: any = await prisma['sys_role'].count({
+      where: processedQuery,
+    });
+    return {
+      result,
+      countNum,
+    };
+  }
 
   /**
    * 列举所有角色：除去超级管理员
@@ -175,6 +196,8 @@ export class Service {
         roleName: roleName,
         roleKey: roleKey,
         remark,
+        createTime: new Date(),
+        updateTime: new Date()
       }
     });
     // using transaction
@@ -316,13 +339,32 @@ export class Service {
   /**
    * 更新角色信息, 只正对菜单
    */
+  async changeStatus(param: any): Promise<sys_role> {
+    const { roleId, status } = param;
+    const role = await prisma.sys_role.update({
+      data: {
+        status,
+        updateTime: new Date()
+      },
+      where: {
+        roleId: roleId,
+      },
+    });
+    return role;
+  }
+  /**
+   * 更新角色信息, 只正对菜单
+   */
   async updateV1(param: any): Promise<sys_role> {
-    const { roleId, roleName, roleKey, remark, menuIds } = param;
+    const { roleId, roleName, roleKey, remark, menuIds, roleSort, status } = param;
     const role = await prisma.sys_role.update({
       data: {
         roleName: roleName,
         roleKey: roleKey,
         remark,
+        status,
+        roleSort,
+        updateTime: new Date()
       },
       where: {
         roleId: roleId,
