@@ -4,7 +4,7 @@
       <el-col :sm="24" :lg="12" style="padding-left: 20px">
         <h2>Lumi CMS</h2>
         <p>
-          一直想做一款Nodejs技术栈的后台管理系统，看了很多优秀的开源项目但是发现没有合适自己的。于是利用空闲休息时间开始自己写一套后台系统。如此有了Lumi CMS管理系统，她可以用于所有的Web应用程序，如网站管理后台，网站会员中心，CMS，CRM，OA等等，当然，您也可以对她进行深度定制，以做出更强系统。所有前端后台代码封装过后十分精简易上手，出错概率低。同时支持移动客户端访问。系统会陆续更新一些实用功能。
+          Lumi CMS是一款基于Node.js技术栈的现代化后台管理系统，采用NestJS + Vue3 + TypeScript + Prisma等前沿技术构建。系统设计简洁高效，易于上手，同时具备强大的扩展性，可用于各类Web应用场景，如网站管理后台、会员中心、CMS、CRM、OA等。系统支持响应式设计，确保在PC端和移动端均有良好的用户体验。
         </p>
         <p>
           <b>当前版本:</b> <span>v{{ version }}</span>
@@ -33,25 +33,25 @@
           <el-col :span="6">
             <h4>后端技术</h4>
             <ul>
-              <li>SpringBoot</li>
-              <li>Spring Security</li>
+              <li>NestJS</li>
+              <li>TypeScript</li>
               <li>JWT</li>
-              <li>MyBatis</li>
-              <li>Druid</li>
-              <li>Fastjson</li>
-              <li>...</li>
+              <li>Prisma ORM</li>
+              <li>MySQL</li>
+              <li>Redis</li>
+              <li>Swagger</li>
             </ul>
           </el-col>
           <el-col :span="6">
             <h4>前端技术</h4>
             <ul>
-              <li>Vue</li>
-              <li>Vuex</li>
-              <li>Element-ui</li>
+              <li>Vue 3</li>
+              <li>Pinia</li>
+              <li>Element Plus</li>
+              <li>TypeScript</li>
+              <li>Vite</li>
               <li>Axios</li>
               <li>Sass</li>
-              <li>Quill</li>
-              <li>...</li>
             </ul>
           </el-col>
         </el-row>
@@ -73,13 +73,6 @@
                 target="_blank"
                 >http://www.ruoyi.vip</el-link
               >
-            </p>
-            <p>
-              <i class="el-icon-user-solid"></i> QQ群：<s> 满937441 </s> <s> 满887144332 </s>
-              <s> 满180251782 </s> <s> 满104180207 </s> <s> 满186866453 </s> <s> 满201396349 </s>
-              <s> 满101456076 </s> <s> 满101539465 </s> <s> 满264312783 </s> <s> 满167385320 </s> 
-              <s> 满104748341 </s> <s> 满160110482 </s> <s> 满170801498 </s> <s> 满108482800 </s> 
-              <s> 满101046199 </s> <s> 满136919097 </s> <s> 满143961921 </s> <a href="http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=1HmEGh7zKA_CKI2E-pGInPTlC5jS9mc_&authKey=XaiUf1wfbSTEecm4lDMtIMsc6g%2BoETxjBm1BbZPr6IfuMGRj7oG4GEeu7jtzNaw%2F&noverify=0&group_code=174951577" target="_blank">174951577</a>
             </p>
             <p>
               <i class="el-icon-chat-dot-round"></i> 微信：<a
