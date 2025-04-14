@@ -126,7 +126,6 @@ Backend service (apps/api) supports the following environment variables:
 - JWT_SECRET: JWT secret key
 - DATABASE_URL: Database connection URL
 - SERVER_PORT: API service port
-- WS_PORT: WebSocket service port
 - MYSQL_*: MySQL database configuration
 - REDIS_*: Redis configuration
 

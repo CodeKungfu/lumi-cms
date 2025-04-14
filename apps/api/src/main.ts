@@ -51,7 +51,6 @@ async function bootstrap() {
   const serverUrl = await app.getUrl();
   Logger.log(`api服务已经启动,请访问: ${serverUrl}`);
   Logger.log(`API文档已生成,请访问: ${serverUrl}/${process.env.SWAGGER_PATH}/`);
-  Logger.log(`ws服务已经启动,请访问: http://localhost:${process.env.WS_PORT}${process.env.WS_PATH}`);
 }
 
 bootstrap();

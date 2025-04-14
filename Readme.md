@@ -65,7 +65,6 @@ lumi-cms/
 - Prisma ORM
 - JWT 认证
 - Redis 缓存
-- Bull 队列
 - Winston 日志
 </details>
 
@@ -125,7 +124,6 @@ docker-compose -f docker-compose.all.yml up -d
 - JWT_SECRET: JWT 密钥
 - DATABASE_URL: 数据库连接 URL
 - SERVER_PORT: API 服务端口
-- WS_PORT: WebSocket 服务端口
 - MYSQL_*: MySQL 数据库配置
 - REDIS_*: Redis 配置
 
@@ -148,7 +146,7 @@ npx prisma migrate dev --name <migration-name>
 - 基于 Nest.js 的后端 API 服务
 - 基于 Prisma ORM 的数据库操作
 - 基于 Redis 的缓存和会话管理
-- 基于 Bull 的队列管理
+- 基于 JWT 的认证机制
 - 基于 Winston 的日志记录
 - 基于 TypeScript 的开发
 - 基于 ESLint 和 Prettier 的代码规范
@@ -167,7 +165,6 @@ npx prisma migrate dev --name <migration-name>
 9. 操作日志：系统正常操作日志记录和查询；系统异常信息日志记录和查询。
 10. 登录日志：系统登录日志记录查询包含登录异常。
 11. 在线用户：当前系统中活跃用户状态监控。
-12. 定时任务：在线（添加、修改、删除)任务调度包含执行结果日志。
 13. 代码生成：前后端代码的生成（java、html、xml、sql）支持CRUD下载 。
 14. 系统接口：根据业务代码自动生成相关的api接口文档。（已支持）
 15. 服务监控：监视当前系统CPU、内存、磁盘、堆栈等相关信息。
