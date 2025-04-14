@@ -3,6 +3,7 @@ import { ApiException } from 'src/common/exceptions/api.exception';
 import { difference, filter, includes, isEmpty, map, findIndex, omit } from 'lodash';
 import { prisma } from 'src/prisma';
 import { ExcelService } from 'src/shared/services/excel.service';
+import { processPageQuery } from 'src/common/utils/query-helper';
 import { tableType, tableName } from './config';
 
 @Injectable()
@@ -43,7 +44,10 @@ export class Service {
   async update(body: any): Promise<tableType> {
     const updateObj = omit(body, ['configId', 'createTime']);
     const resultInfo: tableType = await prisma[tableName].update({
-      data: updateObj,
+      data: {
+        ...updateObj,
+        updateTime: new Date(),
+      },
       where: {
         configId: body.configId,
       },
@@ -56,7 +60,11 @@ export class Service {
    */
   async create(body: any): Promise<any> {
     const resultInfo: tableType = await prisma[tableName].create({
-      data: body,
+      data: {
+        ...body,
+        createTime: new Date(),
+        updateTime: new Date(),
+      }
     });
     return resultInfo;
   }
@@ -65,14 +73,15 @@ export class Service {
    * 分页查询信息
    */
   async pageDto(dto: any): Promise<any> {
-    const queryObj = omit(dto, ['pageNum', 'pageSize']);
+    const { processedQuery, orderBy } = processPageQuery(tableName, dto);
     const result: any = await prisma[tableName].findMany({
       skip: (Number(dto.pageNum) - 1) * Number(dto.pageSize),
       take: Number(dto.pageSize),
-      where: queryObj,
+      where: processedQuery,
+      orderBy,
     });
     const countNum: any = await prisma[tableName].count({
-      where: queryObj,
+      where: processedQuery,
     });
     return {
       result,
