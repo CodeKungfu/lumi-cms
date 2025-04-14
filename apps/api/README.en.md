@@ -62,12 +62,8 @@ yarn dev
 9. Operation Log: Recording and querying normal operation logs and abnormal information logs of the system.  (Supported)
 10. Login Log: Recording and querying system login logs, including login exceptions.
 11. Online Users: Monitoring the status of active users in the current system.
-12. Scheduled Tasks: Online (adding, modifying, deleting) task scheduling including execution result logs.
-13. Code Generation: Generating front-end and back-end code (java, html, xml, sql) supporting CRUD downloads.
 14. System Interface: Automatically generating related API interface documents based on business code.
 15. Service Monitoring: Monitoring relevant information such as current system CPU, memory, disk, and stack.
-16. Online Builder: Dragging form elements to generate corresponding HTML code.
-17. Connection Pool Monitoring: Monitoring the status of the current system's database connection pool, and analyzing SQL to identify system performance bottlenecks.
 
 ## System Modules
 

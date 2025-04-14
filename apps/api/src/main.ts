@@ -42,8 +42,6 @@ async function bootstrap() {
   app.useGlobalFilters(new ApiExceptionFilter(app.get(LoggerService)));
   // api interceptor
   app.useGlobalInterceptors(new ApiTransformInterceptor(new Reflector()));
-  // websocket
-  // app.useWebSocketAdapter(new SocketIoAdapter(app, app.get(ConfigService)));
   // swagger
   setupSwagger(app);
   // start

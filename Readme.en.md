@@ -166,12 +166,8 @@ npx prisma migrate dev --name <migration-name>
 9.  Operation Logs: Record and query system normal operation logs and exception logs.
 10.  Login Logs: Record and query system login logs including login exceptions.
 11.  Online Users: Monitor active user status in the current system.
-12.  Scheduled Tasks: Online (add, modify, delete) task scheduling including execution result logs.
-13.  Code Generation: Generate frontend and backend code (java, html, xml, sql) with CRUD download support.
-14.  System Interfaces: Automatically generate relevant API documentation based on business code. (Supported)
+12.  System Interfaces: Automatically generate relevant API documentation based on business code. (Supported)
 15.  Service Monitoring: Monitor current system CPU, memory, disk, stack, and other related information.
-16.  Online Builder: Drag form elements to generate corresponding HTML code.
-17.  Connection Pool Monitoring: Monitor the current system database connection pool status for SQL analysis to identify system performance bottlenecks.
 ## 🤝 Contribution Guidelines
 1. Fork the repository
 2. Create a feature branch (git checkout -b feature/amazing-feature)

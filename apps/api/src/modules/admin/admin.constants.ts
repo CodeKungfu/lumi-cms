@@ -11,8 +11,6 @@ export const FORBIDDEN_OP_MENU_ID_INDEX = 90;
 export const ADMIN_PREFIX = '';
 export const QINIU_API = 'http://api.qiniu.com';
 
-export const NETDISK_TASK_PREFIX = 'admin:netdisk:';
-
 // 目录分隔符
 export const NETDISK_DELIMITER = '/';
 export const NETDISK_LIMIT = 100;

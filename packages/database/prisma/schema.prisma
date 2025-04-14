@@ -9,57 +9,6 @@ datasource db {
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-model gen_table {
-  table_id          BigInt    @id @default(autoincrement())
-  table_name        String?   @default("") @db.VarChar(200)
-  table_comment     String?   @default("") @db.VarChar(500)
-  sub_table_name    String?   @db.VarChar(64)
-  sub_table_fk_name String?   @db.VarChar(64)
-  class_name        String?   @default("") @db.VarChar(100)
-  tpl_category      String?   @default("crud") @db.VarChar(200)
-  tpl_web_type      String?   @default("") @db.VarChar(30)
-  package_name      String?   @db.VarChar(100)
-  module_name       String?   @db.VarChar(30)
-  business_name     String?   @db.VarChar(30)
-  function_name     String?   @db.VarChar(50)
-  function_author   String?   @db.VarChar(50)
-  gen_type          String?   @default("0") @db.Char(1)
-  gen_path          String?   @default("/") @db.VarChar(200)
-  options           String?   @db.VarChar(1000)
-  create_by         String?   @default("") @db.VarChar(64)
-  create_time       DateTime? @db.DateTime(0)
-  update_by         String?   @default("") @db.VarChar(64)
-  update_time       DateTime? @db.DateTime(0)
-  remark            String?   @db.VarChar(500)
-}
-
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-model gen_table_column {
-  column_id      BigInt    @id @default(autoincrement())
-  table_id       BigInt?
-  column_name    String?   @db.VarChar(200)
-  column_comment String?   @db.VarChar(500)
-  column_type    String?   @db.VarChar(100)
-  java_type      String?   @db.VarChar(500)
-  java_field     String?   @db.VarChar(200)
-  is_pk          String?   @db.Char(1)
-  is_increment   String?   @db.Char(1)
-  is_required    String?   @db.Char(1)
-  is_insert      String?   @db.Char(1)
-  is_edit        String?   @db.Char(1)
-  is_list        String?   @db.Char(1)
-  is_query       String?   @db.Char(1)
-  query_type     String?   @default("EQ") @db.VarChar(200)
-  html_type      String?   @db.VarChar(200)
-  dict_type      String?   @default("") @db.VarChar(200)
-  sort           Int?
-  create_by      String?   @default("") @db.VarChar(64)
-  create_time    DateTime? @db.DateTime(0)
-  update_by      String?   @default("") @db.VarChar(64)
-  update_time    DateTime? @db.DateTime(0)
-}
-
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model sys_config {
   configId    Int       @id @default(autoincrement()) @map("config_id")
   configName  String?   @default("") @map("config_name") @db.VarChar(100)
@@ -120,37 +69,6 @@ model sys_dict_type {
   updateBy   String?   @default("") @map("update_by") @db.VarChar(64)
   updateTime DateTime? @map("update_time") @db.DateTime(0)
   remark     String?   @db.VarChar(500)
-}
-
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-model sys_job {
-  jobId          BigInt    @default(autoincrement()) @map("job_id")
-  jobName        String    @default("") @map("job_name") @db.VarChar(64)
-  jobGroup       String    @default("DEFAULT") @map("job_group") @db.VarChar(64)
-  invokeTarget   String    @map("invoke_target") @db.VarChar(500)
-  cronExpression String?   @default("") @map("cron_expression") @db.VarChar(255)
-  misfirePolicy  String?   @default("3") @map("misfire_policy") @db.VarChar(20)
-  concurrent     String?   @default("1") @db.Char(1)
-  status         String?   @default("0") @db.Char(1)
-  createBy       String?   @default("") @map("create_by") @db.VarChar(64)
-  createTime     DateTime? @map("create_time") @db.DateTime(0)
-  updateBy       String?   @default("") @map("update_by") @db.VarChar(64)
-  updateTime     DateTime? @map("update_time") @db.DateTime(0)
-  remark         String?   @default("") @db.VarChar(500)
-
-  @@id([jobId, jobName, jobGroup])
-}
-
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-model sys_job_log {
-  jobLogId      BigInt    @id @default(autoincrement()) @map("job_log_id")
-  jobName       String    @map("job_name") @db.VarChar(64)
-  jobGroup      String    @map("job_group") @db.VarChar(64)
-  invokeTarget  String    @map("invoke_target") @db.VarChar(500)
-  jobMessage    String?   @map("job_message") @db.VarChar(500)
-  status        String?   @default("0") @db.Char(1)
-  exceptionInfo String?   @default("") @map("exception_info") @db.VarChar(2000)
-  createTime    DateTime? @map("create_time") @db.DateTime(0)
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments

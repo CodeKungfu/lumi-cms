@@ -144,78 +144,6 @@ export class IsCronExpression implements ValidatorConstraintInterface {
   }
 }
 
-// export class CreateTaskDto {
-//   @ApiProperty({ description: '任务名称' })
-//   @IsString()
-//   @MinLength(2)
-//   @MaxLength(50)
-//   name: string;
-
-//   @ApiProperty({ description: '调用的服务' })
-//   @IsString()
-//   @MinLength(1)
-//   service: string;
-
-//   @ApiProperty({ description: '任务类别：cron | interval' })
-//   @IsIn([0, 1])
-//   type: number;
-
-//   @ApiProperty({ description: '任务状态' })
-//   @IsIn([0, 1])
-//   status: number;
-
-//   @ApiPropertyOptional({ description: '开始时间', type: Date })
-//   @IsDateString()
-//   @ValidateIf((o) => !isEmpty(o.startTime))
-//   startTime: string;
-
-//   @ApiPropertyOptional({ description: '结束时间', type: Date })
-//   @IsDateString()
-//   @ValidateIf((o) => !isEmpty(o.endTime))
-//   endTime: string;
-
-//   @ApiPropertyOptional({ description: '限制执行次数，负数则无限制' })
-//   @IsInt()
-//   @IsOptional()
-//   readonly limit: number = -1;
-
-//   @ApiProperty({ description: 'cron表达式' })
-//   @Validate(IsCronExpression)
-//   @ValidateIf((o) => o.type === 0)
-//   cron: string;
-
-//   @ApiProperty({ description: '执行间隔，毫秒单位' })
-//   @IsInt()
-//   @Min(100)
-//   @ValidateIf((o) => o.type === 1)
-//   every: number;
-
-//   @ApiPropertyOptional({ description: '执行参数' })
-//   @IsString()
-//   @IsOptional()
-//   data: string;
-
-//   @ApiPropertyOptional({ description: '任务备注' })
-//   @IsOptional()
-//   @IsString()
-//   remark: string;
-// }
-
-// export class UpdateTaskDto extends CreateTaskDto {
-//   @ApiProperty({ description: '需要更新的任务ID' })
-//   @IsInt()
-//   @Min(0)
-//   id: number;
-// }
-
-// export class CheckIdTaskDto {
-//   @ApiProperty({ description: '任务ID' })
-//   @IsInt()
-//   @Min(0)
-//   @Type(() => Number)
-//   id: number;
-// }
-
 export class AccountInfo {
   @ApiProperty()
   name: string;
@@ -326,29 +254,6 @@ export class LoginLogInfo {
   @ApiProperty({ description: '登录用户名' })
   username: string;
 }
-
-// export class TaskLogInfo {
-//   @ApiProperty({ description: '日志编号' })
-//   id: number;
-
-//   @ApiProperty({ description: '任务编号' })
-//   taskId: number;
-
-//   @ApiProperty({ description: '任务名称' })
-//   name: string;
-
-//   @ApiProperty({ description: '创建时间' })
-//   createdAt: string;
-
-//   @ApiProperty({ description: '耗时' })
-//   consumeTime: number;
-
-//   @ApiProperty({ description: '执行信息' })
-//   detail: string;
-
-//   @ApiProperty({ description: '任务执行状态' })
-//   status: number;
-// }
 
 export class Runtime {
   @ApiProperty({ description: '系统' })
