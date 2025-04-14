@@ -18,16 +18,15 @@ export class MyController {
   @Get('list')
   // @ts-ignore ← Ignore type error, Swagger can generate fields normally
   async page(@Query() dto: tableQueryDTO): Promise<any> {
-    const rows = await this.service.page(dto.pageNum - 1, dto.pageSize);
-    const count = await this.service.count();
+    const rows = await this.service.pageDto(dto);
     return {
-      rows,
-      total: count,
-      // pagination: {
-      //   size: dto.pageSize,
-      //   page: dto.pageNum,
-      //   total: count,
-      // },
+      rows: rows.result,
+      total: rows.countNum,
+      pagination: {
+        size: dto.pageSize,
+        page: dto.pageNum,
+        total: rows.countNum,
+      },
     };
   }
 

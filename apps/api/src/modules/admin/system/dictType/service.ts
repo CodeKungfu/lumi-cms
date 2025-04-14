@@ -3,19 +3,13 @@ import { ApiException } from 'src/common/exceptions/api.exception';
 import { ExcelService } from 'src/shared/services/excel.service';
 import { difference, filter, includes, isEmpty, map, findIndex, omit } from 'lodash';
 import { prisma } from 'src/prisma';
+import { processPageQuery } from 'src/common/utils/query-helper';
 import { tableType, tableName } from './config';
 
 @Injectable()
 export class Service {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor(private excelService: ExcelService) {}
-
-  /**
-   * 列举所有条数
-   */
-  async count(): Promise<number> {
-    return await prisma[tableName].count();
-  }
 
   async optionselect(): Promise<any> {
     const resultInfo: any = await prisma[tableName].findMany();
@@ -38,14 +32,23 @@ export class Service {
   }
 
   /**
-   * 分页加载信息
+   * 分页查询信息
    */
-  async page(page: number, count: number): Promise<tableType[]> {
+  async pageDto(dto: any): Promise<any> {
+    const { processedQuery, orderBy } = processPageQuery(tableName, dto);
     const result: any = await prisma[tableName].findMany({
-      skip: page * count,
-      take: count,
+      skip: (Number(dto.pageNum) - 1) * Number(dto.pageSize),
+      take: Number(dto.pageSize),
+      where: processedQuery,
+      orderBy,
     });
-    return result;
+    const countNum: any = await prisma[tableName].count({
+      where: processedQuery,
+    });
+    return {
+      result,
+      countNum,
+    };
   }
 
   /**
