@@ -517,6 +517,30 @@ export class Service {
   /**
    * 更新用户信息
    */
+  async changeStatus(param: any): Promise<void> {
+    const exists = await prisma.sys_user.findFirst({
+      where: {
+        userId: param.userId,
+      },
+    });
+    if (isEmpty(exists)) {
+      throw new ApiException(10017);
+    }
+    if (param.status) {
+      await prisma.sys_user.update({
+        data: {
+          status: param.status.toString(),
+        },
+        where: {
+          userId: param.userId,
+        },
+      });
+    }
+  }
+
+  /**
+   * 更新用户信息
+   */
   async update(param: any): Promise<void> {
     const exists = await prisma.sys_user.findFirst({
       where: {

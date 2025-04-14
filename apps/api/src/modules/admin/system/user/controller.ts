@@ -151,6 +151,18 @@ export class MyController {
   }
 
   /**
+   * 修改用户
+   */
+  @RequiresPermissions('system:user:changeStatus')
+  @ApiOperation({
+    summary: '更新管理员信息',
+  })
+  @Put('changeStatus')
+  async changeStatus(@Body() dto: any): Promise<void> {
+    await this.userService.changeStatus(dto);
+  }
+
+  /**
    * 删除用户
    */
   @RequiresPermissions('system:user:remove')
