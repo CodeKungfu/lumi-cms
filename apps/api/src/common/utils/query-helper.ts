@@ -32,6 +32,15 @@ export function processQueryObject(tableName: string, queryObj: Record<string, a
           gte: new Date(processedObj[field][0]),
           lte: new Date(processedObj[field][1])
         }
+      } else {
+        // 针对swagger ui 没有Type 类型转换的情况
+        const arr = JSON.parse(processedObj[field])
+        if (Array.isArray(arr)){
+          processedObj[field] = {
+            gte: new Date(arr[0]),
+            lte: new Date(arr[1])
+          }
+        }
       }
     }
   }

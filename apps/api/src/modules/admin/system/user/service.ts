@@ -12,6 +12,7 @@ import { AccountInfo, PageSearchUserInfo } from 'src/common/dto';
 import { CreateUserDto, PageSearchUserDto, UpdatePasswordDto, UpdateUserDto, UpdateUserInfoDto } from 'src/common/dto';
 import { omit } from 'lodash';
 import { prisma } from '@repo/database';
+import { processPageQuery } from 'src/common/utils/query-helper';
 
 // 使用更简单的方式定义 sys_user 类型
 type sys_user = Awaited<ReturnType<typeof prisma.sys_user.findUnique>>;
@@ -711,14 +712,15 @@ export class Service {
    * 分页查询信息
    */
   async pageDto(dto: any): Promise<any> {
-    const queryObj = omit(dto, ['pageNum', 'pageSize']);
+    const { processedQuery, orderBy } = processPageQuery('sys_user', dto);
     const result: any = await prisma.sys_user.findMany({
       skip: (Number(dto.pageNum) - 1) * Number(dto.pageSize),
       take: Number(dto.pageSize),
-      where: queryObj,
+      where: processedQuery,
+      orderBy,
     });
     const countNum: any = await prisma.sys_user.count({
-      where: queryObj,
+      where: processedQuery
     });
     return {
       result,
