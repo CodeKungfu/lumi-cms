@@ -41,11 +41,15 @@ export class Service {
   /**
    * 更新信息
    */
-  async update(body: any): Promise<tableType> {
+  async update(body: any, userName: string = 'admin'): Promise<tableType> {
     const updateObj = omit(body, ['noticeId', 'createTime']);
     updateObj.noticeContent = Buffer.from(updateObj.noticeContent);
     const resultInfo: tableType = await prisma[tableName].update({
-      data: updateObj,
+      data: {
+        ... updateObj,
+        updateTime: new Date(),
+        updateBy: userName,
+      },
       where: {
         noticeId: body.noticeId,
       },
@@ -56,10 +60,14 @@ export class Service {
   /**
    * 新增信息
    */
-  async create(body: any): Promise<any> {
+  async create(body: any, userName: string = 'admin'): Promise<any> {
     body.noticeContent = Buffer.from(body.noticeContent);
     const resultInfo: tableType = await prisma[tableName].create({
-      data: body,
+      data: {
+        ...body,
+        createTime: new Date(),
+        createBy: userName,
+      },
     });
     return resultInfo;
   }

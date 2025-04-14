@@ -199,6 +199,7 @@ export class Service {
       {
         uid: parseInt(user.userId.toString()),
         pv: 1,
+        userName: user.userName,
       },
       // {
       //   expiresIn: '24h',

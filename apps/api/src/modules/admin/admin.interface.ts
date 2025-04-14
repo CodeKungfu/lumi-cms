@@ -3,6 +3,7 @@ import { conf } from 'qiniu';
 export interface IAdminUser {
   uid: number;
   pv: number;
+  userName?: string;
 }
 
 export type QINIU_ACCESS_CONTROL = 'private' | 'public';
