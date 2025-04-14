@@ -82,7 +82,7 @@ export class OperlogInterceptor implements NestInterceptor {
 
     try {
       // 获取操作人信息
-      const operName = user ? (user['username'] || '') : '';
+      const operName = user ? (user['userName'] || '') : '';
       const deptName = user && user['dept'] ? user['dept']['deptName'] || '' : '';
 
       // 获取客户端IP
