@@ -1,11 +1,9 @@
 import './polyfill';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { BullModule } from '@nestjs/bull';
 import Configuration from './config/configuration';
 import { AdminModule } from './modules/admin/admin.module';
 import { SharedModule } from './shared/shared.module';
-import { MissionModule } from './mission/mission.module';
 import { LoggerModule } from './shared/logger/logger.module';
 import { WinstonLogLevel } from './shared/logger/logger.interface';
 import { APP_INTERCEPTOR } from '@nestjs/core';
@@ -17,7 +15,6 @@ import { OperlogInterceptor } from './common/interceptors/operlog.interceptor';
       isGlobal: true,
       load: [Configuration],
     }),
-    BullModule.forRoot({}),
     // custom logger
     LoggerModule.forRootAsync(
       {
@@ -42,8 +39,6 @@ import { OperlogInterceptor } from './common/interceptors/operlog.interceptor';
     ),
     // custom module
     SharedModule,
-    // mission module
-    MissionModule.forRoot(),
     // application modules import
     AdminModule,
   ],

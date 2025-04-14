@@ -1,13 +1,7 @@
 import { Module } from '@nestjs/common';
-import { BullModule } from '@nestjs/bull';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { ROOT_ROLE_ID, SYS_TASK_QUEUE_NAME, SYS_TASK_QUEUE_PREFIX } from 'src/modules/admin/admin.constants';
+// import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ROOT_ROLE_ID } from 'src/modules/admin/admin.constants';
 import { rootRoleIdProvider } from '../core/provider/root-role-id.provider';
-
-import { SysTaskConsumer } from './task/processor';
-
-import * as taskController from './task/controller';
-import * as taskService from './task/service';
 
 import * as userController from './user/controller';
 import * as userService from './user/service';
@@ -46,29 +40,13 @@ import * as menuController from './menu/controller';
 import * as menuService from './menu/service';
 
 @Module({
-  imports: [
-    BullModule.registerQueueAsync({
-      name: SYS_TASK_QUEUE_NAME,
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        redis: {
-          host: configService.get<string>('redis.host'),
-          port: configService.get<number>('redis.port'),
-          password: configService.get<string>('redis.password'),
-          db: configService.get<number>('redis.db'),
-        },
-        prefix: SYS_TASK_QUEUE_PREFIX,
-      }),
-      inject: [ConfigService],
-    }),
-  ],
+  imports: [],
   controllers: [
     userController.MyController,
     roleController.MyController,
     menuController.MyController,
     deptController.MyController,
     logController.MyController,
-    taskController.MyController,
     onlineController.MyController,
     serveController.MyController,
     dictController.MyController,
@@ -84,8 +62,6 @@ import * as menuService from './menu/service';
     menuService.Service,
     deptService.Service,
     logService.Service,
-    taskService.Service,
-    SysTaskConsumer,
     onlineService.Service,
     serveService.Service,
     dictService.Service,

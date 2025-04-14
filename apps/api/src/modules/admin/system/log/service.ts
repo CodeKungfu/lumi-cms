@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UAParser } from 'ua-parser-js';
-import { LoginLogInfo, TaskLogInfo } from 'src/common/dto';
+import { LoginLogInfo } from 'src/common/dto';
 import { prisma } from 'src/prisma';
 import { UtilService } from 'src/shared/services/util.service';
 
@@ -97,7 +97,7 @@ export class Service {
   /**
    * 分页加载日志信息
    */
-  async page(page: number, count: number): Promise<TaskLogInfo[]> {
+  async page(page: number, count: number): Promise<any> {
     // const result = await this.getRepo().admin.sys.TaskLog.find({
     //   order: {
     //     id: 'DESC',

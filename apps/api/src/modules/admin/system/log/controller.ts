@@ -2,7 +2,7 @@ import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { ApiOkResponsePaginated, PaginatedResponseDto } from 'src/common/class/res.class';
 import { PageOptionsDto } from 'src/common/dto';
-import { LoginLogInfo, TaskLogInfo } from 'src/common/dto';
+import { LoginLogInfo } from 'src/common/dto';
 import { ADMIN_PREFIX } from '../../admin.constants';
 import { LogDisabled } from '../../core/decorators/log-disabled.decorator';
 import { Service as SysLogService } from './service';
@@ -20,23 +20,6 @@ export class MyController {
   async loginLogPage(@Query() dto: PageOptionsDto): Promise<PaginatedResponseDto<LoginLogInfo>> {
     const list = await this.logService.pageGetLoginLog(dto.page - 1, dto.limit);
     const count = await this.logService.countLoginLog();
-    return {
-      list,
-      pagination: {
-        total: count,
-        size: dto.limit,
-        page: dto.page,
-      },
-    };
-  }
-
-  @ApiOperation({ summary: '分页查询任务日志' })
-  @ApiOkResponse({ type: [TaskLogInfo] })
-  @LogDisabled()
-  @Get('task/page')
-  async taskPage(@Query() dto: PageOptionsDto): Promise<PaginatedResponseDto<TaskLogInfo>> {
-    const list = await this.logService.page(dto.page - 1, dto.limit);
-    const count = await this.logService.countTaskLog();
     return {
       list,
       pagination: {
