@@ -115,9 +115,13 @@ export class MyController {
   @ApiOkResponse()
   @Keep()
   @Get(':id')
-  async infoUser(@Param() params: any): Promise<any> {
+  async infoUser(@Param() params: any, @AdminUser() user: IAdminUser): Promise<any> {
     if (params.id) {
-      const list = await this.userService.infoUser(params.id);
+      let id = params.id;
+      if (id.toString() === 'profile') {
+        id = user.uid;
+      }
+      const list = await this.userService.infoUser(id);
       return list;
     } else {
       const list = await this.userService.infoUserV1();
@@ -148,6 +152,18 @@ export class MyController {
   async update(@Body() dto: any): Promise<void> {
     await this.userService.update(dto);
     await this.menuService.refreshPerms(dto.id);
+  }
+
+  /**
+   * 修改用户
+   */
+  @RequiresPermissions('system:user:profile')
+  @ApiOperation({
+    summary: '更新管理员信息',
+  })
+  @Put('profile')
+  async profile(@Body() dto: any, @AdminUser() user: IAdminUser): Promise<void> {
+    return await this.userService.updatePersonInfo( user.uid, dto);
   }
 
   /**
