@@ -12,9 +12,6 @@ import * as logService from './log/service';
 import  * as roleController from './role/controller';
 import * as roleService from './role/service';
 
-import * as onlineController from './online/controller';
-import * as onlineService from './online/service';
-
 import * as dictController from './dictType/controller';
 import * as dictService from './dictType/service';
 
@@ -44,7 +41,6 @@ import * as menuService from './menu/service';
     menuController.MyController,
     deptController.MyController,
     logController.MyController,
-    onlineController.MyController,
     dictController.MyController,
     dictDataController.MyController,
     configController.MyController,
@@ -58,13 +54,12 @@ import * as menuService from './menu/service';
     menuService.Service,
     deptService.Service,
     logService.Service,
-    onlineService.Service,
     dictService.Service,
     dictDataService.Service,
     configService.Service,
     noticeService.Service,
     postService.Service,
   ],
-  exports: [ROOT_ROLE_ID, userService.Service, menuService.Service, logService.Service, onlineService.Service],
+  exports: [ROOT_ROLE_ID, userService.Service, menuService.Service, logService.Service],
 })
 export class SystemModule {}

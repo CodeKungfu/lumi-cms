@@ -4,7 +4,7 @@ import { OnlineUserInfo } from 'src/common/dto';
 import { prisma } from 'src/prisma';
 import { ApiException } from 'src/common/exceptions/api.exception';
 import { UAParser } from 'ua-parser-js';
-import { Service as SysUserService } from '../user/service';
+import { Service as SysUserService } from '../../system/user/service';
 
 @Injectable()
 export class Service {
