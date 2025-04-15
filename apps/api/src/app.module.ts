@@ -8,15 +8,9 @@ import { LoggerModule } from './shared/logger/logger.module';
 import { WinstonLogLevel } from './shared/logger/logger.interface';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { OperlogInterceptor } from './common/interceptors/operlog.interceptor';
-import { McpModule } from '@rekog/mcp-nest';
-import { GreetingTool } from './greeting.tool';
 
 @Module({
   imports: [
-    McpModule.forRoot({
-      name: 'my-mcp-server',
-      version: '1.0.0',
-    }),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [Configuration],
@@ -49,7 +43,6 @@ import { GreetingTool } from './greeting.tool';
     AdminModule,
   ],
   providers: [
-    GreetingTool,
     {
       provide: APP_INTERCEPTOR,
       useClass: OperlogInterceptor,
