@@ -4,15 +4,7 @@ export const PERMISSION_OPTIONAL_KEY_METADATA = 'admin_module:permission_optiona
 export const LOG_DISABLED_KEY_METADATA = 'admin_module:log_disabled';
 
 export const ROOT_ROLE_ID = 'admin_module:root_role_id';
-export const QINIU_CONFIG = 'admin_module:qiniu_config';
 
 export const FORBIDDEN_OP_MENU_ID_INDEX = 90;
 
 export const ADMIN_PREFIX = '';
-export const QINIU_API = 'http://api.qiniu.com';
-
-// 目录分隔符
-export const NETDISK_DELIMITER = '/';
-export const NETDISK_LIMIT = 100;
-export const NETDISK_HANDLE_MAX_ITEM = 1000;
-export const NETDISK_COPY_SUFFIX = '的副本';
