@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ApiException } from 'src/common/exceptions/api.exception';
 import { difference, filter, includes, isEmpty, map, findIndex, omit } from 'lodash';
+import { UAParser } from 'ua-parser-js';
 import { prisma } from 'src/prisma';
 import { tableType, tableName, tableQueryDTO } from './config';
 import { processPageQuery } from 'src/common/utils/query-helper';
@@ -86,5 +87,35 @@ export class Service {
       result,
       countNum,
     };
+  }
+
+  /**
+   * 清空表中的所有数据
+   */
+  async clearLoginLog(): Promise<void> {
+    await prisma[tableName].deleteMany();
+  }
+
+  /**
+   * 分页加载日志信息
+   */
+  async pageGetLoginLog(page: number, count: number): Promise<any[]> {
+    const result: any =
+      await prisma.$queryRaw`SELECT * FROM sys_logininfor INNER JOIN sys_user ON sys_logininfor.user_id = sys_user.id order by sys_logininfor.created_at DESC LIMIT ${
+        page * count
+      }, ${count}`;
+    const parser = new UAParser();
+    return result.map((e) => {
+      const u = parser.setUA(e.ua).getResult();
+      return {
+        id: e.id,
+        ip: e.ip,
+        os: `${u.os.name} ${u.os.version}`,
+        browser: `${u.browser.name} ${u.browser.version}`,
+        time: e.created_at,
+        username: e.username,
+        loginLocation: e.login_location,
+      };
+    });
   }
 }

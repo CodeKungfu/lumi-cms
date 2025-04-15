@@ -7,7 +7,6 @@ import { ApiException } from 'src/common/exceptions/api.exception';
 import { RedisService } from 'src/shared/services/redis.service';
 import { ImageCaptchaDto, ImageCaptcha, PermMenuInfo } from 'src/common/dto';
 
-import { Service as SysLogService } from '../system/log/service';
 import { Service as SysUserService } from '../system/user/service';
 import * as SysMenuService from '../system/menu/service';
 import { prisma } from 'src/prisma';
@@ -109,7 +108,6 @@ export class Service {
     private redisService: RedisService,
     private menuService: SysMenuService.Service,
     private userService: SysUserService,
-    private logService: SysLogService,
     private util: UtilService,
     private jwtService: JwtService,
   ) {}
@@ -215,7 +213,6 @@ export class Service {
     await this.redisService
       .getRedis()
       .set(`admin:perms:${user.userId}`, JSON.stringify(perms));
-    // await this.logService.saveLoginLog(Number(user.userId), ip, ua);
     // 修改这两处 create 调用
     await prisma.sys_logininfor.create({
       data: {

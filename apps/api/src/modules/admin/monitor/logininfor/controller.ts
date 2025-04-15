@@ -44,6 +44,14 @@ export class MyController {
     return list;
   }
 
+  @ApiOperation({ summary: `清空${keyStr}` })
+  @ApiOkResponse()
+  @Delete('clean')
+  async clean(): Promise<any> {
+    await this.service.clearLoginLog();
+    return true;
+  }
+
   @ApiOperation({ summary: `查询${keyStr}` })
   @ApiOkResponse()
   @Put()

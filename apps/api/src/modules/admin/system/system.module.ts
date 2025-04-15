@@ -6,9 +6,6 @@ import { rootRoleIdProvider } from '../core/provider/root-role-id.provider';
 import * as userController from './user/controller';
 import * as userService from './user/service';
 
-import * as logController from './log/controller';
-import * as logService from './log/service';
-
 import  * as roleController from './role/controller';
 import * as roleService from './role/service';
 
@@ -40,7 +37,6 @@ import * as menuService from './menu/service';
     roleController.MyController,
     menuController.MyController,
     deptController.MyController,
-    logController.MyController,
     dictController.MyController,
     dictDataController.MyController,
     configController.MyController,
@@ -53,13 +49,12 @@ import * as menuService from './menu/service';
     roleService.Service,
     menuService.Service,
     deptService.Service,
-    logService.Service,
     dictService.Service,
     dictDataService.Service,
     configService.Service,
     noticeService.Service,
     postService.Service,
   ],
-  exports: [ROOT_ROLE_ID, userService.Service, menuService.Service, logService.Service],
+  exports: [ROOT_ROLE_ID, userService.Service, menuService.Service],
 })
 export class SystemModule {}
