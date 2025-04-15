@@ -19,6 +19,7 @@ async function bootstrap() {
   app.enableCors();
   // 给请求添加prefix
   // app.setGlobalPrefix(PREFIX);
+  app.setGlobalPrefix('', { exclude: ['sse', 'messages'] });
   // custom logger
   app.useLogger(app.get(LoggerService));
   // validate
