@@ -9,9 +9,6 @@ import * as userService from './user/service';
 import * as logController from './log/controller';
 import * as logService from './log/service';
 
-import * as serveController from './serve/controller';
-import * as serveService from './serve/service';
-
 import  * as roleController from './role/controller';
 import * as roleService from './role/service';
 
@@ -48,7 +45,6 @@ import * as menuService from './menu/service';
     deptController.MyController,
     logController.MyController,
     onlineController.MyController,
-    serveController.MyController,
     dictController.MyController,
     dictDataController.MyController,
     configController.MyController,
@@ -63,7 +59,6 @@ import * as menuService from './menu/service';
     deptService.Service,
     logService.Service,
     onlineService.Service,
-    serveService.Service,
     dictService.Service,
     dictDataService.Service,
     configService.Service,
