@@ -1,10 +1,9 @@
-import { sys_oper_log } from '@repo/database';
-import { ADMIN_PREFIX } from 'src/modules/admin/admin.constants';
-import { generatePageDto, generateDto, InfoDto, DeleteDto } from 'src/common/utils/dto-generator';
+import { generatePageDto, generateDto } from 'src/common/utils/dto-generator';
+export { InfoDto, DeleteDto } from 'src/common/utils/dto-generator';
+export { ADMIN_PREFIX } from 'src/modules/admin/admin.constants';
 export const keyStr = '操作日志';
-export const tableName = 'sys_oper_log';
 export const controllerName = 'operlog';
-export type tableType = sys_oper_log;
+export const tableName = 'sys_oper_log';
+export { sys_oper_log as tableType } from '@repo/database';
 export const tableQueryType = generatePageDto(tableName);
 export const tableDTO = generateDto(tableName);
-export { ADMIN_PREFIX, InfoDto, DeleteDto };

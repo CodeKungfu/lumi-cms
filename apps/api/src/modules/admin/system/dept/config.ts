@@ -1,12 +1,9 @@
-import { sys_dept } from '@repo/database';
-import { ADMIN_PREFIX } from 'src/modules/admin/admin.constants';
-export { ADMIN_PREFIX };
+import { generatePageDto, generateDto } from 'src/common/utils/dto-generator';
+export { InfoDto } from 'src/common/utils/dto-generator';
+export { ADMIN_PREFIX } from 'src/modules/admin/admin.constants';
 export const keyStr = '部门管理';
-export const tableName = 'sys_dept';
 export const controllerName = 'dept';
-export type tableType = sys_dept;
-
-import { generatePageDto, generateDto, InfoDto } from 'src/common/utils/dto-generator';
+export const tableName = 'sys_dept';
+export { sys_dept as tableType } from '@repo/database';
 export const tableQueryDTO = generatePageDto(tableName);
 export const tableDTO = generateDto(tableName);
-export { InfoDto };

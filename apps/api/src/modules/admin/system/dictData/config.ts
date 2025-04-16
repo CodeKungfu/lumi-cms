@@ -1,11 +1,9 @@
-import { sys_dict_data } from '@repo/database';
-import { ADMIN_PREFIX } from 'src/modules/admin/admin.constants';
+import { generatePageDto, generateDto } from 'src/common/utils/dto-generator';
+export { InfoDto, DeleteDto } from 'src/common/utils/dto-generator';
+export { ADMIN_PREFIX } from 'src/modules/admin/admin.constants';
 export const keyStr = '字典管理';
-export const tableName = 'sys_dict_data';
 export const controllerName = 'dict/data';
-export type tableType = sys_dict_data;
-
-import { generatePageDto, generateDto, InfoDto, DeleteDto } from 'src/common/utils/dto-generator';
+export const tableName = 'sys_dict_data';
+export { sys_dict_data as tableType } from '@repo/database';
 export const tableQueryDTO = generatePageDto(tableName);
 export const tableDTO = generateDto(tableName);
-export { InfoDto, DeleteDto, ADMIN_PREFIX };
