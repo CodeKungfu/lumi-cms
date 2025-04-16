@@ -3,28 +3,26 @@ import { ROOT_ROLE_ID } from 'src/modules/admin/admin.constants';
 import { rootRoleIdProvider } from '../core/provider/root-role-id.provider';
 import { SystemModule } from '../system/system.module';
 
-import * as operlogController from './operlog/controller';
-import * as operlogService from './operlog/service';
+// 模块列表
+const modules = ['operlog','logininfor','online'];
 
-import * as logininforController from './logininfor/controller';
-import * as logininforService from './logininfor/service';
-
-import * as onlineController from './online/controller';
-import * as onlineService from './online/service';
+// 动态导入所有模块
+const components = modules.reduce((acc, name) => {
+  acc[name] = {
+    controller: require(`./${name}/controller`),
+    service: require(`./${name}/service`)
+  };
+  return acc;
+}, {} as any);
 
 @Module({
   imports: [SystemModule],
-  controllers: [
-    logininforController.MyController,
-    operlogController.MyController,
-    onlineController.MyController,
-  ],
+  controllers: modules.map(name => components[name].controller.MyController),
   providers: [
     rootRoleIdProvider(),
-    logininforService.Service,
-    operlogService.Service,
-    onlineService.Service,
+    ...modules.map(name => components[name].service.Service)
   ],
-  exports: [ROOT_ROLE_ID, onlineService.Service],
+  exports: [ROOT_ROLE_ID, components.online.service.Service],
 })
+
 export class MonitorModule {}
