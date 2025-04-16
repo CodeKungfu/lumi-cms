@@ -8,7 +8,6 @@ import { ApiExceptionFilter } from './common/filters/api-exception.filter';
 import { ApiTransformInterceptor } from './common/interceptors/api-transform.interceptor';
 import { setupSwagger } from './setup-swagger';
 import { LoggerService } from './shared/logger/logger.service';
-// import { SocketIoAdapter } from '@/modules/ws/socket-io.adapter';
 
 const SERVER_PORT = process.env.SERVER_PORT;
 
@@ -19,7 +18,6 @@ async function bootstrap() {
   app.enableCors();
   // 给请求添加prefix
   // app.setGlobalPrefix(PREFIX);
-  app.setGlobalPrefix('', { exclude: ['sse', 'messages'] });
   // custom logger
   app.useLogger(app.get(LoggerService));
   // validate
