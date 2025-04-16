@@ -31,6 +31,15 @@ export class MyController {
   @RequiresPermissions('system:operlog:remove')
   @ApiOperation({ summary: `查询${keyStr}` })
   @ApiOkResponse()
+  @Delete('clean')
+  async deleteAll(): Promise<any> {
+    const list = await this.service.delete('clean');
+    return list;
+  }
+
+  @RequiresPermissions('system:operlog:remove')
+  @ApiOperation({ summary: `查询${keyStr}` })
+  @ApiOkResponse()
   @Delete(':id')
   async delete(@Param() params: DeleteDto): Promise<any> {
     const list = await this.service.delete(params.id);

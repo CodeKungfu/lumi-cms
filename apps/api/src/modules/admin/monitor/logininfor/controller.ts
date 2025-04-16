@@ -36,20 +36,20 @@ export class MyController {
     return list;
   }
 
-  @ApiOperation({ summary: `查询${keyStr}` })
-  @ApiOkResponse()
-  @Delete(':id')
-  async delete(@Param() params: DeleteDto): Promise<any> {
-    const list = await this.service.delete(params.id);
-    return list;
-  }
-
   @ApiOperation({ summary: `清空${keyStr}` })
   @ApiOkResponse()
   @Delete('clean')
   async clean(): Promise<any> {
     await this.service.clearLoginLog();
     return true;
+  }
+
+  @ApiOperation({ summary: `查询${keyStr}` })
+  @ApiOkResponse()
+  @Delete(':id')
+  async delete(@Param() params: DeleteDto): Promise<any> {
+    const list = await this.service.delete(params.id);
+    return list;
   }
 
   @ApiOperation({ summary: `查询${keyStr}` })
