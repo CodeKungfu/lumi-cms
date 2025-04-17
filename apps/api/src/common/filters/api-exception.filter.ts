@@ -1,7 +1,7 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common';
 import { FastifyReply } from 'fastify';
 // import { isDev } from 'src/config/env';
-import { LoggerService } from 'src/shared/logger/logger.service';
+// import { LoggerService } from 'src/shared/logger/logger.service';
 import { ApiException } from '../exceptions/api.exception';
 import { ResponseDto } from '../class/res.class';
 
@@ -10,7 +10,7 @@ import { ResponseDto } from '../class/res.class';
  */
 @Catch()
 export class ApiExceptionFilter implements ExceptionFilter {
-  constructor(private logger: LoggerService) {}
+  // constructor(private logger: LoggerService) {}
 
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
@@ -29,7 +29,8 @@ export class ApiExceptionFilter implements ExceptionFilter {
     // }
     // 记录 500 日志
     if (status >= 500) {
-      this.logger.error(exception, ApiExceptionFilter.name);
+      // this.logger.error(exception, ApiExceptionFilter.name);
+      console.log(exception, ApiExceptionFilter.name);
     }
     const result = new ResponseDto(code, null, message);
     response.status(status).send(result);

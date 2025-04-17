@@ -4,8 +4,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import Configuration from './config/configuration';
 import { AdminModule } from './modules/admin/admin.module';
 import { SharedModule } from './shared/shared.module';
-import { LoggerModule } from './shared/logger/logger.module';
-import { WinstonLogLevel } from './shared/logger/logger.interface';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { OperlogInterceptor } from './common/interceptors/operlog.interceptor';
 
@@ -15,28 +13,6 @@ import { OperlogInterceptor } from './common/interceptors/operlog.interceptor';
       isGlobal: true,
       load: [Configuration],
     }),
-    // custom logger
-    LoggerModule.forRootAsync(
-      {
-        imports: [ConfigModule],
-        useFactory: (configService: ConfigService) => {
-          return {
-            level: configService.get<WinstonLogLevel>('logger.level'),
-            consoleLevel: configService.get<WinstonLogLevel>('logger.consoleLevel'),
-            timestamp: configService.get<boolean>('logger.timestamp'),
-            maxFiles: configService.get<string>('logger.maxFiles'),
-            maxFileSize: configService.get<string>('logger.maxFileSize'),
-            disableConsoleAtProd: configService.get<boolean>('logger.disableConsoleAtProd'),
-            dir: configService.get<string>('logger.dir'),
-            errorLogName: configService.get<string>('logger.errorLogName'),
-            appLogName: configService.get<string>('logger.appLogName'),
-          };
-        },
-        inject: [ConfigService],
-      },
-      // global module
-      true,
-    ),
     // custom module
     SharedModule,
     // application modules import

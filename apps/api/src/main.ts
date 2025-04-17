@@ -7,7 +7,6 @@ import { AppModule } from './app.module';
 import { ApiExceptionFilter } from './common/filters/api-exception.filter';
 import { ApiTransformInterceptor } from './common/interceptors/api-transform.interceptor';
 import { setupSwagger } from './setup-swagger';
-import { LoggerService } from './shared/logger/logger.service';
 
 const SERVER_PORT = process.env.SERVER_PORT;
 
@@ -19,7 +18,7 @@ async function bootstrap() {
   // 给请求添加prefix
   // app.setGlobalPrefix(PREFIX);
   // custom logger
-  app.useLogger(app.get(LoggerService));
+  // app.useLogger(app.get(LoggerService));
   // validate
   app.useGlobalPipes(
     new ValidationPipe({
@@ -38,7 +37,7 @@ async function bootstrap() {
     }),
   );
   // execption
-  app.useGlobalFilters(new ApiExceptionFilter(app.get(LoggerService)));
+  // app.useGlobalFilters(new ApiExceptionFilter(app.get(LoggerService)));
   // api interceptor
   app.useGlobalInterceptors(new ApiTransformInterceptor(new Reflector()));
   // swagger
