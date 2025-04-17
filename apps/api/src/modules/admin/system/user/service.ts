@@ -6,8 +6,6 @@ import { UtilService } from 'src/shared/services/util.service';
 import { ExcelService } from 'src/shared/services/excel.service';
 import { ROOT_ROLE_ID } from 'src/modules/admin/admin.constants';
 import { RedisService } from 'src/shared/services/redis.service';
-import { SYS_USER_INITPASSWORD } from 'src/common/contants/param-config.contants';
-// import { SysParamConfigService } from '../param-config/param-config.service';
 import { AccountInfo, PageSearchUserInfo } from 'src/common/dto';
 import { CreateUserDto, PageSearchUserDto, UpdatePasswordDto, UpdateUserDto, UpdateUserInfoDto } from 'src/common/dto';
 import { omit } from 'lodash';
@@ -467,11 +465,6 @@ export class Service {
     }
     // 所有用户初始密码为123456
     await prisma.$transaction(async (prisma) => {
-      // const salt = await this.util.generateRandomValue(32);
-      // 查找配置的初始密码
-      // const initPassword = await this.paramConfigService.findValueByKey(
-      //   SYS_USER_INITPASSWORD,
-      // );
       const initPassword = param.password;
       const password = this.util.md5(`${initPassword ?? '123456'}`);
       const result = await prisma.sys_user.create({

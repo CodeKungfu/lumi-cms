@@ -1,7 +1,6 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common';
 import { FastifyReply } from 'fastify';
 // import { isDev } from 'src/config/env';
-// import { LoggerService } from 'src/shared/logger/logger.service';
 import { ApiException } from '../exceptions/api.exception';
 import { ResponseDto } from '../class/res.class';
 
@@ -10,8 +9,6 @@ import { ResponseDto } from '../class/res.class';
  */
 @Catch()
 export class ApiExceptionFilter implements ExceptionFilter {
-  // constructor(private logger: LoggerService) {}
-
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<FastifyReply>();
