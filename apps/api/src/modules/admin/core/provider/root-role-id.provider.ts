@@ -9,7 +9,7 @@ export function rootRoleIdProvider(): FactoryProvider {
   return {
     provide: ROOT_ROLE_ID,
     useFactory: (configService: ConfigService) => {
-      return configService.get<number>('rootRoleId', 1);
+      return configService.get('rootRoleId', 1);
     },
     inject: [ConfigService],
   };

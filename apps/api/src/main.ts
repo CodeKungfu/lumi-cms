@@ -1,7 +1,6 @@
 import { HttpStatus, Logger, UnprocessableEntityException, ValidationPipe } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
-// import { ConfigService } from '@nestjs/config';
 import { ValidationError } from 'class-validator';
 import { AppModule } from './app.module';
 import { ApiExceptionFilter } from './common/filters/api-exception.filter';

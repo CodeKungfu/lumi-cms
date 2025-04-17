@@ -27,22 +27,18 @@ const providers = [UtilService, RedisService, ExcelService];
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
-        // 优先使用环境变量，其次使用配置服务
-        secret: process.env.JWT_SECRET || configService.get<string>('jwt.secret'),
+        secret: configService.get('JWT_SECRET'),
       }),
       inject: [ConfigService],
     }),
     RedisModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
-        // 优先使用环境变量，其次使用配置服务
-        const host = process.env.REDIS_HOST || configService.get<string>('redis.host');
-        // console.log('使用的Redis主机:', host);
         return {
-          host,
-          port: parseInt(process.env.REDIS_PORT || configService.get<string>('redis.port')),
-          password: process.env.REDIS_PASSWORD || configService.get<string>('redis.password'),
-          db: parseInt(process.env.REDIS_DB || configService.get<string>('redis.db')),
+          host: configService.get('REDIS_HOST'),
+          port: parseInt(configService.get('REDIS_PORT')),
+          password: configService.get('REDIS_PASSWORD'),
+          db: parseInt(configService.get('REDIS_DB')),
         };
       },
       inject: [ConfigService],
