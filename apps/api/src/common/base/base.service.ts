@@ -1,11 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { prisma } from 'src/prisma';
 import { isEmpty, map } from 'lodash';
+import { ExcelService } from 'src/shared/services/excel.service';
 import { ApiException } from 'src/common/exceptions/api.exception';
 import { processPageQuery } from 'src/common/utils/query-helper';
 
 @Injectable()
-export class BaseService<T = any> {
+export class BaseService {
+  @Inject(ExcelService)
+  protected excelService: ExcelService;
   constructor(
     protected readonly tableName: string,
     protected readonly primaryKey: string = 'id'
@@ -29,6 +32,18 @@ export class BaseService<T = any> {
   }
 
   /**
+   * 导出
+   */
+  async pageDtoExport(dto: any) {
+    const { processedQuery, orderBy } = processPageQuery(this.tableName, dto);
+    const result = await (prisma as any)[this.tableName].findMany({
+      where: processedQuery,
+      orderBy,
+    });
+    return this.excelService.createExcelFile('target', result);
+  }
+
+  /**
    * 查询详情
    */
   async info(id: any) {
@@ -44,7 +59,11 @@ export class BaseService<T = any> {
    * 创建记录
    */
   async create(data: any) {
-    return (prisma as any)[this.tableName].create({ data });
+    return (prisma as any)[this.tableName].create({ 
+      ...data,
+      createTime: new Date(), 
+      updateTime: new Date(),
+    });
   }
 
   /**
@@ -72,7 +91,9 @@ export class BaseService<T = any> {
     }
     const result: any = await (prisma as any)[this.tableName].deleteMany({ 
         where: { 
-            [this.primaryKey]: map(id.toString().split(','), Number), 
+            [this.primaryKey]: {
+              in: map(id.toString().split(','), Number), 
+            }
         }
     });
     return { count: result.count };

@@ -40,7 +40,7 @@ export class MyController {
   @ApiOkResponse()
   @Delete('clean')
   async clean(): Promise<any> {
-    await this.service.clearLoginLog();
+    await this.service.delete('clean');
     return true;
   }
 
