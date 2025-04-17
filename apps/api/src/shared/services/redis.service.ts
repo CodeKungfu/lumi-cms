@@ -10,11 +10,6 @@ export class RedisService {
     private readonly clients: Map<string, Redis | Cluster>,
   ) {}
 
-  /**
-   * get redis client by name
-   * @param name client name
-   * @returns Redis Instance
-   */
   public getRedis(name = REDIS_DEFAULT_CLIENT_KEY): Redis {
     if (!this.clients.has(name)) {
       throw new Error(`redis client ${name} does not exist`);
