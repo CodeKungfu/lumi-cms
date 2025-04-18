@@ -4,7 +4,7 @@ import { Keep, RequiresPermissions } from 'src/common/decorators';
 import { ExcelFileCleanupInterceptor } from 'src/common/interceptors/excel.interceptor';
 import { Service } from './service';
 import { keyStr, controllerName, ADMIN_PREFIX } from './config';
-import { tableQueryDTO, tableDTO, InfoDto } from './config';
+import { tableQueryDTO, tableDTO, InfoDto, DeleteDto } from './config';
 
 @ApiSecurity(ADMIN_PREFIX)
 @ApiTags(`${keyStr}模块`)
@@ -92,7 +92,7 @@ export class MyController {
   @ApiOperation({ summary: `查询${keyStr}` })
   @ApiOkResponse()
   @Delete(':id')
-  async delete(@Param() params: InfoDto): Promise<any> {
+  async delete(@Param() params: DeleteDto): Promise<any> {
     const list = await this.service.delete(params.id);
     return list;
   }

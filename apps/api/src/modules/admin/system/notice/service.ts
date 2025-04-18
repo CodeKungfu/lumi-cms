@@ -29,13 +29,15 @@ export class Service {
   /**
    * 根据获取信息
    */
-  async delete(id: number): Promise<tableType> {
-    const resultInfo: tableType = await prisma[tableName].delete({
-      where: {
-        noticeId: Number(id),
-      },
+  async delete(id: any): Promise<any> {
+      const result: any = await (prisma as any)[tableName].deleteMany({ 
+        where: { 
+          noticeId: {
+              in: map(id.toString().split(','), Number), 
+            }
+        }
     });
-    return resultInfo;
+    return { count: result.count };
   }
 
   /**

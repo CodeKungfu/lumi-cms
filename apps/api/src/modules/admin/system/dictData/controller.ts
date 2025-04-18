@@ -52,8 +52,8 @@ export class MyController {
   @ApiOperation({ summary: `查询${keyStr}` })
   @ApiOkResponse()
   @Get(':id')
-  async info1(@Param() params: InfoDto): Promise<any> {
-    const list = await this.service.info1(params.id);
+  async info(@Param() params: InfoDto): Promise<any> {
+    const list = await this.service.info(params.id);
     return list;
   }
 
@@ -63,8 +63,8 @@ export class MyController {
   @ApiOperation({ summary: `查询${keyStr}` })
   @ApiOkResponse()
   @Get('type/:name')
-  async info(@Param() params: any): Promise<any> {
-    const list = await this.service.info(params.name);
+  async info2(@Param() params: any): Promise<any> {
+    const list = await this.service.info2(params.name);
     return list;
   }
 

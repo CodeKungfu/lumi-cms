@@ -1,5 +1,5 @@
 import { generatePageDto, generateDto } from 'src/common/utils/dto-generator';
-export { InfoDto } from 'src/common/utils/dto-generator';
+export { InfoDto, DeleteDto } from 'src/common/utils/dto-generator';
 export { ADMIN_PREFIX } from 'src/modules/admin/admin.constants';
 export const keyStr = '通知公告';
 export const controllerName = 'notice';
