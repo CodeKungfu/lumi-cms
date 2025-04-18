@@ -28,7 +28,16 @@ export class BaseService {
       }),
       (prisma as any)[this.tableName].count({ where: processedQuery }),
     ]);
-    return { result, countNum };
+    
+    return {
+      rows: result,
+      total: countNum,
+      pagination: {
+        size: dto.pageSize,
+        page: dto.pageNum,
+        total: countNum,
+      },
+    }
   }
 
   /**

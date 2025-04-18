@@ -20,8 +20,9 @@ export class MyController {
   @ApiOperation({ summary: `分页查询${keyStr}` })
   @Keep()
   @Get('list')
-  async list(@Query() dto: any): Promise<any> {
-    const rows = await this.service.pageDto(dto);
+  // @ts-ignore ← Ignore type error, Swagger can generate fields normally
+  async list(@Query() dto: tableQueryDTO): Promise<any> {
+    const { rows } = await this.service.pageDto(dto);
     return {
       data: rows,
     };
@@ -49,8 +50,7 @@ export class MyController {
   @ApiOkResponse()
   @Get(':id')
   async info(@Param() params: InfoDto): Promise<any> {
-    const list = await this.service.info(params.id);
-    return list;
+    return await this.service.info(params.id);
   }
 
   /**
@@ -62,8 +62,7 @@ export class MyController {
   @Post()
   // @ts-ignore ← Ignore type error, Swagger can generate fields normally
   async create(@Body() body: tableDTO, @AdminUser() user: IAdminUser): Promise<any> {
-    const list = await this.service.create(body, user.userName);
-    return list;
+    return await this.service.create(body, user.userName);
   }
 
   /**
@@ -75,8 +74,7 @@ export class MyController {
   @Put()
   // @ts-ignore ← Ignore type error, Swagger can generate fields normally
   async update(@Body() body: tableDTO, @AdminUser() user: IAdminUser): Promise<any> {
-    const list = await this.service.update(body, user.userName);
-    return list;
+    return await this.service.update(body, user.userName);
   }
 
   /**
@@ -87,7 +85,6 @@ export class MyController {
   @ApiOkResponse()
   @Delete(':id')
   async delete(@Param() params: DeleteDto): Promise<any> {
-    const list = await this.service.delete(params.id);
-    return list;
+    return await this.service.delete(params.id);
   }
 }
