@@ -19,7 +19,7 @@ export class MyController {
   @Keep()
   @Get('list')
   async list(@Query() dto: any): Promise<any> {
-    const rows = await this.service.list(dto);
+    const rows = await this.service.pageDto(dto);
     return {
       data: rows,
     };
@@ -46,7 +46,7 @@ export class MyController {
   @ApiOperation({ summary: `查询${keyStr}` })
   @ApiOkResponse()
   @Get(':id')
-  async info1(@Param() params: InfoDto): Promise<any> {
+  async info(@Param() params: InfoDto): Promise<any> {
     const list = await this.service.info(params.id);
     return list;
   }
