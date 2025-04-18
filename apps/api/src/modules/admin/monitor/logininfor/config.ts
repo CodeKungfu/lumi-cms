@@ -7,3 +7,7 @@ export const tableName = 'sys_logininfor';
 export { sys_logininfor as tableType } from '@repo/database';
 export const tableQueryDTO = generatePageDto(tableName);
 export const tableDTO = generateDto(tableName);
+
+export const permissionsPrefix = 'system:logininfor';
+export { IAdminUser } from '../../admin.interface';
+export { AdminUser } from '../../core/decorators/admin-user.decorator';

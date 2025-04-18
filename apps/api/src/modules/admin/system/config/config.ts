@@ -7,3 +7,7 @@ export const tableName = 'sys_config';
 export { sys_config as tableType} from '@repo/database';
 export const tableQueryDTO = generatePageDto(tableName);
 export const tableDTO = generateDto(tableName);
+
+export const permissionsPrefix = 'system:config';
+export { IAdminUser } from '../../admin.interface';
+export { AdminUser } from '../../core/decorators/admin-user.decorator';

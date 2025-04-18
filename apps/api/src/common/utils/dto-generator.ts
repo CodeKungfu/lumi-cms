@@ -135,13 +135,16 @@ export class InfoDto {
 export class DeleteDto {
   @ApiProperty({
     description: 'id (支持单个ID或逗号分隔的多个ID)',
-    example: '1 / 1,2,3'
+    example: '1 / 1,2,3 / clean'
   })
   @Transform(({ value }) => {
     if (typeof value === 'string') {
       // 处理逗号分隔的ID字符串
       if (value.includes(',')) {
         return value.split(',').map(id => Number(id.trim()));
+      }
+      if (value === 'clean') {
+        return 'clean'
       }
       // 单个ID
       return Number(value);
@@ -150,5 +153,5 @@ export class DeleteDto {
     return value;
   })
   @IsOptional()
-  id: any;
+  id: String;
 }

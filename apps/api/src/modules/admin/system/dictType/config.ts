@@ -7,3 +7,6 @@ export const tableName = 'sys_dict_type';
 export { sys_dict_type as tableType } from '@repo/database';
 export const tableQueryDTO = generatePageDto(tableName);
 export const tableDTO = generateDto(tableName);
+export const permissionsPrefix = 'system:dict';
+export { IAdminUser } from '../../admin.interface';
+export { AdminUser } from '../../core/decorators/admin-user.decorator';
