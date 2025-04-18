@@ -1,6 +1,8 @@
 import { Body, Controller, Get, Post, Param, Put, Delete, Query } from '@nestjs/common';
 import { ApiOperation, ApiOkResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { Keep, RequiresPermissions } from 'src/common/decorators';
+import { IAdminUser } from '../../admin.interface';
+import { AdminUser } from '../../core/decorators/admin-user.decorator';
 import { Service } from './service';
 import { keyStr, controllerName, ADMIN_PREFIX } from './config';
 import { tableQueryDTO, tableDTO, InfoDto, DeleteDto } from './config';
@@ -59,8 +61,8 @@ export class MyController {
   @ApiOkResponse()
   @Post()
   // @ts-ignore ← Ignore type error, Swagger can generate fields normally
-  async create(@Body() body: tableDTO): Promise<any> {
-    const list = await this.service.create(body);
+  async create(@Body() body: tableDTO, @AdminUser() user: IAdminUser): Promise<any> {
+    const list = await this.service.create(body, user.userName);
     return list;
   }
 
@@ -72,8 +74,8 @@ export class MyController {
   @ApiOkResponse()
   @Put()
   // @ts-ignore ← Ignore type error, Swagger can generate fields normally
-  async update(@Body() body: tableDTO): Promise<any> {
-    const list = await this.service.update(body);
+  async update(@Body() body: tableDTO, @AdminUser() user: IAdminUser): Promise<any> {
+    const list = await this.service.update(body, user.userName);
     return list;
   }
 

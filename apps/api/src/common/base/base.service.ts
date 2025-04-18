@@ -58,18 +58,19 @@ export class BaseService {
   /**
    * 创建记录
    */
-  async create(data: any) {
+  async create(data: any, userName: string) {
     return (prisma as any)[this.tableName].create({ 
       ...data,
       createTime: new Date(), 
       updateTime: new Date(),
+      createBy: userName,
     });
   }
 
   /**
    * 更新记录
    */
-  async update(data: any) {
+  async update(data: any, userName: string) {
     const { [this.primaryKey]: id, createTime, ...rest } = data;
     const where = { [this.primaryKey]: id };
     return (prisma as any)[this.tableName].update({
@@ -77,6 +78,7 @@ export class BaseService {
       data: {
         ...rest,
         updateTime: new Date(),
+        updateBy: userName,
       },
     });
   }
