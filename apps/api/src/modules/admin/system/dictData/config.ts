@@ -3,6 +3,7 @@ export { InfoDto, DeleteDto } from 'src/common/utils/dto-generator';
 export { ADMIN_PREFIX } from 'src/modules/admin/admin.constants';
 export const keyStr = '字典管理';
 export const controllerName = 'dict/data';
+export const permissionsPrefix = 'system:dict';
 export const tableName = 'sys_dict_data';
 export { sys_dict_data as tableType } from '@repo/database';
 export const tableQueryDTO = generatePageDto(tableName);

@@ -9,7 +9,6 @@ export class Service extends BaseService {
     super(tableName, 'deptId');
   }
 
-  // exclude
   async exclude(id: any): Promise<any> {
     return await prisma[tableName].findMany({
       orderBy: {

@@ -150,5 +150,5 @@ export class DeleteDto {
     return value;
   })
   @IsOptional()
-  id: number | number[];
+  id: any;
 }

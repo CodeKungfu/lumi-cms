@@ -1,89 +1,41 @@
-import { Body, Controller, Get, Post, Param, Put, Delete, Query } from '@nestjs/common';
-import { ApiOperation, ApiOkResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { Keep, RequiresPermissions } from 'src/common/decorators';
-import { IAdminUser } from '../../admin.interface';
-import { AdminUser } from '../../core/decorators/admin-user.decorator';
+import { Body, Param, Query } from '@nestjs/common';
+import { ControllerCreate, ApiList, ApiInfo, ApiCreate, ApiUpdate, ApiDelete } from 'src/common/decorators/controller.decorators';
 import { Service } from './service';
-import { keyStr, controllerName, ADMIN_PREFIX } from './config';
-import { tableQueryDTO, tableDTO, InfoDto, DeleteDto } from './config';
+import { keyStr, controllerName, ADMIN_PREFIX, permissionsPrefix, tableQueryDTO, tableDTO, InfoDto, DeleteDto, IAdminUser, AdminUser } from './config';
 
-@ApiSecurity(ADMIN_PREFIX)
-@ApiTags(`${keyStr}模块`)
-@Controller(`${controllerName}`)
+@ControllerCreate(`${keyStr}模块`, controllerName, ADMIN_PREFIX)
 export class MyController {
   constructor(private service: Service) {}
 
-  /**
-   * 获取部门列表
-   */
-  @RequiresPermissions('system:dept:list')
-  @ApiOperation({ summary: `分页查询${keyStr}` })
-  @Keep()
-  @Get('list')
+  @ApiList('list', permissionsPrefix, `分页查询${keyStr}`)
   // @ts-ignore ← Ignore type error, Swagger can generate fields normally
   async list(@Query() dto: tableQueryDTO): Promise<any> {
-    const { rows } = await this.service.pageDto(dto);
-    return {
-      data: rows,
-    };
+    return await this.service.pageDto(dto);
   }
 
-  /**
-   * 查询部门列表（排除节点）
-   */
-  @RequiresPermissions('system:dept:list')
-  @ApiOperation({ summary: `查询${keyStr}（排除节点）` })
-  @Keep()
-  @Get('list/exclude/:id')
+  @ApiList('list/exclude/:id', permissionsPrefix, `查询${keyStr}（排除节点）`)
   async exclude(@Param() params: InfoDto): Promise<any> {
-    const rows = await this.service.exclude(params.id);
-    return {
-      data: rows,
-    };
+    return await this.service.exclude(params.id);
   }
 
-  /**
-   * 根据部门编号获取详细信息
-   */
-  @RequiresPermissions('system:dept:query')
-  @ApiOperation({ summary: `查询${keyStr}` })
-  @ApiOkResponse()
-  @Get(':id')
+  @ApiInfo(':id', permissionsPrefix, `查询${keyStr}详情`)
   async info(@Param() params: InfoDto): Promise<any> {
     return await this.service.info(params.id);
   }
 
-  /**
-   * 新增部门
-   */
-  @RequiresPermissions('system:dept:add')
-  @ApiOperation({ summary: `查询${keyStr}` })
-  @ApiOkResponse()
-  @Post()
+  @ApiCreate('', permissionsPrefix, `新增${keyStr}`)
   // @ts-ignore ← Ignore type error, Swagger can generate fields normally
   async create(@Body() body: tableDTO, @AdminUser() user: IAdminUser): Promise<any> {
     return await this.service.create(body, user.userName);
   }
 
-  /**
-   * 修改部门
-   */
-  @RequiresPermissions('system:dept:edit')
-  @ApiOperation({ summary: `查询${keyStr}` })
-  @ApiOkResponse()
-  @Put()
+  @ApiUpdate('',permissionsPrefix, `修改${keyStr}`)
   // @ts-ignore ← Ignore type error, Swagger can generate fields normally
   async update(@Body() body: tableDTO, @AdminUser() user: IAdminUser): Promise<any> {
     return await this.service.update(body, user.userName);
   }
 
-  /**
-   * 删除部门
-   */
-  @RequiresPermissions('system:dept:remove')
-  @ApiOperation({ summary: `查询${keyStr}` })
-  @ApiOkResponse()
-  @Delete(':id')
+  @ApiDelete(':id',permissionsPrefix, `删除${keyStr}`)
   async delete(@Param() params: DeleteDto): Promise<any> {
     return await this.service.delete(params.id);
   }

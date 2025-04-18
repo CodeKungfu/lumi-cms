@@ -176,7 +176,7 @@ const { queryParams, form, rules } = toRefs(data);
 function getList() {
   loading.value = true;
   listDept(queryParams.value).then(response => {
-    deptList.value = proxy.handleTree(response.data, "deptId");
+    deptList.value = proxy.handleTree(response.rows, "deptId");
     loading.value = false;
   });
 }
@@ -212,7 +212,7 @@ function resetQuery() {
 function handleAdd(row) {
   reset();
   listDept().then(response => {
-    deptOptions.value = proxy.handleTree(response.data, "deptId");
+    deptOptions.value = proxy.handleTree(response.rows, "deptId");
   });
   if (row != undefined) {
     form.value.parentId = row.deptId;
@@ -232,7 +232,7 @@ function toggleExpandAll() {
 function handleUpdate(row) {
   reset();
   listDeptExcludeChild(row.deptId).then(response => {
-    deptOptions.value = proxy.handleTree(response.data, "deptId");
+    deptOptions.value = proxy.handleTree(response.rows, "deptId");
   });
   getDept(row.deptId).then(response => {
     form.value = response.data;
