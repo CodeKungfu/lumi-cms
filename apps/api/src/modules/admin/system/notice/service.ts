@@ -1,98 +1,10 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { ApiException } from 'src/common/exceptions/api.exception';
-import { difference, filter, includes, isEmpty, map, findIndex, omit } from 'lodash';
-import { prisma } from 'src/prisma';
-import { tableType, tableName } from './config';
+import { Injectable } from '@nestjs/common';
+import { tableName } from './config';
+import { BaseService } from 'src/common/base/base.service';
 
 @Injectable()
-export class Service {
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  constructor() {}
-
-  /**
-   * 根据获取信息
-   */
-  async info(id: number): Promise<any> {
-    const resultInfo: any = await prisma[tableName].findFirst({
-      where: {
-        noticeId: Number(id),
-      },
-    });
-    if (isEmpty(resultInfo)) {
-      throw new ApiException(10017);
-    }
-    resultInfo.noticeContent = Buffer.from(resultInfo.noticeContent).toString('utf-8');
-
-    return resultInfo;
-  }
-
-  /**
-   * 根据获取信息
-   */
-  async delete(id: any): Promise<any> {
-      const result: any = await (prisma as any)[tableName].deleteMany({ 
-        where: { 
-          noticeId: {
-              in: map(id.toString().split(','), Number), 
-            }
-        }
-    });
-    return { count: result.count };
-  }
-
-  /**
-   * 更新信息
-   */
-  async update(body: any, userName: string = 'admin'): Promise<tableType> {
-    const updateObj = omit(body, ['noticeId', 'createTime']);
-    updateObj.noticeContent = Buffer.from(updateObj.noticeContent);
-    const resultInfo: tableType = await prisma[tableName].update({
-      data: {
-        ... updateObj,
-        updateTime: new Date(),
-        updateBy: userName,
-      },
-      where: {
-        noticeId: body.noticeId,
-      },
-    });
-    return resultInfo;
-  }
-
-  /**
-   * 新增信息
-   */
-  async create(body: any, userName: string = 'admin'): Promise<any> {
-    body.noticeContent = Buffer.from(body.noticeContent);
-    const resultInfo: tableType = await prisma[tableName].create({
-      data: {
-        ...body,
-        createTime: new Date(),
-        createBy: userName,
-      },
-    });
-    return resultInfo;
-  }
-
-  /**
-   * 分页查询信息
-   */
-  async pageDto(dto: any): Promise<any> {
-    const queryObj = omit(dto, ['pageNum', 'pageSize']);
-    const result: any = await prisma[tableName].findMany({
-      skip: (Number(dto.pageNum) - 1) * Number(dto.pageSize),
-      take: Number(dto.pageSize),
-      where: queryObj,
-    });
-    result.map((item: any) => {
-      item.noticeContent = Buffer.from(item.noticeContent).toString('utf-8');
-    });
-    const countNum: any = await prisma[tableName].count({
-      where: queryObj,
-    });
-    return {
-      result,
-      countNum,
-    };
+export class Service extends BaseService {
+  constructor() {
+    super(tableName, 'noticeId');
   }
 }

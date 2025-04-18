@@ -23,6 +23,9 @@ export class MyController {
   // @ts-ignore ← Ignore type error, Swagger can generate fields normally
   async page(@Query() dto: tableQueryDTO): Promise<any> {
     const rows = await this.service.pageDto(dto);
+    rows.result.map((item: any) => {
+      item.noticeContent = Buffer.from(item.noticeContent).toString('utf-8');
+    });
     return {
       rows: rows.result,
       total: rows.countNum,
@@ -41,8 +44,9 @@ export class MyController {
   @ApiOperation({ summary: `查询${keyStr}` })
   @ApiOkResponse()
   @Get(':id')
-  async info1(@Param() params: InfoDto): Promise<any> {
+  async info(@Param() params: InfoDto): Promise<any> {
     const list = await this.service.info(params.id);
+    list.noticeContent = Buffer.from(list.noticeContent).toString('utf-8');
     return list;
   }
 
@@ -55,6 +59,7 @@ export class MyController {
   @Post()
   // @ts-ignore ← Ignore type error, Swagger can generate fields normally
   async create(@Body() body: tableDTO, @AdminUser() user: IAdminUser): Promise<any> {
+    body.noticeContent = Buffer.from(body.noticeContent);
     const list = await this.service.create(body, user.userName);
     return list;
   }
@@ -68,6 +73,7 @@ export class MyController {
   @Put()
   // @ts-ignore ← Ignore type error, Swagger can generate fields normally
   async update(@Body() body: tableDTO, @AdminUser() user: IAdminUser): Promise<any> {
+    body.noticeContent = Buffer.from(body.noticeContent);
     const list = await this.service.update(body, user.userName);
     return list;
   }
