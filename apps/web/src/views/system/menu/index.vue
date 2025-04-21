@@ -312,7 +312,7 @@ const { queryParams, form, rules } = toRefs(data);
 function getList() {
   loading.value = true;
   listMenu(queryParams.value).then(response => {
-    menuList.value = proxy.handleTree(response.data, "menuId");
+    menuList.value = proxy.handleTree(response.result, "menuId");
     loading.value = false;
   });
 }
@@ -321,7 +321,7 @@ function getTreeselect() {
   menuOptions.value = [];
   listMenu().then(response => {
     const menu = { menuId: 0, menuName: "主类目", children: [] };
-    menu.children = proxy.handleTree(response.data, "menuId");
+    menu.children = proxy.handleTree(response.result, "menuId");
     menuOptions.value.push(menu);
   });
 }

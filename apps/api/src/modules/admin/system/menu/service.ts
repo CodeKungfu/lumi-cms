@@ -53,19 +53,6 @@ export class Service {
     private roleService: SysRoleService,
   ) {}
 
-  /**
-   * 获取所有部门
-   */
-  async list(dto: any): Promise<tableType[]> {
-    const queryObj = omit(dto, ['pageNum', 'pageSize']);
-    return await prisma[tableName].findMany({
-      where: queryObj,
-      orderBy: {
-        orderNum: 'desc',
-      },
-    });
-  }
-
   // exclude
   async exclude(id: any): Promise<tableType[]> {
     return await prisma[tableName].findMany({
@@ -150,7 +137,7 @@ export class Service {
   /**
    * 根据获取信息
    */
-  async delete(id: number): Promise<tableType> {
+  async delete(id: any): Promise<tableType> {
     const resultInfo: tableType = await prisma[tableName].delete({
       where: {
         menuId: Number(id),
@@ -162,10 +149,14 @@ export class Service {
   /**
    * 更新信息
    */
-  async update(body: any): Promise<tableType> {
+  async update(body: any, username: string): Promise<tableType> {
     const updateObj = omit(body, ['menuId', 'createTime']);
     const resultInfo: tableType = await prisma[tableName].update({
-      data: updateObj,
+      data: {
+        ...updateObj,
+        updateBy: username,
+        updateTime: new Date(),
+      },
       where: {
         menuId: body.menuId,
       },
@@ -176,9 +167,13 @@ export class Service {
   /**
    * 新增信息
    */
-  async create(body: any): Promise<any> {
+  async create(body: any, username: string): Promise<any> {
     const resultInfo: tableType = await prisma[tableName].create({
-      data: body,
+      data: {
+        ...body,
+        createTime: new Date(),
+        createBy: username,
+      },
     });
     return resultInfo;
   }
@@ -188,13 +183,14 @@ export class Service {
    */
   async pageDto(dto: any): Promise<any> {
     const queryObj = omit(dto, ['pageNum', 'pageSize']);
-    const result: any = await prisma[tableName].findMany({
-      skip: (Number(dto.pageNum) - 1) * Number(dto.pageSize),
-      take: Number(dto.pageSize),
-      where: queryObj,
-    });
     const countNum: any = await prisma[tableName].count({
       where: queryObj,
+    });
+    const result =  await prisma[tableName].findMany({
+      where: queryObj,
+      orderBy: {
+        orderNum: 'desc',
+      },
     });
     return {
       result,
