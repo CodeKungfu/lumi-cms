@@ -1,28 +1,22 @@
-import { Body, Controller, Get, Post, Query, Param, Put, Delete, Res, UseInterceptors, StreamableFile } from '@nestjs/common';
-import { ApiOperation, ApiOkResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { ADMIN_PREFIX } from 'src/modules/admin/admin.constants';
+import { Body, Get, Post, Query, Param, Put, Res, StreamableFile } from '@nestjs/common';
+import { ApiOperation, ApiOkResponse } from '@nestjs/swagger';
 import { ApiException } from 'src/common/exceptions/api.exception';
 import { Keep, RequiresPermissions } from 'src/common/decorators';
-import { ExcelFileCleanupInterceptor } from 'src/common/interceptors/excel.interceptor';
 import { RoleInfo } from 'src/common/dto';
-import { CreateRoleDto, DeleteRoleDto, InfoRoleDto, UpdateRoleDto } from 'src/common/dto';
-import { AdminUser } from '../../core/decorators/admin-user.decorator';
-import { IAdminUser } from '../../admin.interface';
+import { DeleteRoleDto, InfoRoleDto, UpdateRoleDto } from 'src/common/dto';
 import * as SysMenuService from '../menu/service';
 import { Service as SysRoleService } from './service';
 
-@ApiSecurity(ADMIN_PREFIX)
-@ApiTags('角色模块')
-@Controller('role')
+import { ControllerCreate, ApiList, ApiInfo, ApiCreate, ApiUpdate, ApiDelete, ApiExport } from 'src/common/decorators/controller.decorators';
+import { keyStr, controllerName, ADMIN_PREFIX, permissionsPrefix, tableQueryDTO, tableDTO, InfoDto, DeleteDto, IAdminUser, AdminUser } from './config';
+
+@ControllerCreate(`${keyStr}模块`, controllerName, ADMIN_PREFIX)
 export class MyController {
   constructor(private roleService: SysRoleService, private menuService: SysMenuService.Service) {}
 
-  @RequiresPermissions('system:role:list')
-  @ApiOperation({ summary: '获取角色列表' })
-  @ApiOkResponse()
-  @Keep()
-  @Get('list')
-  async list(@Query() dto: any={}): Promise<any> {
+  @ApiList('list', permissionsPrefix, `分页查询${keyStr}`)
+   // @ts-ignore ← Ignore type error, Swagger can generate fields normally
+  async list(@Query() dto: tableQueryDTO): Promise<any> {
     const rows = await this.roleService.pageDto2(dto);
     return {
       rows: rows.result,
@@ -38,10 +32,7 @@ export class MyController {
   /**
    * 导出用户列表
    */
-  @RequiresPermissions('system:role:export')
-  @ApiOperation({ summary: `导出` })
-  @UseInterceptors(ExcelFileCleanupInterceptor)
-  @Post('export')
+  @ApiExport('export', permissionsPrefix, `导出${keyStr}`)
   async export(@Body() dto: any, @Res() res: any): Promise<StreamableFile> {
     const { filename, filePath, file } =  await this.roleService.pageDtoExport(dto);
     res.filePathToDelete = filePath;
@@ -53,11 +44,8 @@ export class MyController {
   /**
    * 根据角色编号获取详细信息
    */
-  @RequiresPermissions('system:role:query')
-  @ApiOperation({ summary: `获取角色信息` })
-  @ApiOkResponse()
-  @Get(':id')
-  async info1(@Param() params: any): Promise<any> {
+  @ApiInfo(':id', permissionsPrefix, `查询${keyStr}详情`)
+  async info1(@Param() params: InfoDto): Promise<any> {
     const list = await this.roleService.detailInfo(params.id);
     return list;
   }
@@ -65,21 +53,18 @@ export class MyController {
   /**
    * 新增角色
    */
-  @RequiresPermissions('system:role:add')
-  @ApiOperation({ summary: '新增角色' })
-  @Post()
-  async add(@Body() dto: any, @AdminUser() user: IAdminUser): Promise<void> {
+  @ApiCreate('', permissionsPrefix, `新增${keyStr}`)
+  // @ts-ignore ← Ignore type error, Swagger can generate fields normally
+  async add(@Body() dto: tableDTO, @AdminUser() user: IAdminUser): Promise<void> {
     await this.roleService.add(dto, user.uid);
   }
 
   /**
    * 修改保存角色
    */
-  @RequiresPermissions('system:role:edit')
-  @ApiOperation({ summary: `获取角色信息` })
-  @ApiOkResponse()
-  @Put()
-  async updateV1(@Body() body: any): Promise<any> {
+  @ApiUpdate('',permissionsPrefix, `修改${keyStr}`)
+  // @ts-ignore ← Ignore type error, Swagger can generate fields normally
+  async updateV1(@Body() body: tableDTO): Promise<any> {
     const list = await this.roleService.updateV1(body);
     return list;
   }
@@ -98,11 +83,8 @@ export class MyController {
   /**
    * 删除角色
    */
-  @RequiresPermissions('system:role:remove')
-  @ApiOperation({ summary: `获取角色信息` })
-  @ApiOkResponse()
-  @Delete(':ids')
-  async remove(@Param() params: any): Promise<any> {
+  @ApiDelete(':id',permissionsPrefix, `删除${keyStr}`)
+  async remove(@Param() params: DeleteDto): Promise<any> {
     const list = await this.roleService.delete(params);
     return list;
   }
