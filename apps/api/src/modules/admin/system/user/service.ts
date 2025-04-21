@@ -15,109 +15,6 @@ import { processPageQuery } from 'src/common/utils/query-helper';
 // 使用更简单的方式定义 sys_user 类型
 type sys_user = Awaited<ReturnType<typeof prisma.sys_user.findUnique>>;
 
-// 定义 sys_user 类型
-
-// 能用1
-// const transData = (jsonArr, roleId) => {
-//   let readArr = [];
-//   if (roleId) {
-//     jsonArr.forEach((item) => {
-//       if (item.roleId === roleId) {
-//         readArr.push(item);
-//       }
-//     });
-//   } else {
-//     readArr = jsonArr;
-//   }
-//   // 调用方法， temp为原始数据, result为树形结构数据
-//   const result = generateOptions(readArr);
-
-//   // 开始递归方法
-//   function generateOptions(params) {
-//     const result: any = [];
-//     for (const param of params) {
-//       if (Number(param.parentId) === 0) {
-//         // 判断是否为顶层节点
-//         const parent: any = {
-//           id: param.deptId,
-//           label: param.deptName,
-//         };
-//         parent.children = getchilds(param.deptId, params); // 获取子节点
-//         result.push(parent);
-//       }
-//     }
-//     return result;
-//   }
-
-//   function getchilds(id, array) {
-//     const childs = [];
-//     for (const arr of array) {
-//       // 循环获取子节点
-//       if (arr.parentId === id) {
-//         childs.push({
-//           id: arr.deptId,
-//           label: arr.deptName,
-//         });
-//       }
-//     }
-//     for (const child of childs) {
-//       // 获取子节点的子节点
-//       const childscopy = getchilds(child.id, array); // 递归获取子节点
-//       if (childscopy.length > 0) {
-//         child.children = childscopy;
-//       }
-//     }
-//     return childs;
-//   }
-//   return result;
-// };
-
-// 能用2
-// const transData = (jsonArr, roleId) => {
-//   // 如果roleId存在，筛选出相关项目，否则直接使用原数组
-//   const readArr = roleId
-//     ? jsonArr.filter((item) => item.roleId === roleId)
-//     : jsonArr;
-
-//   // 建立映射关系
-//   const idToChildren = new Map();
-//   for (const item of readArr) {
-//     item.children = idToChildren.get(Number(item.deptId)) || []; // 初始化children
-//     // 如果有父项，就把自己加到父项的children数组中
-//     if (!idToChildren.has(Number(item.parentId))) {
-//       idToChildren.set(Number(item.parentId), []);
-//     }
-//     idToChildren.get(Number(item.parentId)).push({
-//       id: Number(item.deptId),
-//       label: item.deptName,
-//       children: item.children || undefined,
-//     });
-//   }
-//   // 根结点
-//   const filterArr = readArr
-//     .filter((item) => Number(item.parentId) === 0)
-//     .map((item) => ({
-//       id: Number(item.deptId),
-//       label: item.deptName,
-//     }));
-//   const result = filterArr.map((item) => ({
-//     id: item.id,
-//     label: item.label,
-//     children: buildTree(item, idToChildren),
-//   }));
-
-//   function buildTree(item, idToChildren) {
-//     const children: any = idToChildren.get(item.id) || [];
-//     if (children.length > 0) {
-//       for (const child of children) {
-//         child.children = buildTree(child, idToChildren);
-//       }
-//       return children;
-//     }
-//   }
-//   return result;
-// };
-
 const transData = (jsonArr, roleId) => {
   // 如果roleId存在，筛选出相关项目，否则直接使用原数组
   let readArr = roleId ? jsonArr.filter((item) => item.roleId === roleId) : jsonArr;
@@ -444,7 +341,7 @@ export class Service {
    * 增加系统用户，如果返回false则表示已存在该用户
    * @param param Object 对应SysUser实体类
    */
-  async create(param: any): Promise<void> {
+  async create(param: any, username: string): Promise<void> {
     const exists = await prisma.sys_user.findFirst({
       where: {
         userName: param.userName,
@@ -477,6 +374,10 @@ export class Service {
           phonenumber: param.phonenumber,
           remark: param.remark,
           status: param.status.toString(),
+          createBy: username,
+          createTime: new Date(),
+          updateBy: username,
+          updateTime: new Date(),
         },
       });
       const { roleIds = [], postIds = [] } = param;
@@ -534,7 +435,7 @@ export class Service {
   /**
    * 更新用户信息
    */
-  async update(param: any): Promise<void> {
+  async update(param: any,username: string): Promise<void> {
     const exists = await prisma.sys_user.findFirst({
       where: {
         userName: param.userName,
@@ -569,6 +470,8 @@ export class Service {
           phonenumber: param.phonenumber,
           remark: param.remark,
           status: param.status.toString(),
+          updateBy: username,
+          updateTime: new Date(),
         },
         where: {
           userId: param.userId,

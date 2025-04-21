@@ -1,32 +1,27 @@
-import { Body, Controller, Get, Post, Query, Param, Put, Delete, UseInterceptors, Res, StreamableFile } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { Body, Get, Post, Query, Param, Put, Res, StreamableFile } from '@nestjs/common';
+import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { Keep, RequiresPermissions } from 'src/common/decorators';
-import { ExcelFileCleanupInterceptor } from 'src/common/interceptors/excel.interceptor';
 import { PageSearchUserInfo } from 'src/common/dto';
-import { CreateUserDto, DeleteUserDto, InfoUserDto, PageSearchUserDto, PasswordUserDto, UpdateUserDto } from 'src/common/dto';
 
-import { ADMIN_PREFIX } from '../../admin.constants';
-import { IAdminUser } from '../../admin.interface';
-import { AdminUser } from '../../core/decorators/admin-user.decorator';
+import { ControllerCreate, ApiList, ApiInfo, ApiCreate, ApiUpdate, ApiDelete, ApiExport } from 'src/common/decorators/controller.decorators';
+import { PageSearchUserDto, PasswordUserDto } from 'src/common/dto';
 
 import * as SysMenuService from '../menu/service';
 import { Service as SysUserService } from './service';
 
+import { keyStr, controllerName, ADMIN_PREFIX, permissionsPrefix, tableQueryDTO, tableDTO, InfoDto, DeleteDto, IAdminUser, AdminUser } from './config';
 
-@ApiSecurity(ADMIN_PREFIX)
-@ApiTags('管理员模块')
-@Controller('user')
+
+@ControllerCreate(`${keyStr}模块`, controllerName, ADMIN_PREFIX)
 export class MyController {
   constructor(private userService: SysUserService, private menuService: SysMenuService.Service) {}
 
   /**
    * 获取用户列表
    */
-  @RequiresPermissions('system:user:list')
-  @ApiOperation({ summary: `分页查询` })
-  @Keep()
-  @Get('list')
-  async list(@Query() dto: any): Promise<any> {
+  @ApiList('list', permissionsPrefix, `分页查询${keyStr}`)
+   // @ts-ignore ← Ignore type error, Swagger can generate fields normally
+  async list(@Query() dto: tableQueryDTO): Promise<any> {
     const rows = await this.userService.pageDto(dto);
     return {
       rows: rows.result,
@@ -42,10 +37,7 @@ export class MyController {
   /**
    * 导出用户列表
    */
-  @RequiresPermissions('system:user:export')
-  @ApiOperation({ summary: `导出` })
-  @UseInterceptors(ExcelFileCleanupInterceptor)
-  @Post('export')
+  @ApiExport('export', permissionsPrefix, `导出${keyStr}`)
   async export(@Body() dto: any, @Res() res: any): Promise<StreamableFile> {
     const { filename, filePath, file } =  await this.userService.pageDtoExport(dto);
     res.filePathToDelete = filePath;
@@ -110,12 +102,8 @@ export class MyController {
   /**
    * 根据用户编号获取详细信息
    */
-  @RequiresPermissions('system:user:query')
-  @ApiOperation({ summary: `查询` })
-  @ApiOkResponse()
-  @Keep()
-  @Get(':id')
-  async infoUser(@Param() params: any, @AdminUser() user: IAdminUser): Promise<any> {
+  @ApiInfo(':id', permissionsPrefix, `查询${keyStr}详情`)
+  async infoUser(@Param() params: InfoDto, @AdminUser() user: IAdminUser): Promise<any> {
     if (params.id) {
       let id = params.id;
       if (id.toString() === 'profile') {
@@ -132,25 +120,19 @@ export class MyController {
   /**
    * 新增用户
    */
-  @RequiresPermissions('system:user:add')
-  @ApiOperation({
-    summary: '新增管理员',
-  })
-  @Post()
-  async create(@Body() dto: any): Promise<void> {
-    await this.userService.create(dto);
+  @ApiCreate('', permissionsPrefix, `新增${keyStr}`)
+  // @ts-ignore ← Ignore type error, Swagger can generate fields normally
+  async create(@Body() body: tableDTO, @AdminUser() user: IAdminUser): Promise<void> {
+    await this.userService.create(body, user.userName);
   }
 
   /**
    * 修改用户
    */
-  @RequiresPermissions('system:user:edit')
-  @ApiOperation({
-    summary: '更新管理员信息',
-  })
-  @Put()
-  async update(@Body() dto: any): Promise<void> {
-    await this.userService.update(dto);
+  @ApiUpdate('',permissionsPrefix, `修改${keyStr}`)
+  // @ts-ignore ← Ignore type error, Swagger can generate fields normally
+  async update(@Body() dto: tableDTO, @AdminUser() user: IAdminUser): Promise<void> {
+    await this.userService.update(dto, user.userName);
     await this.menuService.refreshPerms(dto.id);
   }
 
@@ -181,13 +163,9 @@ export class MyController {
   /**
    * 删除用户
    */
-  @RequiresPermissions('system:user:remove')
-  @ApiOperation({ summary: `删除用户` })
-  @ApiOkResponse()
-  @Keep()
-  @Delete(':ids')
-  async remove(@Param() params: any): Promise<any> {
-    return await this.userService.delete(params.ids);
+  @ApiDelete(':id',permissionsPrefix, `删除${keyStr}`)
+  async remove(@Param() params: DeleteDto): Promise<any> {
+    return await this.userService.delete(params.id);
   }
 
   // @ApiOperation({
