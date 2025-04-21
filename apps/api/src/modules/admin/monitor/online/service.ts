@@ -34,10 +34,31 @@ export class Service {
    */
   async kickUser(uid: number, currentUid: number): Promise<void> {
     const rootUserId = await this.userService.findRootUserId();
+    
+    // 检查是否为超级管理员
     if (uid === Number(rootUserId)) {
-      throw new ApiException(10013);
+      throw new ApiException(10013); // 不能踢出超级管理员
     }
-
+    
+    // 检查是否为自己
+    if (uid === currentUid) {
+      throw new ApiException(10012); // 不能踢出自己
+    }
+    
+    // 记录踢出日志
+    await prisma.sys_logininfor.create({
+      data: {
+        ipaddr: '',
+        userName: (await this.userService.infoUser0(uid)).userName,
+        status: '1',
+        msg: '用户被管理员强制下线',
+        loginTime: new Date(),
+        browser: '',
+        os: '',
+        loginLocation: '',
+      },
+    });
+    
     // 清除用户Token
     await this.redisService.getRedis().del(`admin:token:${uid}`);
     // 清除用户权限缓存
@@ -54,25 +75,29 @@ export class Service {
     currentUid: number,
   ): Promise<OnlineUserInfo[]> {
     const rootUserId = await this.userService.findRootUserId();
+    
+    // 使用子查询优化
     const result: any = await prisma.$queryRaw`
       SELECT 
-        sys_logininfor.info_id as sessionId,
-        sys_logininfor.login_time as loginTime, 
-        sys_logininfor.ipaddr as ip, 
-        sys_logininfor.browser,
-        sys_logininfor.os,
-        sys_logininfor.login_location as loginLocation,
-        sys_user.user_id as id,
-        sys_user.user_name as userName,
-        sys_user.nick_name as name,
-        sys_dept.dept_name as deptName
-      FROM sys_logininfor 
-      INNER JOIN sys_user ON sys_logininfor.user_name = sys_user.user_name 
-      LEFT JOIN sys_dept ON sys_user.dept_id = sys_dept.dept_id
-      WHERE sys_logininfor.login_time IN (
-        SELECT MAX(login_time) FROM sys_logininfor GROUP BY user_name
-      )
-      AND sys_user.user_id IN (${ids.join(',')})
+        l.info_id as sessionId,
+        l.login_time as loginTime, 
+        l.ipaddr as ip, 
+        l.browser,
+        l.os,
+        l.login_location as loginLocation,
+        u.user_id as id,
+        u.user_name as userName,
+        u.nick_name as name,
+        d.dept_name as deptName
+      FROM sys_logininfor l
+      INNER JOIN (
+        SELECT user_name, MAX(login_time) as max_time 
+        FROM sys_logininfor 
+        GROUP BY user_name
+      ) lm ON l.user_name = lm.user_name AND l.login_time = lm.max_time
+      INNER JOIN sys_user u ON l.user_name = u.user_name 
+      LEFT JOIN sys_dept d ON u.dept_id = d.dept_id
+      WHERE u.user_id IN (${ids.join(',')})
     `;
 
     if (result) {
