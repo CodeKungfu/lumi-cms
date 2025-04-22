@@ -55,43 +55,24 @@ export class Service {
   }
 
   async treeselect(uid, params) {
-    if (this.rootRoleId === uid) { // 超级管理员
-      const menuList: any =  await prisma.$queryRaw`select menu_id, menu_name, parent_id, order_num, path, component, query, is_frame, is_cache, menu_type, visible, status, ifnull(perms,'') as perms, icon, create_time 
-      from sys_menu order by parent_id, order_num`;
-      const menuArr = menuList.map((item: any) => {
-        // 保持原有结构，并添加 buildTreeData 需要的字段
-        return {
-          ...item,
-          parentId: Number(item.parent_id),
-          id: Number(item.menu_id),
-          label: item.menu_name
-        }
-      })
-      const menus = buildTreeData(menuArr, 'id', 'parentId', 'children');
-      return menus
-    } else {
-      // 管理员
-      const menuList: any =  await prisma.$queryRaw`select distinct m.menu_id, m.parent_id, m.menu_name, m.path, m.component, m.query, m.visible, m.status, ifnull(m.perms,'') as perms, m.is_frame, m.is_cache, m.menu_type, m.icon, m.order_num, m.create_time
-      from sys_menu m
-      left join sys_role_menu rm on m.menu_id = rm.menu_id
-      left join sys_user_role ur on rm.role_id = ur.role_id
-      left join sys_role ro on ur.role_id = ro.role_id
-      where ur.user_id = ${params.userId}
-      order by m.parent_id, m.order_num
-      `;
-      const menuArr = menuList.map((item: any) => {
-        // 保持原有结构，并添加 buildTreeData 需要的字段
-        return {
-          ...item,
-          parentId: Number(item.parent_id),
-          id: Number(item.menu_id),
-          label: item.menu_name
-        }
-      })
-      // 使用 buildTreeData 替换 transData
-      const menus = buildTreeData(menuArr, 'id', 'parentId', 'children');
-      return menus
-    }
+    const query = this.rootRoleId === uid 
+    ? `select menu_id, menu_name, parent_id, order_num, path, component, query, is_frame, is_cache, menu_type, visible, status, ifnull(perms,'') as perms, icon, create_time 
+       from sys_menu order by parent_id, order_num`
+    : `select distinct m.menu_id, m.parent_id, m.menu_name, m.path, m.component, m.query, m.visible, m.status, ifnull(m.perms,'') as perms, m.is_frame, m.is_cache, m.menu_type, m.icon, m.order_num, m.create_time
+       from sys_menu m
+       left join sys_role_menu rm on m.menu_id = rm.menu_id
+       left join sys_user_role ur on rm.role_id = ur.role_id
+       left join sys_role ro on ur.role_id = ro.role_id
+       where ur.user_id = ${params.userId}
+       order by m.parent_id, m.order_num`;
+    const menuList: any = await prisma.$queryRaw`${query}`;
+    const menuArr = menuList.map((item: any) => ({
+      ...item,
+      parentId: Number(item.parent_id),
+      id: Number(item.menu_id),
+      label: item.menu_name
+    }));
+    return buildTreeData(menuArr, 'id', 'parentId', 'children');
   }
 
   /**

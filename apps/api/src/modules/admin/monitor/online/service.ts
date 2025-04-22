@@ -100,23 +100,20 @@ export class Service {
       WHERE u.user_id IN (${ids.join(',')})
     `;
 
-    if (result) {
-      return result.map((e) => {
-        return {
-          tokenId: e.sessionId,  // 添加会话编号
-          id: e.id,
-          ipaddr: e.ip,
-          userName: `${e.name}（${e.userName}）`,
-          deptName: e.deptName || '-',
-          loginLocation: e.loginLocation || '-',
-          isCurrent: currentUid === e.id,
-          loginTime: e.loginTime,
-          os: e.os || '-',
-          browser: e.browser || '-',
-          disable: currentUid === e.id || e.id === rootUserId,
-        };
-      });
-    }
-    return [];
+    if (!result) return [];
+  
+    return result.map((e) => ({
+      tokenId: e.sessionId,
+      id: e.id,
+      ipaddr: e.ip,
+      userName: `${e.name}（${e.userName}）`,
+      deptName: e.deptName || '-',
+      loginLocation: e.loginLocation || '-',
+      isCurrent: currentUid === e.id,
+      loginTime: e.loginTime,
+      os: e.os || '-',
+      browser: e.browser || '-',
+      disable: currentUid === e.id || e.id === rootUserId,
+    }));
   }
 }

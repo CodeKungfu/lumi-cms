@@ -8,42 +8,16 @@ import { sys_role } from '@repo/database';
 import { prisma } from 'src/prisma';
 import { findIndex, omit } from 'lodash';
 import { processPageQuery } from 'src/common/utils/query-helper';
+import { buildTreeData } from 'src/shared/services/util.service';
 
 const transData = (jsonArr) => {
-  // 如果roleId存在，筛选出相关项目，否则直接使用原数组
-  let readArr = jsonArr;
-  // 需要返回数据字段
-  readArr = readArr.map((item) => ({
+  const readArr = jsonArr.map((item) => ({
     parentId: Number(item.parentId),
     id: Number(item.deptId),
     label: item.deptName
   }));
-  // 建立映射关系
-  const idToChildren = new Map();
-  for (const item of readArr) {
-    item.children = idToChildren.get(item.id) || undefined; // 初始化children
-    // 如果有父项，就把自己加到父项的children数组中
-    if (!idToChildren.has(item.parentId)) {
-      idToChildren.set(item.parentId, []);
-    }
-    idToChildren.get(item.parentId).push(item);
-  }
-  function buildTree(item, idToChildren) {
-    const children: any = idToChildren.get(item.id) || [];
-    if (children.length > 0) {
-      for (const child of children) {
-        child.children = buildTree(child, idToChildren);
-      }
-      return children;
-    }
-  }
-  return readArr
-    .filter((item) => item.parentId === 0)
-    .map((item) => ({
-      id: item.id,
-      label: item.label,
-      children: buildTree(item, idToChildren),
-    }));
+  
+  return buildTreeData(readArr, 'id', 'parentId', 'children');
 };
 
 @Injectable()

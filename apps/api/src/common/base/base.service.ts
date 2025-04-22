@@ -100,13 +100,8 @@ export class BaseService {
       await (prisma as any)[this.tableName].deleteMany({});
       return { count: 0 };
     }
-    const result: any = await (prisma as any)[this.tableName].deleteMany({ 
-        where: { 
-            [this.primaryKey]: {
-              in: map(id.toString().split(','), Number), 
-            }
-        }
-    });
+    const where = { [this.primaryKey]: { in: map(id.toString().split(','), Number) } };
+    const result: any = await (prisma as any)[this.tableName].deleteMany({ where });
     return { count: result.count };
   }
 }

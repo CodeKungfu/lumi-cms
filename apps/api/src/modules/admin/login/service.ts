@@ -72,23 +72,12 @@ export class Service {
     const user = await this.userService.findUserByUserName(username);
     if (isEmpty(user)) throw new ApiException(10003);
     if (user.password !== this.util.md5(`${password}`)) throw new ApiException(10003);
-    const perms = await this.menuService.getPerms(Number(user.userId));
-    if (Number(user.userId) === 1) {
-      const oldToken = await this.getRedisTokenById(Number(user.userId));
+    const userId = Number(user.userId);
+    const perms = await this.menuService.getPerms(userId);
+    if (userId === 1) {
+      const oldToken = await this.getRedisTokenById(userId);
       if (oldToken) {
-        const parser = new UAParser(ua);
-        await prisma.sys_logininfor.create({
-          data: {
-            ipaddr: ip,
-            userName: user.userName,
-            status: '0',
-            msg: '登录成功',
-            loginTime: new Date(),
-            browser: parser.getBrowser().name || '',
-            os: parser.getOS().name || '',
-            loginLocation: '',
-          },
-        });
+        await this.createLoginRecord(ip, ua, user);
         return oldToken;
       }
     }
@@ -97,9 +86,20 @@ export class Service {
       pv: 1,
       userName: user.userName,
     });
-    await this.redisService.getRedis().set(`admin:passwordVersion:${user.userId}`, 1);
-    await this.redisService.getRedis().set(`admin:token:${user.userId}`, jwtSign, 'EX', 86400);
-    await this.redisService.getRedis().set(`admin:perms:${user.userId}`, JSON.stringify(perms));
+    // 设置Redis缓存
+    const redis = this.redisService.getRedis();
+    await Promise.all([
+      redis.set(`admin:passwordVersion:${userId}`, 1),
+      redis.set(`admin:token:${userId}`, jwtSign, 'EX', 86400),
+      redis.set(`admin:perms:${userId}`, JSON.stringify(perms))
+    ]);
+    await this.createLoginRecord(ip, ua, user);
+    return jwtSign;
+  }
+
+  // 提取登录记录创建逻辑
+  private async createLoginRecord(ip: string, ua: string, user: any): Promise<void> {
+    const parser = new UAParser(ua);
     await prisma.sys_logininfor.create({
       data: {
         ipaddr: ip,
@@ -107,12 +107,11 @@ export class Service {
         status: '0',
         msg: '登录成功',
         loginTime: new Date(),
-        browser: new UAParser(ua).getBrowser().name || '',
-        os: new UAParser(ua).getOS().name || '',
+        browser: parser.getBrowser().name || '',
+        os: parser.getOS().name || '',
         loginLocation: '',
       },
     });
-    return jwtSign;
   }
 
   async clearLoginStatus(uid: number): Promise<void> {
