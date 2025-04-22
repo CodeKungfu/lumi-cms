@@ -130,7 +130,7 @@ export class Service {
       img: `data:image/svg+xml;base64,${Buffer.from(svg.data).toString(
         'base64',
       )}`,
-      id: await this.util.generateUUID(), // this.utils.generateUUID()
+      id: this.util.generateUUID(), // this.utils.generateUUID()
     };
     // 5分钟过期时间
     await this.redisService

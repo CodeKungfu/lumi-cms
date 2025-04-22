@@ -4,6 +4,41 @@ import { FastifyRequest } from 'fastify';
 import { nanoid, customAlphabet } from 'nanoid';
 import * as CryptoJS from 'crypto-js';
 
+/**
+ * 首字母大写
+ */
+export function capitalizeFirstLetter(str: string): string {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+/**
+ * 转换树形结构数据
+ */
+export const buildTreeData = (data: any[], idField: string = 'id', parentField: string = 'parentId', childrenField: string = 'children') => {
+  const tree = [];
+  const idMap = new Map();
+  
+  // 创建节点映射
+  data.forEach(item => {
+    idMap.set(item[idField], { ...item, [childrenField]: [] });
+  });
+  
+  // 构建树结构
+  data.forEach(item => {
+    const parentId = item[parentField];
+    const node = idMap.get(item[idField]);
+    
+    if (parentId === 0 || !idMap.has(parentId)) {
+      tree.push(node);
+    } else {
+      const parent = idMap.get(parentId);
+      parent[childrenField].push(node);
+    }
+  });
+  
+  return tree;
+};
+
 @Injectable()
 export class UtilService {
   constructor(private readonly httpService: HttpService) {}
@@ -24,7 +59,7 @@ export class UtilService {
 
   /* 判断IP是不是内网 */
   IsLAN(ip: string) {
-    ip.toLowerCase();
+    ip = ip.toLowerCase();
     if (ip == 'localhost') return true;
     let a_ip = 0;
     if (ip == '') return false;
@@ -79,17 +114,17 @@ export class UtilService {
   /**
    * 生成一个UUID
    */
-  public async generateUUID(): Promise<string> {
+  public generateUUID(): string {
     return nanoid();
   }
 
   /**
    * 生成一个随机的值
    */
-  public async generateRandomValue(
+  public generateRandomValue(
     length: number,
     placeholder = '1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM',
-  ): Promise<string> {
+  ): string {
     const customNanoid = customAlphabet(placeholder, length);
     return customNanoid();
   }
