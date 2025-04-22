@@ -7,46 +7,10 @@ import { tableType, tableName } from './config';
 import { RedisService } from 'src/shared/services/redis.service';
 import { Service as SysRoleService } from '../role/service';
 
-const transData = (jsonArr) => {
-  // 如果roleId存在，筛选出相关项目，否则直接使用原数组
-  let readArr = jsonArr;
-  // 需要返回数据字段
-  readArr = readArr.map((item) => ({
-    parentId: Number(item.parentId),
-    id: Number(item.menuId),
-    label: item.menuName,
-  }));
-  // 建立映射关系
-  const idToChildren = new Map();
-  for (const item of readArr) {
-    item.children = idToChildren.get(item.id) || undefined; // 初始化children
-    // 如果有父项，就把自己加到父项的children数组中
-    if (!idToChildren.has(item.parentId)) {
-      idToChildren.set(item.parentId, []);
-    }
-    idToChildren.get(item.parentId).push(item);
-  }
-  function buildTree(item, idToChildren) {
-    const children: any = idToChildren.get(item.id) || [];
-    if (children.length > 0) {
-      for (const child of children) {
-        child.children = buildTree(child, idToChildren);
-      }
-      return children;
-    }
-  }
-  return readArr
-    .filter((item) => item.parentId === 0)
-    .map((item) => ({
-      id: item.id,
-      label: item.label,
-      children: buildTree(item, idToChildren),
-    }));
-};
+import { buildTreeData } from 'src/shared/services/util.service';
 
 @Injectable()
 export class Service {
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor(
     private redisService: RedisService,
     @Inject(ROOT_ROLE_ID) private rootRoleId: number,
@@ -70,7 +34,12 @@ export class Service {
   // exclude
   async roleMenuTreeselect(roleId: any): Promise<any> {
     const menuList = await prisma[tableName].findMany();
-    const menus = transData(menuList);
+    const mappedMenuList = menuList.map((item) => ({
+      parentId: Number(item.parentId),
+      id: Number(item.menuId),
+      label: item.menuName,
+    }));
+    const menus = buildTreeData(mappedMenuList, 'id', 'parentId', 'children');
     const result: any = await prisma.$queryRaw`select m.menu_id
       from sys_menu m
               left join sys_role_menu rm on m.menu_id = rm.menu_id
@@ -90,12 +59,15 @@ export class Service {
       const menuList: any =  await prisma.$queryRaw`select menu_id, menu_name, parent_id, order_num, path, component, query, is_frame, is_cache, menu_type, visible, status, ifnull(perms,'') as perms, icon, create_time 
       from sys_menu order by parent_id, order_num`;
       const menuArr = menuList.map((item: any) => {
-        item.parentId = item.parent_id;
-        item.menuId = item.menu_id;
-        item.menuName = item.menu_name;
-        return item
+        // 保持原有结构，并添加 buildTreeData 需要的字段
+        return {
+          ...item,
+          parentId: Number(item.parent_id),
+          id: Number(item.menu_id),
+          label: item.menu_name
+        }
       })
-      const menus = transData(menuArr);
+      const menus = buildTreeData(menuArr, 'id', 'parentId', 'children');
       return menus
     } else {
       // 管理员
@@ -108,12 +80,16 @@ export class Service {
       order by m.parent_id, m.order_num
       `;
       const menuArr = menuList.map((item: any) => {
-        item.parentId = item.parent_id;
-        item.menuId = item.menu_id;
-        item.menuName = item.menu_name;
-        return item
+        // 保持原有结构，并添加 buildTreeData 需要的字段
+        return {
+          ...item,
+          parentId: Number(item.parent_id),
+          id: Number(item.menu_id),
+          label: item.menu_name
+        }
       })
-      const menus = transData(menuArr);
+      // 使用 buildTreeData 替换 transData
+      const menus = buildTreeData(menuArr, 'id', 'parentId', 'children');
       return menus
     }
   }
@@ -254,9 +230,7 @@ export class Service {
     const online = await this.redisService.getRedis().get(`admin:token:${uid}`);
     if (online) {
       // 判断是否在线
-      await this.redisService
-        .getRedis()
-        .set(`admin:perms:${uid}`, JSON.stringify(perms));
+      await this.redisService.getRedis().set(`admin:perms:${uid}`, JSON.stringify(perms));
     }
   }
 
@@ -264,16 +238,12 @@ export class Service {
    * 刷新所有在线用户的权限
    */
   async refreshOnlineUserPerms(): Promise<void> {
-    const onlineUserIds: string[] = await this.redisService
-      .getRedis()
-      .keys('admin:token:*');
+    const onlineUserIds: string[] = await this.redisService.getRedis().keys('admin:token:*');
     if (onlineUserIds && onlineUserIds.length > 0) {
       for (let i = 0; i < onlineUserIds.length; i++) {
         const uid = onlineUserIds[i].split('admin:token:')[1];
         const perms = await this.getPerms(parseInt(uid));
-        await this.redisService
-          .getRedis()
-          .set(`admin:perms:${uid}`, JSON.stringify(perms));
+        await this.redisService.getRedis().set(`admin:perms:${uid}`, JSON.stringify(perms));
       }
     }
   }

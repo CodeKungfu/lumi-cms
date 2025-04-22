@@ -5,8 +5,8 @@ import * as svgCaptcha from 'svg-captcha';
 import { UtilService } from 'src/shared/services/util.service';
 import { ApiException } from 'src/common/exceptions/api.exception';
 import { RedisService } from 'src/shared/services/redis.service';
+import { buildTreeData } from 'src/shared/services/util.service'; 
 import { ImageCaptchaDto, ImageCaptcha, PermMenuInfo } from 'src/common/dto';
-
 import { Service as SysUserService } from '../system/user/service';
 import * as SysMenuService from '../system/menu/service';
 import { prisma } from 'src/prisma';
@@ -16,91 +16,44 @@ function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-// console.log(capitalizeFirstLetter('nodejs')); // 输出: Nodejs
-
-const transData = (jsonArr) => {
-  const readArr = jsonArr;
-  // 调用方法， temp为原始数据, result为树形结构数据
-  const result = generateOptions(readArr);
-
-  // 开始递归方法
-  function generateOptions(params) {
-    const result: any = [];
-    for (const param of params) {
-      if (Number(param.parent_id) === 0) {
-        // 判断是否为顶层节点
-        const parent: any = {
-          name: capitalizeFirstLetter(param.path),
-          path: '/' + param.path,
-          hidden: false,
-          redirect: 'noRedirect',
-          component: 'Layout',
-          alwaysShow: true,
-          meta: {
-            title: param.menu_name,
-            icon: param.icon,
-            noCache: false,
-            link: null,
-          },
-        };
-        parent.children = getchilds(param.menu_id, params); // 获取子节点
-        result.push(parent);
-      } else {
-        const children = getchilds(param.menu_id, params); // 获取子节点
-        if (children.length > 0) {
-          children.map((item) => {
-            item.children = [];
-          });
-          const name = capitalizeFirstLetter(param.path);
-          // 找到name 相同的
-          result.reduce((map, item) => {
-            item.children = item.children || [];
-            item.children.reduce((map0, item0) => {
-              if (item0.name === name) {
-                item0.children = children;
-              }
-              return map0;
-            }, {});
-            return map;
-          }, {});
-        }
-      }
+function mapToRouteFormat(node: any): any {
+  const routeNode = {
+    id: node.id, // 保留原始 id，虽然前端路由不直接用
+    parentId: node.parentId, // 保留原始 parentId
+    name: capitalizeFirstLetter(node.path),
+    path: node.path, // 子路由路径不带 /
+    hidden: node.visible === '1', // '1' 表示隐藏
+    component: node.component || 'Layout', // 顶层或目录使用 Layout
+    alwaysShow: node.menu_type === 'M', // 目录类型通常需要 alwaysShow
+    redirect: node.menu_type === 'M' ? 'noRedirect' : undefined, // 目录类型设置 redirect
+    meta: {
+      title: node.menu_name,
+      icon: node.icon,
+      noCache: node.is_cache === '1', // '1' 表示不缓存
+      link: node.is_frame === '0' ? node.path : null, // '0' 表示外链
+    },
+    children: [] // 初始化 children
+  };
+  // 处理顶层路由路径和组件
+  if (routeNode.parentId === 0) {
+    routeNode.path = '/' + node.path;
+    if (!routeNode.component) {
+      routeNode.component = 'Layout';
     }
-    return result;
+  } else {
+      // 子菜单 component 可能为空，需要处理
+      if (!routeNode.component && node.menu_type === 'C') {
+          console.warn(`Menu item component is missing for path: ${node.path}`);
+          // 可以根据需要设置默认组件或保持为空
+          // routeNode.component = 'DefaultView';
+      }
   }
-
-  function getchilds(id, array) {
-    const childs = [];
-    for (const arr of array) {
-      // 循环获取子节点
-      if (arr.parent_id === id) {
-        childs.push({
-          name: capitalizeFirstLetter(arr.path),
-          path: arr.path,
-          hidden: false,
-          component: arr.component,
-          // 添加menu_id属性，确保能够正确递归查找子节点
-          id: arr.menu_id,
-          meta: {
-            title: arr.menu_name,
-            icon: arr.icon,
-            noCache: false,
-            link: null,
-          },
-        });
-      }
-    }
-    for (const child of childs) {
-      // 获取子节点的子节点
-      const childscopy = getchilds(child.id, array); // 递归获取子节点
-      if (childscopy.length > 0) {
-        child.children = childscopy;
-      }
-    }
-    return childs;
+  // 递归处理子节点
+  if (node.children && node.children.length > 0) {
+    routeNode.children = node.children.map(mapToRouteFormat);
   }
-  return result;
-};
+  return routeNode;
+}
 
 @Injectable()
 export class Service {
@@ -130,12 +83,10 @@ export class Service {
       img: `data:image/svg+xml;base64,${Buffer.from(svg.data).toString(
         'base64',
       )}`,
-      id: this.util.generateUUID(), // this.utils.generateUUID()
+      id: this.util.generateUUID(),
     };
     // 5分钟过期时间
-    await this.redisService
-      .getRedis()
-      .set(`admin:captcha:img:${result.id}`, svg.text, 'EX', 60 * 5);
+    await this.redisService.getRedis().set(`admin:captcha:img:${result.id}`, svg.text, 'EX', 60 * 5);
     return result;
   }
 
@@ -143,9 +94,7 @@ export class Service {
    * 校验验证码
    */
   async checkImgCaptcha(id: string, code: string): Promise<void> {
-    const result = await this.redisService
-      .getRedis()
-      .get(`admin:captcha:img:${id}`);
+    const result = await this.redisService.getRedis().get(`admin:captcha:img:${id}`);
     if (isEmpty(result) || code.toLowerCase() !== result.toLowerCase()) {
       throw new ApiException(10002);
     }
@@ -203,16 +152,10 @@ export class Service {
       //   expiresIn: '24h',
       // },
     );
-    await this.redisService
-      .getRedis()
-      .set(`admin:passwordVersion:${user.userId}`, 1);
+    await this.redisService.getRedis().set(`admin:passwordVersion:${user.userId}`, 1);
     // Token设置过期时间 24小时
-    await this.redisService
-      .getRedis()
-      .set(`admin:token:${user.userId}`, jwtSign, 'EX', 60 * 60 * 24);
-    await this.redisService
-      .getRedis()
-      .set(`admin:perms:${user.userId}`, JSON.stringify(perms));
+    await this.redisService.getRedis().set(`admin:token:${user.userId}`, jwtSign, 'EX', 60 * 60 * 24);
+    await this.redisService.getRedis().set(`admin:perms:${user.userId}`, JSON.stringify(perms));
     // 修改这两处 create 调用
     await prisma.sys_logininfor.create({
       data: {
@@ -237,19 +180,17 @@ export class Service {
   }
 
   async getRouters(uid: number): Promise<any> {
-    const menus_1 = await this.menuService.getMenus(uid);
-    const menus = [];
-    menus_1.forEach((item: any) => {
-      const temp = Object.assign({}, item, {
-        menuId: Number(item.menu_id),
-        parentId: Number(item.parent_id),
-      });
-      menus.push(temp);
-    });
-    // console.log(menus);
-    const res = transData(menus);
-    // console.log(res);
-    return res;
+    const menuList = await this.menuService.getMenus(uid);
+    // 2. 准备 buildTreeData 需要的数据格式
+    const dataForTree = menuList.map((item: any) => ({
+      ...item, // 保留原始字段，因为 mapToRouteFormat 需要它们
+      id: Number(item.menu_id),
+      parentId: Number(item.parent_id),
+    }));
+    const genericTree = buildTreeData(dataForTree, 'id', 'parentId', 'children');
+    // 4. 将通用树映射为前端路由格式
+    const routerTree = genericTree.map(mapToRouteFormat);
+    return routerTree;
   }
   /**
    * 获取权限菜单
