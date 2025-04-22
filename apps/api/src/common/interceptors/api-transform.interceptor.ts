@@ -1,4 +1,4 @@
-import { CallHandler, ExecutionContext, NestInterceptor } from '@nestjs/common';
+import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { FastifyReply } from 'fastify';
@@ -9,6 +9,7 @@ import { ResponseDto } from '../class/res.class';
 /**
  * 统一处理返回接口结果，如果不需要则添加@Keep装饰器
  */
+@Injectable()
 export class ApiTransformInterceptor implements NestInterceptor {
   constructor(private readonly reflector: Reflector) {}
   intercept(

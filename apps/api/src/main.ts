@@ -1,10 +1,8 @@
 import { HttpStatus, Logger, UnprocessableEntityException, ValidationPipe } from '@nestjs/common';
-import { NestFactory, Reflector } from '@nestjs/core';
+import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { ValidationError } from 'class-validator';
 import { AppModule } from './app.module';
-import { ApiExceptionFilter } from './common/filters/api-exception.filter';
-import { ApiTransformInterceptor } from './common/interceptors/api-transform.interceptor';
 import { setupSwagger } from './setup-swagger';
 
 const SERVER_PORT = process.env.SERVER_PORT;
@@ -35,10 +33,6 @@ async function bootstrap() {
       },
     }),
   );
-  // execption
-  // app.useGlobalFilters(new ApiExceptionFilter(app.get(LoggerService)));
-  // api interceptor
-  app.useGlobalInterceptors(new ApiTransformInterceptor(new Reflector()));
   // swagger
   setupSwagger(app);
   // start

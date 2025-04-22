@@ -6,6 +6,7 @@ import { SharedModule } from './shared/shared.module';
 import { APP_INTERCEPTOR, APP_FILTER } from '@nestjs/core';
 import { OperlogInterceptor } from './common/interceptors/operlog.interceptor';
 import { ApiExceptionFilter } from './common/filters/api-exception.filter';
+import { ApiTransformInterceptor } from './common/interceptors/api-transform.interceptor';
 
 @Module({
   imports: [
@@ -26,6 +27,10 @@ import { ApiExceptionFilter } from './common/filters/api-exception.filter';
     {
       provide: APP_FILTER,
       useClass: ApiExceptionFilter,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ApiTransformInterceptor,
     },
   ],
 })
