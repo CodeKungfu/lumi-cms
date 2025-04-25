@@ -20,16 +20,6 @@ export class MyController {
     return {data: list};
   }
 
-  @ApiOperation({ summary: `分页查询${keyStr}` })
-  @Keep()
-  @Get('list/exclude/:id')
-  async exclude(@Param() params: InfoDto): Promise<any> {
-    const rows = await this.service.exclude(params.id);
-    return {
-      data: rows,
-    };
-  }
-
   /**
    * 加载对应角色菜单列表树
    */

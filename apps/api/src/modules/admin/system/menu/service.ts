@@ -18,20 +18,6 @@ export class Service {
   ) {}
 
   // exclude
-  async exclude(id: any): Promise<tableType[]> {
-    return await prisma[tableName].findMany({
-      orderBy: {
-        orderNum: 'desc',
-      },
-      where: {
-        menuId: {
-          not: id,
-        },
-      },
-    });
-  }
-
-  // exclude
   async roleMenuTreeselect(roleId: any): Promise<any> {
     const menuList = await prisma[tableName].findMany();
     const mappedMenuList = menuList.map((item) => ({
