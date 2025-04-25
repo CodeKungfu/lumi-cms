@@ -16,7 +16,6 @@ const transData = (jsonArr) => {
     id: Number(item.deptId),
     label: item.deptName
   }));
-  
   return buildTreeData(readArr, 'id', 'parentId', 'children');
 };
 
