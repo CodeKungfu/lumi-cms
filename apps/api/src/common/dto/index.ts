@@ -272,10 +272,6 @@ export class RoleInfo {
   depts: sys_role_dept[];
 }
 
-export class CreatedRoleId {
-  roleId: number;
-}
-
 export class UpdateUserInfoDto {
   @ApiProperty({
     required: false,

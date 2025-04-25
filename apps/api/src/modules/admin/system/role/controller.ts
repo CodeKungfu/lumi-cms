@@ -17,21 +17,9 @@ export class MyController {
   @ApiList('list', permissionsPrefix, `分页查询${keyStr}`)
    // @ts-ignore ← Ignore type error, Swagger can generate fields normally
   async list(@Query() dto: tableQueryDTO): Promise<any> {
-    const rows = await this.roleService.pageDto2(dto);
-    return {
-      rows: rows.result,
-      total: rows.countNum,
-      pagination: {
-        size: dto.pageSize,
-        page: dto.pageNum,
-        total: rows.countNum,
-      },
-    };
+    return await this.roleService.pageDto2(dto);
   }
 
-  /**
-   * 导出用户列表
-   */
   @ApiExport('export', permissionsPrefix, `导出${keyStr}`)
   async export(@Body() dto: any, @Res() res: any): Promise<StreamableFile> {
     const { filename, filePath, file } =  await this.roleService.pageDtoExport(dto);
@@ -41,151 +29,89 @@ export class MyController {
     return res.send(file);
   }
 
-  /**
-   * 根据角色编号获取详细信息
-   */
   @ApiInfo(':id', permissionsPrefix, `查询${keyStr}详情`)
   async info1(@Param() params: InfoDto): Promise<any> {
-    const list = await this.roleService.detailInfo(params.id);
-    return list;
+    return await this.roleService.detailInfo(params.id);
   }
 
-  /**
-   * 新增角色
-   */
   @ApiCreate('', permissionsPrefix, `新增${keyStr}`)
   // @ts-ignore ← Ignore type error, Swagger can generate fields normally
   async add(@Body() dto: tableDTO, @AdminUser() user: IAdminUser): Promise<void> {
     await this.roleService.add(dto, user.uid);
   }
 
-  /**
-   * 修改保存角色
-   */
   @ApiUpdate('',permissionsPrefix, `修改${keyStr}`)
   // @ts-ignore ← Ignore type error, Swagger can generate fields normally
   async updateV1(@Body() body: tableDTO): Promise<any> {
-    const list = await this.roleService.updateV1(body);
-    return list;
+    return await this.roleService.updateV1(body);
   }
-  /**
-   * 修改角色状态
-   * changeStatus
-   */
+  
   @RequiresPermissions('system:role:changeStatus')
-  @ApiOperation({ summary: `获取角色信息` })
+  @ApiOperation({ summary: `修改角色状态` })
   @ApiOkResponse()
   @Put('changeStatus')
   async changeStatus(@Body() body: any): Promise<any> {
-    const list = await this.roleService.changeStatus(body);
-    return list;
+    return await this.roleService.changeStatus(body);
   }
-  /**
-   * 删除角色
-   */
+ 
   @ApiDelete(':id',permissionsPrefix, `删除${keyStr}`)
   async remove(@Param() params: DeleteDto): Promise<any> {
-    const list = await this.roleService.delete(params);
-    return list;
+    return await this.roleService.delete(params);
   }
 
-  /**
-   * 修改保存数据权限
-   */
   @RequiresPermissions('system:role:edit')
-  @ApiOperation({ summary: `获取角色信息` })
+  @ApiOperation({ summary: `修改保存数据权限` })
   @ApiOkResponse()
   @Put('dataScope')
   async updateV2(@Body() body: any): Promise<any> {
-    const list = await this.roleService.updateV2(body);
-    return list;
+    return await this.roleService.updateV2(body);
   }
 
-  /**
-   * 查询已分配用户角色列表
-   */
   @RequiresPermissions('system:role:list')
-  @ApiOperation({ summary: `获取角色信息` })
+  @ApiOperation({ summary: `查询已分配用户角色列表` })
   @Keep()
   @Get('authUser/allocatedList')
   async allocatedList(@Query() dto: any): Promise<any> {
-    const rows = await this.roleService.pageDto(dto);
-    return {
-      rows: rows.user,
-      total: rows.countNum,
-      pagination: {
-        size: dto.pageSize,
-        page: dto.pageNum,
-        total: rows.countNum,
-      },
-    };
+    return await this.roleService.pageDto(dto);
   }
 
-  /**
-   * 查询未分配用户角色列表
-   */
   @RequiresPermissions('system:role:list')
-  @ApiOperation({ summary: `获取角色信息` })
+  @ApiOperation({ summary: `查询未分配用户角色列表` })
   @Keep()
   @Get('authUser/unallocatedList')
   async unallocatedList(@Query() dto: any): Promise<any> {
-    const rows = await this.roleService.pageDto1(dto);
-    return {
-      rows: rows.user,
-      total: rows.countNum,
-      pagination: {
-        size: dto.pageSize,
-        page: dto.pageNum,
-        total: rows.countNum,
-      },
-    };
+    return await this.roleService.pageDto1(dto);
   }
 
-  /**
-   * 取消授权用户
-   */
   @RequiresPermissions('system:role:edit')
   @ApiOperation({ summary: `取消授权用户` })
   @Keep()
   @Put('authUser/cancel')
   async cancelAuthUser(@Body() body: any): Promise<any> {
-    const rows = await this.roleService.cancelAuthUser(body);
-    return rows;
+    return await this.roleService.cancelAuthUser(body);
   }
 
-  /**
-   * 批量取消授权用户
-   */
   @RequiresPermissions('system:role:edit')
   @ApiOperation({ summary: `批量取消授权用户` })
   @Keep()
   @Put('authUser/cancelAll')
   async cancelAuthUserAll(@Query() body: any): Promise<any> {
-    const rows = await this.roleService.cancelAuthUserAll(body);
-    return rows;
+    return await this.roleService.cancelAuthUserAll(body);
   }
 
-  /**
-   * 批量选择用户授权
-   */
   @RequiresPermissions('system:role:edit')
   @ApiOperation({ summary: `批量选择用户授权` })
   @Put('authUser/selectAll')
   async selectAll(@Query() dto: any): Promise<any> {
-    const rows = await this.roleService.insertAuthUsers(dto);
-    return rows;
+    return await this.roleService.insertAuthUsers(dto);
   }
 
-  /**
-   * 获取对应角色部门树列表
-   */
   @RequiresPermissions('system:role:query')
-  @ApiOperation({ summary: `获取角色信息` })
+  @ApiOperation({ summary: `获取对应角色部门树列表` })
   @Keep()
   @Get('deptTree/:id')
   async deptTree(@Param() params: any): Promise<any> {
-    const rows = await this.roleService.deptTree(params.id);
-    return rows;
+    return await this.roleService.deptTree(params.id);
   }
 
   @ApiOperation({ summary: '更新角色' })

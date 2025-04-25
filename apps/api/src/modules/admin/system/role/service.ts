@@ -2,11 +2,11 @@ import { Inject, Injectable } from '@nestjs/common';
 import { difference, filter, includes, isEmpty, map } from 'lodash';
 import { ROOT_ROLE_ID } from 'src/modules/admin/admin.constants';
 import { ExcelService } from 'src/shared/services/excel.service';
-import { CreateRoleDto, UpdateRoleDto } from 'src/common/dto';
-import { CreatedRoleId, RoleInfo } from 'src/common/dto';
+import { UpdateRoleDto } from 'src/common/dto';
+import { RoleInfo } from 'src/common/dto';
 import { sys_role } from '@repo/database';
 import { prisma } from 'src/prisma';
-import { findIndex, omit } from 'lodash';
+import { omit } from 'lodash';
 import { processPageQuery } from 'src/common/utils/query-helper';
 import { buildTreeData } from 'src/shared/services/util.service';
 
@@ -21,10 +21,7 @@ const transData = (jsonArr) => {
 
 @Injectable()
 export class Service {
-  constructor(
-    @Inject(ROOT_ROLE_ID) private rootRoleId: number,
-    private excelService: ExcelService,
-  ) {}
+  constructor(@Inject(ROOT_ROLE_ID) private rootRoleId: number, private excelService: ExcelService ) {}
 
   /**
    * 分页查询信息
@@ -40,9 +37,15 @@ export class Service {
     const countNum: any = await prisma['sys_role'].count({
       where: processedQuery,
     });
+
     return {
-      result,
-      countNum,
+      rows: result,
+      total: countNum,
+      pagination: {
+        size: dto.pageSize,
+        page: dto.pageNum,
+        total: countNum,
+      },
     };
   }
 
@@ -570,8 +573,13 @@ export class Service {
       },
     });
     return {
-      user,
-      countNum,
+      rows: user,
+      total: countNum,
+      pagination: {
+        size: dto.pageSize,
+        page: dto.pageNum,
+        total: countNum,
+      },
     };
   }
 
@@ -600,8 +608,13 @@ export class Service {
       },
     });
     return {
-      user,
-      countNum,
+      rows: user,
+      total: countNum,
+      pagination: {
+        size: dto.pageSize,
+        page: dto.pageNum,
+        total: countNum,
+      },
     };
   }
 
