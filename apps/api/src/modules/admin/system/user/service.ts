@@ -620,8 +620,13 @@ export class Service {
       where: processedQuery
     });
     return {
-      result,
-      countNum,
+      rows: result,
+      total: countNum,
+      pagination: {
+        size: dto.pageSize,
+        page: dto.pageNum,
+        total: countNum,
+      },
     };
   }
 
@@ -629,7 +634,7 @@ export class Service {
    * 根据部门ID进行分页查询用户列表
    * deptId = -1 时查询全部
    */
-  async page(uid: number, params: PageSearchUserDto): Promise<PageSearchUserInfo[]> {
+  async page(uid: number, params: PageSearchUserDto): Promise<any> {
     // const { departmentIds, limit, page, name, username, phone, remark } =
     //   params;
     const { departmentIds, limit, page } = params;
@@ -721,7 +726,16 @@ export class Service {
         }
       }
     });
-    return dealResult;
+    // return dealResult;
+
+    return {
+      list: dealResult,
+      pagination: {
+        total: dealResult.length,
+        page: params.page,
+        size: params.limit,
+      },
+    };
   }
 
   /**
