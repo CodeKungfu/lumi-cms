@@ -12,10 +12,7 @@ export class OperlogInterceptor implements NestInterceptor {
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     // 检查是否禁用日志
-    const isLogDisabled = this.reflector.get<boolean>(
-      LOG_DISABLED_KEY_METADATA,
-      context.getHandler(),
-    );
+    const isLogDisabled = this.reflector.get<boolean>(LOG_DISABLED_KEY_METADATA, context.getHandler());
 
     if (isLogDisabled) {
       return next.handle();

@@ -65,7 +65,7 @@ lumi-cms/
 - Prisma ORM
 - JWT 认证
 - Redis 缓存
-- Winston 日志
+
 </details>
 
 <details>

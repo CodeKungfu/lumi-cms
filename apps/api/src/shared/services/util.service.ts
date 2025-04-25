@@ -5,13 +5,6 @@ import { nanoid, customAlphabet } from 'nanoid';
 import * as CryptoJS from 'crypto-js';
 
 /**
- * 首字母大写
- */
-export function capitalizeFirstLetter(str: string): string {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-/**
  * 转换树形结构数据
  */
 export const buildTreeData = (data: any[], idField: string = 'id', parentField: string = 'parentId', childrenField: string = 'children') => {

@@ -167,7 +167,6 @@ npx prisma migrate dev --name <migration-name>
 10.  Login Logs: Record and query system login logs including login exceptions.
 11.  Online Users: Monitor active user status in the current system.
 12.  System Interfaces: Automatically generate relevant API documentation based on business code. (Supported)
-15.  Service Monitoring: Monitor current system CPU, memory, disk, stack, and other related information.
 ## 🤝 Contribution Guidelines
 1. Fork the repository
 2. Create a feature branch (git checkout -b feature/amazing-feature)

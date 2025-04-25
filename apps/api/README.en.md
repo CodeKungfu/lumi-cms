@@ -62,8 +62,7 @@ yarn dev
 9. Operation Log: Recording and querying normal operation logs and abnormal information logs of the system.  (Supported)
 10. Login Log: Recording and querying system login logs, including login exceptions.
 11. Online Users: Monitoring the status of active users in the current system.
-14. System Interface: Automatically generating related API interface documents based on business code.
-15. Service Monitoring: Monitoring relevant information such as current system CPU, memory, disk, and stack.
+12. System Interface: Automatically generating related API interface documents based on business code.
 
 ## System Modules
 
