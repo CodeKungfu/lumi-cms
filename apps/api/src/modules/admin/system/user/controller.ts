@@ -75,11 +75,7 @@ export class MyController {
   @ApiInfo(':id', permissionsPrefix, `查询${keyStr}详情`)
   async infoUser(@Param() params: InfoDto, @AdminUser() user: IAdminUser): Promise<any> {
     if (params.id) {
-      let id = params.id;
-      if (id.toString() === 'profile') {
-        id = user.uid;
-      }
-      return await this.userService.infoUser(id);
+      return await this.userService.infoUser(params.id.toString() === 'profile' ? user.uid : params.id);
     } else {
       return await this.userService.infoUserV1();
     }
