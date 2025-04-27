@@ -4,7 +4,7 @@ import { rootRoleIdProvider } from '../core/provider/root-role-id.provider';
 import { SystemModule } from '../system/system.module';
 
 // 模块列表
-const modules = ['operlog','logininfor','online'];
+const modules = ['operlog','logininfor'];
 
 // 动态导入所有模块
 const components = modules.reduce((acc, name) => {
@@ -22,7 +22,7 @@ const components = modules.reduce((acc, name) => {
     rootRoleIdProvider(),
     ...modules.map(name => components[name].service.Service)
   ],
-  exports: [ROOT_ROLE_ID, components.online.service.Service],
+  exports: [ROOT_ROLE_ID],
 })
 
 export class MonitorModule {}
