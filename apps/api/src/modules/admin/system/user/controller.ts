@@ -1,10 +1,7 @@
-import { Body, Get, Post, Query, Param, Put, Res, StreamableFile } from '@nestjs/common';
+import { Body, Post, Query, Param, Res, StreamableFile } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
-import { Keep, RequiresPermissions } from 'src/common/decorators';
-import { PageSearchUserInfo } from 'src/common/dto';
-
-import { ControllerCreate, ApiList, ApiInfo, ApiCreate, ApiUpdate, ApiDelete, ApiExport } from 'src/common/decorators/controller.decorators';
-import { PageSearchUserDto, PasswordUserDto } from 'src/common/dto';
+import { ApiGet, ControllerCreate, ApiList, ApiInfo, ApiCreate, ApiUpdate, ApiDelete, ApiExport } from 'src/common/decorators/controller.decorators';
+import { PageSearchUserDto, PasswordUserDto, PageSearchUserInfo } from 'src/common/dto';
 
 import * as SysMenuService from '../menu/service';
 import { Service as SysUserService } from './service';
@@ -31,17 +28,12 @@ export class MyController {
     return res.send(file);
   }
 
-  @RequiresPermissions('system:user:edit')
-  @ApiOperation({ summary: '重置密码' })
-  @Put('resetPwd')
+  @ApiUpdate('resetPwd',permissionsPrefix, `重置密码`)
   async resetPwd(@Body() dto: PasswordUserDto): Promise<void> {
     await this.userService.forceUpdatePassword(dto.userId, dto.password);
   }
 
-  @RequiresPermissions('system:user:query')
-  @ApiOperation({ summary: `根据用户编号获取授权角色` })
-  @Keep()
-  @Get('authRole/:id')
+  @ApiGet('authRole/:id', 'system:user:query', '根据用户编号获取授权角色')
   async authRoleById(@AdminUser() user: IAdminUser, @Param() params: any): Promise<any> {
     const list: any = await this.userService.infoUser0(params.id);
     const role = await this.userService.infoUserRole(params.id);
@@ -52,10 +44,7 @@ export class MyController {
     };
   }
 
-  @RequiresPermissions('system:user:edit')
-  @ApiOperation({ summary: `用户授权角色` })
-  @Keep()
-  @Put('authRole')
+  @ApiUpdate('authRole',permissionsPrefix, `用户授权角色`, true)
   async insertAuthRole(@Query() params: any): Promise<any> {
     const role = await this.userService.insertAuthRole(params.userId, params.roleIds);
     return {
@@ -63,13 +52,9 @@ export class MyController {
     };
   }
 
-  @RequiresPermissions('system:user:list')
-  @ApiOperation({ summary: '获取部门树列表' })
-  @Keep()
-  @Get('deptTree')
+  @ApiGet('deptTree', 'system:user:list', '获取部门树列表')
   async deptTree(@AdminUser() user: IAdminUser): Promise<any> {
-    const res: any = await this.userService.deptTree();
-    return res;
+    return await this.userService.deptTree();
   }
 
   @ApiInfo(':id', permissionsPrefix, `查询${keyStr}详情`)
@@ -94,16 +79,12 @@ export class MyController {
     await this.menuService.refreshPerms(dto.id);
   }
 
-  @RequiresPermissions('system:user:profile')
-  @ApiOperation({ summary: '修改用户' })
-  @Put('profile')
+  @ApiUpdate('profile','system:user:profile', `修改用户`)
   async profile(@Body() dto: any, @AdminUser() user: IAdminUser): Promise<void> {
     return await this.userService.updatePersonInfo( user.uid, dto);
   }
 
-  @RequiresPermissions('system:user:changeStatus')
-  @ApiOperation({ summary: '修改用户' })
-  @Put('changeStatus')
+  @ApiUpdate('changeStatus','system:user:changeStatus', `修改用户`)
   async changeStatus(@Body() dto: any): Promise<void> {
     await this.userService.changeStatus(dto);
   }

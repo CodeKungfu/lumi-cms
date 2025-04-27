@@ -10,15 +10,6 @@ import { omit } from 'lodash';
 import { processPageQuery } from 'src/common/utils/query-helper';
 import { buildTreeData } from 'src/shared/services/util.service';
 
-const transData = (jsonArr) => {
-  const readArr = jsonArr.map((item) => ({
-    parentId: Number(item.parentId),
-    id: Number(item.deptId),
-    label: item.deptName
-  }));
-  return buildTreeData(readArr, 'id', 'parentId', 'children');
-};
-
 @Injectable()
 export class Service {
   constructor(@Inject(ROOT_ROLE_ID) private rootRoleId: number, private excelService: ExcelService ) {}
@@ -627,7 +618,12 @@ export class Service {
         delFlag: '0'
       },
     });
-    const deptTree = transData(deptList)
+    const readArr = deptList.map((item) => ({
+      parentId: Number(item.parentId),
+      id: Number(item.deptId),
+      label: item.deptName
+    }));
+    const deptTree = buildTreeData(readArr, 'id', 'parentId', 'children');
     // 用户选中列表
     const result: any = await prisma.$queryRaw`select d.dept_id 
 		    from sys_dept d left join sys_role_dept rd on d.dept_id = rd.dept_id 

@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-// import { camelCase, isEmpty } from 'lodash';
 import { findIndex, isEmpty } from 'lodash';
 import { ApiException } from 'src/common/exceptions/api.exception';
 import { UtilService, buildTreeData } from 'src/shared/services/util.service';
@@ -11,23 +10,8 @@ import { CreateUserDto, PageSearchUserDto, UpdatePasswordDto, UpdateUserDto, Upd
 import { omit } from 'lodash';
 import { prisma } from '@repo/database';
 import { processPageQuery } from 'src/common/utils/query-helper';
-
 // 使用更简单的方式定义 sys_user 类型
 type sys_user = Awaited<ReturnType<typeof prisma.sys_user.findUnique>>;
-
-// 使用共享的树结构处理函数
-const transData = (jsonArr, roleId) => {
-  // 如果roleId存在，筛选出相关项目，否则直接使用原数组
-  let readArr = roleId ? jsonArr.filter((item) => item.roleId === roleId) : jsonArr;
-  // 需要返回数据字段
-  readArr = readArr.map((item) => ({
-    parentId: Number(item.parentId),
-    id: Number(item.deptId),
-    label: item.deptName,
-  }));
-  
-  return buildTreeData(readArr, 'id', 'parentId', 'children');
-};
 
 @Injectable()
 export class Service {
@@ -38,8 +22,7 @@ export class Service {
     private util: UtilService,
     private excelService: ExcelService,
   ) {}
-
-
+  
   /**
    * 分页查询信息
    */
@@ -188,7 +171,13 @@ export class Service {
    */
   async deptTree(): Promise<any> {
     const deptTable = await await prisma.sys_dept.findMany();
-    const data = transData(deptTable, '');
+    // 需要返回数据字段
+    const readArr = deptTable.map((item) => ({
+      parentId: Number(item.parentId),
+      id: Number(item.deptId),
+      label: item.deptName,
+    }));
+    const data = buildTreeData(readArr, 'id', 'parentId', 'children');
     return {
       msg: '操作成功',
       code: 200,

@@ -78,10 +78,9 @@ export function ApiCreate(url: string, permission: string = '', summary: string 
   return applyDecorators(...decorators);
 }
 
-export function ApiUpdate(url: string, permission: string = '', summary: string = '') {
+export function ApiUpdate(url: string, permission: string = '', summary: string = '', keep: boolean = false) {
   const decorators = [
-    ApiOperation({ summary }),
-    ApiOkResponse()
+    ApiOperation({ summary })
   ];
   if (url) {
     decorators.push(Put(url));
@@ -91,6 +90,12 @@ export function ApiUpdate(url: string, permission: string = '', summary: string 
   
   if (permission) {
     decorators.push(RequiresPermissions(`${permission}:edit`));
+  }
+
+  if (keep) {
+    decorators.push(Keep());
+  } else {
+    decorators.push(ApiOkResponse());
   }
   
   return applyDecorators(...decorators);
