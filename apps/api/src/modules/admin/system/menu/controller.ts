@@ -1,7 +1,5 @@
-import { ApiOperation } from '@nestjs/swagger';
-import { Keep } from 'src/common/decorators';
-import { Body, Param, Query, Get } from '@nestjs/common';
-import { ControllerCreate, ApiList, ApiInfo, ApiCreate, ApiUpdate, ApiDelete } from 'src/common/decorators/controller.decorators';
+import { Body, Param, Query } from '@nestjs/common';
+import { ApiGet, ControllerCreate, ApiList, ApiInfo, ApiCreate, ApiUpdate, ApiDelete } from 'src/common/decorators/controller.decorators';
 import { Service } from './service';
 import { keyStr, controllerName, ADMIN_PREFIX, permissionsPrefix, tableQueryDTO, tableDTO, InfoDto, DeleteDto, IAdminUser, AdminUser } from './config';
 
@@ -9,23 +7,13 @@ import { keyStr, controllerName, ADMIN_PREFIX, permissionsPrefix, tableQueryDTO,
 export class MyController {
   constructor(private service: Service) {}
 
-  /**
-   * 获取菜单下拉树列表
-   */
-  @ApiOperation({ summary: `查询${keyStr}` })
-  @Keep()
-  @Get('treeselect')
+  @ApiGet('treeselect', '', '获取菜单下拉树列表')
   async treeselect(@AdminUser() user: any,@Param() params: any): Promise<any> {
     const list = await this.service.treeselect(user.uid, params.id);
     return {data: list};
   }
 
-  /**
-   * 加载对应角色菜单列表树
-   */
-  @ApiOperation({ summary: `分页查询${keyStr}` })
-  @Keep()
-  @Get('roleMenuTreeselect/:id')
+  @ApiGet('roleMenuTreeselect/:id', '', '加载对应角色菜单列表树')
   async roleMenuTreeselect(@Param() params: InfoDto): Promise<any> {
     const rows = await this.service.roleMenuTreeselect(params.id);
     return {
