@@ -637,7 +637,7 @@ export class Service {
     result.forEach((item) => {
       checkedKeys.push(item.dept_id)
     })
-    console.log(deptList, checkedKeys)
+    // console.log(deptList, checkedKeys)
     return {
       msg: '操作成功',
       code: 200,

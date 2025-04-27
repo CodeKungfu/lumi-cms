@@ -13,6 +13,25 @@ export function ControllerCreate(keyStr: string, controllerName: string, adminPr
   );
 }
 
+export function ApiGet(url: string, permission: string = '', summary: string = '', keep: boolean = true) {
+  const decorators = [
+    Get(url),
+    ApiOperation({ summary })
+  ];
+  
+  if (permission) {
+    decorators.push(RequiresPermissions(`${permission}`));
+  }
+
+  if (keep) {
+    decorators.push(Keep());
+  } else {
+    decorators.push(ApiOkResponse());
+  }
+  
+  return applyDecorators(...decorators);
+}
+
 export function ApiList(url: string, permission: string = '', summary: string = '', keep: boolean = true) {
   const decorators = [
     Get(url),
