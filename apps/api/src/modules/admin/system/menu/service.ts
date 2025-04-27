@@ -1,13 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { concat, includes, isEmpty, omit } from 'lodash';
+import { prisma } from 'src/prisma';
 import { ROOT_ROLE_ID } from 'src/modules/admin/admin.constants';
 import { ApiException } from 'src/common/exceptions/api.exception';
-import { concat, difference, filter, includes, isEmpty, map, findIndex, omit } from 'lodash';
-import { prisma } from 'src/prisma';
-import { tableType, tableName } from './config';
 import { RedisService } from 'src/shared/services/redis.service';
-import { Service as SysRoleService } from '../role/service';
-
 import { buildTreeData } from 'src/shared/services/util.service';
+import { tableType, tableName } from './config';
+import { Service as SysRoleService } from '../role/service';
 
 @Injectable()
 export class Service {
@@ -16,29 +15,6 @@ export class Service {
     @Inject(ROOT_ROLE_ID) private rootRoleId: number,
     private roleService: SysRoleService,
   ) {}
-
-  // exclude
-  async roleMenuTreeselect(roleId: any): Promise<any> {
-    const menuList = await prisma[tableName].findMany();
-    const mappedMenuList = menuList.map((item) => ({
-      parentId: Number(item.parentId),
-      id: Number(item.menuId),
-      label: item.menuName,
-    }));
-    const menus = buildTreeData(mappedMenuList, 'id', 'parentId', 'children');
-    const result: any = await prisma.$queryRaw`select m.menu_id
-      from sys_menu m
-              left join sys_role_menu rm on m.menu_id = rm.menu_id
-          where rm.role_id = ${roleId}  and m.menu_id not in (select m.parent_id from sys_menu m inner join sys_role_menu rm on m.menu_id = rm.menu_id and rm.role_id = ${roleId}) order by m.parent_id, m.order_num`;
-    const keys = [];
-    result.forEach((item) => {
-      keys.push(item.menu_id);
-    });
-    return {
-      menus,
-      keys,
-    };
-  }
 
   async treeselect(uid, params) {
     let menuList: any;
@@ -67,69 +43,29 @@ export class Service {
     return buildTreeData(menuArr, 'id', 'parentId', 'children');
   }
 
-  /**
-   * 根据获取信息
-   */
-  async info(id: number): Promise<any> {
-    const resultInfo: tableType = await prisma[tableName].findFirst({
-      where: {
-        menuId: Number(id),
-      },
+  // exclude
+  async roleMenuTreeselect(roleId: any): Promise<any> {
+    const menuList = await prisma[tableName].findMany();
+    const mappedMenuList = menuList.map((item) => ({
+      parentId: Number(item.parentId),
+      id: Number(item.menuId),
+      label: item.menuName,
+    }));
+    const menus = buildTreeData(mappedMenuList, 'id', 'parentId', 'children');
+    const result: any = await prisma.$queryRaw`select m.menu_id
+      from sys_menu m
+              left join sys_role_menu rm on m.menu_id = rm.menu_id
+          where rm.role_id = ${roleId}  and m.menu_id not in (select m.parent_id from sys_menu m inner join sys_role_menu rm on m.menu_id = rm.menu_id and rm.role_id = ${roleId}) order by m.parent_id, m.order_num`;
+    const keys = [];
+    result.forEach((item) => {
+      keys.push(item.menu_id);
     });
-    if (isEmpty(resultInfo)) {
-      throw new ApiException(10017);
-    }
-
-    return resultInfo;
+    return {
+      checkedKeys: keys,
+      menus: menus,
+    };
   }
 
-  /**
-   * 根据获取信息
-   */
-  async delete(id: any): Promise<tableType> {
-    const resultInfo: tableType = await prisma[tableName].delete({
-      where: {
-        menuId: Number(id),
-      },
-    });
-    return resultInfo;
-  }
-
-  /**
-   * 更新信息
-   */
-  async update(body: any, username: string): Promise<tableType> {
-    const updateObj = omit(body, ['menuId', 'createTime']);
-    const resultInfo: tableType = await prisma[tableName].update({
-      data: {
-        ...updateObj,
-        updateBy: username,
-        updateTime: new Date(),
-      },
-      where: {
-        menuId: body.menuId,
-      },
-    });
-    return resultInfo;
-  }
-
-  /**
-   * 新增信息
-   */
-  async create(body: any, username: string): Promise<any> {
-    const resultInfo: tableType = await prisma[tableName].create({
-      data: {
-        ...body,
-        createTime: new Date(),
-        createBy: username,
-      },
-    });
-    return resultInfo;
-  }
-
-  /**
-   * 分页查询信息
-   */
   async pageDto(dto: any): Promise<any> {
     const queryObj = omit(dto, ['pageNum', 'pageSize']);
     const countNum: any = await prisma[tableName].count({
@@ -147,6 +83,52 @@ export class Service {
     };
   }
 
+  async info(id: number): Promise<any> {
+    const resultInfo: tableType = await prisma[tableName].findFirst({
+      where: {
+        menuId: Number(id),
+      },
+    });
+    if (isEmpty(resultInfo)) {
+      throw new ApiException(10017);
+    }
+    return resultInfo;
+  }
+
+  async create(body: any, username: string): Promise<any> {
+    const resultInfo: tableType = await prisma[tableName].create({
+      data: {
+        ...body,
+        createTime: new Date(),
+        createBy: username,
+      },
+    });
+    return resultInfo;
+  }
+
+  async update(body: any, username: string): Promise<tableType> {
+    const updateObj = omit(body, ['menuId', 'createTime']);
+    const resultInfo: tableType = await prisma[tableName].update({
+      data: {
+        ...updateObj,
+        updateBy: username,
+        updateTime: new Date(),
+      },
+      where: {
+        menuId: body.menuId,
+      },
+    });
+    return resultInfo;
+  }
+
+  async delete(id: any): Promise<tableType> {
+    const resultInfo: tableType = await prisma[tableName].delete({
+      where: {
+        menuId: Number(id),
+      },
+    });
+    return resultInfo;
+  }
   /**
    * 获取当前用户的所有权限
    */
@@ -155,28 +137,8 @@ export class Service {
     let perms: any = [];
     let result: any = null;
     if (includes(roleIds, this.rootRoleId)) {
-      // root find all perms
-      // result = await prisma.sys_menu.findMany({
-      //   where: {
-      //     perms: {
-      //       not: null,
-      //     },
-      //     menuType: '2',
-      //   },
-      // });
-      return ['*:*:*'];
+      return ['*:*:*']; // root find all perms
     } else {
-      // result = await this.menuRepository
-      //   .createQueryBuilder('menu')
-      //   .innerJoinAndSelect(
-      //     'sys_role_menu',
-      //     'role_menu',
-      //     'menu.id = role_menu.menu_id',
-      //   )
-      //   .andWhere('role_menu.role_id IN (:...roldIds)', { roldIds: roleIds })
-      //   .andWhere('menu.type = 2')
-      //   .andWhere('menu.perms IS NOT NULL')
-      //   .getMany();
       result =
         await prisma.$queryRaw`SELECT distinct menu.perms FROM sys_menu menu LEFT JOIN sys_role_menu role_menu ON menu.menu_id = role_menu.menu_id where role_menu.role_id IN (${roleIds.join(
           ',',
@@ -187,26 +149,20 @@ export class Service {
             perms = concat(perms, e.perms);
           }
         });
-        // perms = uniq(perms);
       }
-      // console.log(perms);
       return perms;
     }
-    // return result || perms;
   }
-
   /**
    * 刷新指定用户ID的权限
    */
   async refreshPerms(uid: number): Promise<void> {
     const perms = await this.getPerms(uid);
     const online = await this.redisService.getRedis().get(`admin:token:${uid}`);
-    if (online) {
-      // 判断是否在线
+    if (online) { // 判断是否在线
       await this.redisService.getRedis().set(`admin:perms:${uid}`, JSON.stringify(perms));
     }
   }
-
   /**
    * 刷新所有在线用户的权限
    */
@@ -220,15 +176,13 @@ export class Service {
       }
     }
   }
-
   /**
    * 根据角色获取所有菜单
    */
   async getMenus(uid: number): Promise<tableType[]> {
     const roleIds = await this.roleService.getRoleIdByUser(uid);
     let menus: tableType[] = [];
-    if (includes(roleIds, this.rootRoleId)) {
-      // root find all
+    if (includes(roleIds, this.rootRoleId)) { // root find all
       menus =
         await prisma.$queryRaw`select distinct m.menu_id, m.parent_id, m.menu_name, m.path, m.component, m.query, m.visible, m.status, ifnull(m.perms,'') as perms, m.is_frame, m.is_cache, m.menu_type, m.icon, m.order_num, m.create_time
         from sys_menu m where m.menu_type in ('M', 'C') and m.status = 0

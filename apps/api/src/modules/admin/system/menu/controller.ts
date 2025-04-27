@@ -15,11 +15,7 @@ export class MyController {
 
   @ApiGet('roleMenuTreeselect/:id', '', '加载对应角色菜单列表树')
   async roleMenuTreeselect(@Param() params: InfoDto): Promise<any> {
-    const rows = await this.service.roleMenuTreeselect(params.id);
-    return {
-      checkedKeys: rows.keys,
-      menus: rows.menus,
-    };
+    return await this.service.roleMenuTreeselect(params.id);
   }
 
   @ApiList('list', permissionsPrefix, `分页查询${keyStr}`)
