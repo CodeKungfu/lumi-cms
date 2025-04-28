@@ -1,11 +1,10 @@
-import { Body, Get, Post, Query, Param, Res, StreamableFile } from '@nestjs/common';
-import { ApiOperation, ApiOkResponse } from '@nestjs/swagger';
+import { Body, Post, Query, Param, Res, StreamableFile } from '@nestjs/common';
+import { ApiOperation } from '@nestjs/swagger';
 import { ApiException } from 'src/common/exceptions/api.exception';
 import { RoleInfo } from 'src/common/dto';
 import { DeleteRoleDto, InfoRoleDto, UpdateRoleDto } from 'src/common/dto';
 import * as SysMenuService from '../menu/service';
 import { Service as SysRoleService } from './service';
-
 import { ApiGet, ControllerCreate, ApiList, ApiInfo, ApiCreate, ApiUpdate, ApiDelete, ApiExport } from 'src/common/decorators/controller.decorators';
 import { keyStr, controllerName, ADMIN_PREFIX, permissionsPrefix, tableQueryDTO, tableDTO, InfoDto, DeleteDto, IAdminUser, AdminUser } from './config';
 
@@ -97,22 +96,14 @@ export class MyController {
     await this.menuService.refreshOnlineUserPerms();
   }
 
-  @ApiOperation({ summary: '分页查询角色信息' })
-  @ApiOkResponse()
-  @Get('page')
+  @ApiGet('page', '', `分页查询角色信息`, false)
   async page(@Query() dto: any): Promise<any> {
-    const list = await this.roleService.page({
-      page: dto.page - 1,
-      limit: Number(dto.limit),
-      name: dto.name,
-    });
-    const count = await this.roleService.count();
     return {
-      list,
+      list: await this.roleService.page(dto),
       pagination: {
         size: dto.limit,
         page: dto.page,
-        total: count,
+        total: await this.roleService.count(),
       },
     };
   }
@@ -128,9 +119,7 @@ export class MyController {
     await this.menuService.refreshOnlineUserPerms();
   }
 
-  @ApiOperation({ summary: '获取角色信息' })
-  @ApiOkResponse({ type: RoleInfo })
-  @Get('info')
+  @ApiGet('info', '', `获取角色信息`, false)
   async info(@Query() dto: InfoRoleDto): Promise<RoleInfo> {
     return await this.roleService.info(dto.roleId);
   }

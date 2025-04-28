@@ -500,8 +500,8 @@ export class Service {
       orderBy: {
         roleId: 'asc',
       },
-      take: limit,
-      skip: page * limit,
+      take: Number(limit),
+      skip: (page - 1) * Number(limit),
     });
     return result;
   }
