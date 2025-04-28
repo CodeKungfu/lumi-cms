@@ -542,61 +542,31 @@ export class Service {
   /**
    * 分页查询信息
    */
-  async pageDto(dto: any): Promise<any> {
+  async pageDto(dto: any, isInclude = true): Promise<any> {
     const queryObj = omit(dto, ['pageNum', 'pageSize']);
     const result: any = await prisma.sys_user_role.findMany({
-      skip: (Number(dto.pageNum) - 1) * Number(dto.pageSize),
-      take: Number(dto.pageSize),
-      where: queryObj,
-    });
-    const countNum: any = await prisma.sys_user_role.count({
       where: queryObj,
     });
     const userIds = [];
     result.forEach((item) => {
       userIds.push(item.userId);
     });
-    const user = await prisma.sys_user.findMany({
-      where: {
-        userId: {
-          in: userIds,
-        },
-      },
-    });
-    return {
-      rows: user,
-      total: countNum,
-      pagination: {
-        size: dto.pageSize,
-        page: dto.pageNum,
-        total: countNum,
-      },
+    const where = isInclude ? {
+      userId: {
+        in: userIds,
+      }
+    } : {
+      userId: {
+        notIn: userIds,
+      }
     };
-  }
-
-  /**
-   * 分页查询信息
-   */
-  async pageDto1(dto: any): Promise<any> {
-    const queryObj = omit(dto, ['pageNum', 'pageSize']);
-    const result: any = await prisma.sys_user_role.findMany({
+    const user = await prisma.sys_user.findMany({
       skip: (Number(dto.pageNum) - 1) * Number(dto.pageSize),
       take: Number(dto.pageSize),
-      where: queryObj,
+      where: where,
     });
-    const countNum: any = await prisma.sys_user_role.count({
-      where: queryObj,
-    });
-    const userIds = [];
-    result.forEach((item) => {
-      userIds.push(item.userId);
-    });
-    const user = await prisma.sys_user.findMany({
-      where: {
-        userId: {
-          notIn: userIds,
-        },
-      },
+    const countNum: any = await prisma.sys_user.count({
+      where: where,
     });
     return {
       rows: user,

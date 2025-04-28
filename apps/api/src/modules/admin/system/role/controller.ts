@@ -61,12 +61,12 @@ export class MyController {
 
   @ApiGet('authUser/allocatedList', 'system:role:list', `查询已分配用户角色列表`)
   async allocatedList(@Query() dto: any): Promise<any> {
-    return await this.roleService.pageDto(dto);
+    return await this.roleService.pageDto(dto, true);
   }
 
   @ApiGet('authUser/unallocatedList', 'system:role:list', `查询未分配用户角色列表`)
   async unallocatedList(@Query() dto: any): Promise<any> {
-    return await this.roleService.pageDto1(dto);
+    return await this.roleService.pageDto(dto, false);
   }
 
   @ApiUpdate('authUser/cancel',`${permissionsPrefix}`, `取消授权用户`)
