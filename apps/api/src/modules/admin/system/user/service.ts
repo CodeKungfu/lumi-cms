@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { findIndex, isEmpty } from 'lodash';
 import { ApiException } from 'src/common/exceptions/api.exception';
-import { UtilService, buildTreeData } from 'src/shared/services/util.service';
+import { UtilService } from 'src/shared/services/util.service';
 import { ExcelService } from 'src/shared/services/excel.service';
 import { ROOT_ROLE_ID } from 'src/modules/admin/admin.constants';
 import { RedisService } from 'src/shared/services/redis.service';
@@ -22,19 +22,54 @@ export class Service {
     private util: UtilService,
     private excelService: ExcelService,
   ) {}
-  
-  /**
-   * 分页查询信息
-   */
-  async pageDtoExport(dto: any): Promise<any> {
-    const queryObj = omit(dto, ['pageNum', 'pageSize']);
+
+  async pageDto(dto: any): Promise<any> {
+    const { processedQuery, orderBy } = processPageQuery('sys_user', dto);
     const result: any = await prisma.sys_user.findMany({
       skip: (Number(dto.pageNum) - 1) * Number(dto.pageSize),
       take: Number(dto.pageSize),
-      where: queryObj,
+      where: processedQuery,
+      orderBy,
     });
-    
+    const countNum: any = await prisma.sys_user.count({
+      where: processedQuery
+    });
+    return {
+      rows: result,
+      total: countNum,
+      pagination: {
+        size: dto.pageSize,
+        page: dto.pageNum,
+        total: countNum,
+      },
+    };
+  }
+ 
+  async pageDtoExport(dto: any): Promise<any> {
+    const queryObj = omit(dto, ['pageNum', 'pageSize']);
+    const result: any = await prisma.sys_user.findMany({
+      where: queryObj
+    });
     return this.excelService.createExcelFile('target', result);
+  }
+
+  async forceUpdatePassword(uid: number, password: string): Promise<void> {
+    const user = await prisma.sys_user.findUnique({
+      where: {
+        userId: uid,
+      },
+    });
+    if (isEmpty(user)) {
+      throw new ApiException(10017);
+    }
+    const newPassword = this.util.md5(`${password}`);
+    await prisma.sys_user.update({
+      data: { password: newPassword },
+      where: {
+        userId: uid,
+      },
+    });
+    await this.upgradePasswordV(Number(user.userId));
   }
 
   /**
@@ -167,24 +202,6 @@ export class Service {
   }
 
   /**
-   * deptTree
-   */
-  async deptTree(): Promise<any> {
-    const deptTable = await await prisma.sys_dept.findMany();
-    // 需要返回数据字段
-    const readArr = deptTable.map((item) => ({
-      parentId: Number(item.parentId),
-      id: Number(item.deptId),
-      label: item.deptName,
-    }));
-    const data = buildTreeData(readArr, 'id', 'parentId', 'children');
-    return {
-      msg: '操作成功',
-      code: 200,
-      data: data,
-    };
-  }
-  /**
    * 获取用户信息
    * @param uid user id
    * @param ip login ip
@@ -281,27 +298,7 @@ export class Service {
     await this.upgradePasswordV(Number(user.userId));
   }
 
-  /**
-   * 直接更改管理员密码
-   */
-  async forceUpdatePassword(uid: number, password: string): Promise<void> {
-    const user = await prisma.sys_user.findUnique({
-      where: {
-        userId: uid,
-      },
-    });
-    if (isEmpty(user)) {
-      throw new ApiException(10017);
-    }
-    const newPassword = this.util.md5(`${password}`);
-    await prisma.sys_user.update({
-      data: { password: newPassword },
-      where: {
-        userId: uid,
-      },
-    });
-    await this.upgradePasswordV(Number(user.userId));
-  }
+  
 
   /**
    * 增加系统用户，如果返回false则表示已存在该用户
@@ -594,30 +591,7 @@ export class Service {
     return result[0].userId;
   }
 
-  /**
-   * 分页查询信息
-   */
-  async pageDto(dto: any): Promise<any> {
-    const { processedQuery, orderBy } = processPageQuery('sys_user', dto);
-    const result: any = await prisma.sys_user.findMany({
-      skip: (Number(dto.pageNum) - 1) * Number(dto.pageSize),
-      take: Number(dto.pageSize),
-      where: processedQuery,
-      orderBy,
-    });
-    const countNum: any = await prisma.sys_user.count({
-      where: processedQuery
-    });
-    return {
-      rows: result,
-      total: countNum,
-      pagination: {
-        size: dto.pageSize,
-        page: dto.pageNum,
-        total: countNum,
-      },
-    };
-  }
+  
 
   /**
    * 根据部门ID进行分页查询用户列表

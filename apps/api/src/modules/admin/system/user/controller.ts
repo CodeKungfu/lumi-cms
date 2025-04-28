@@ -4,6 +4,7 @@ import { ApiGet, ControllerCreate, ApiList, ApiInfo, ApiCreate, ApiUpdate, ApiDe
 import { PageSearchUserDto, PasswordUserDto, PageSearchUserInfo } from 'src/common/dto';
 
 import * as SysMenuService from '../menu/service';
+import * as SysDeptService from '../dept/service';
 import { Service as SysUserService } from './service';
 
 import { keyStr, controllerName, ADMIN_PREFIX, permissionsPrefix, tableQueryDTO, tableDTO, InfoDto, DeleteDto, IAdminUser, AdminUser } from './config';
@@ -11,7 +12,7 @@ import { keyStr, controllerName, ADMIN_PREFIX, permissionsPrefix, tableQueryDTO,
 
 @ControllerCreate(`${keyStr}模块`, controllerName, ADMIN_PREFIX)
 export class MyController {
-  constructor(private userService: SysUserService, private menuService: SysMenuService.Service) {}
+  constructor(private userService: SysUserService, private menuService: SysMenuService.Service, private deptService: SysDeptService.Service) {}
 
   @ApiList('list', permissionsPrefix, `分页查询${keyStr}`)
    // @ts-ignore ← Ignore type error, Swagger can generate fields normally
@@ -26,6 +27,11 @@ export class MyController {
     res.header('Content-disposition', `attachment; filename=${filename}.xlsx`);
     res.type('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     return res.send(file);
+  }
+
+  @ApiGet('deptTree', 'system:user:list', '获取部门树列表')
+  async deptTree(@AdminUser() user: IAdminUser): Promise<any> {
+    return await this.deptService.deptTree();
   }
 
   @ApiUpdate('resetPwd',permissionsPrefix, `重置密码`)
@@ -52,10 +58,7 @@ export class MyController {
     };
   }
 
-  @ApiGet('deptTree', 'system:user:list', '获取部门树列表')
-  async deptTree(@AdminUser() user: IAdminUser): Promise<any> {
-    return await this.userService.deptTree();
-  }
+  
 
   @ApiInfo(':id', permissionsPrefix, `查询${keyStr}详情`)
   async infoUser(@Param() params: InfoDto, @AdminUser() user: IAdminUser): Promise<any> {
