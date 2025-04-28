@@ -34,29 +34,13 @@ export class MyController {
 
   @ApiCreate('', permissionsPrefix, `新增${keyStr}`)
   // @ts-ignore ← Ignore type error, Swagger can generate fields normally
-  async add(@Body() dto: tableDTO, @AdminUser() user: IAdminUser): Promise<void> {
+  async add(@Body() dto: tableDTO & { mmenuIds: number[], deptIds: number[] }, @AdminUser() user: IAdminUser): Promise<void> {
     await this.roleService.add(dto, user.uid);
   }
 
-  @ApiUpdate('',permissionsPrefix, `修改${keyStr}`)
-  // @ts-ignore ← Ignore type error, Swagger can generate fields normally
-  async updateV1(@Body() body: tableDTO & { mmenuIds: number[] }): Promise<any> {
-    return await this.roleService.updateV1(body);
-  }
-
-  @ApiUpdate('changeStatus',`${permissionsPrefix}:changeStatus`, `修改角色状态`)
-  async changeStatus(@Body() body: any): Promise<any> {
-    return await this.roleService.changeStatus(body);
-  }
- 
   @ApiDelete(':id',permissionsPrefix, `删除${keyStr}`)
   async remove(@Param() params: DeleteDto): Promise<any> {
     return await this.roleService.delete(params);
-  }
-
-  @ApiUpdate('dataScope',`${permissionsPrefix}`, `修改保存数据权限`)
-  async updateV2(@Body() body: any): Promise<any> {
-    return await this.roleService.updateV2(body);
   }
 
   @ApiGet('authUser/allocatedList', 'system:role:list', `查询已分配用户角色列表`)
@@ -69,9 +53,25 @@ export class MyController {
     return await this.roleService.pageDto(dto, false);
   }
 
+  @ApiUpdate('',permissionsPrefix, `修改${keyStr}`)
+  // @ts-ignore ← Ignore type error, Swagger can generate fields normally
+  async updateV1(@Body() body: tableDTO & { mmenuIds: number[] }): Promise<any> {
+    return await this.roleService.updateV1(body);
+  }
+
+  @ApiUpdate('changeStatus',`${permissionsPrefix}:changeStatus`, `修改角色状态`)
+  async changeStatus(@Body() body: any): Promise<any> {
+    return await this.roleService.changeStatus(body);
+  }
+
+  @ApiUpdate('dataScope',`${permissionsPrefix}`, `修改保存数据权限`)
+  async updateV2(@Body() body: any): Promise<any> {
+    return await this.roleService.updateV2(body);
+  }
+
   @ApiUpdate('authUser/cancel',`${permissionsPrefix}`, `取消授权用户`)
   async cancelAuthUser(@Body() body: any): Promise<any> {
-    return await this.roleService.cancelAuthUser(body);
+    return await this.roleService.cancelAuthUserAll(body);
   }
 
   @ApiUpdate('authUser/cancelAll',`${permissionsPrefix}`, `批量取消授权用户`)

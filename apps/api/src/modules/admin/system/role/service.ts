@@ -442,17 +442,8 @@ export class Service {
     return true;
   }
 
-  async cancelAuthUser(body) {
-    return await prisma.sys_user_role.deleteMany({
-      where: {
-        userId: Number(body.userId),
-        roleId: Number(body.roleId)
-      }
-    })
-  }
-
   async cancelAuthUserAll(body) {
-    const userIds = body.userIds ? body.userIds.split(',') : []
+    const userIds = body.userIds ? body.userIds.split(',') : body.userId ? [body.userId] : []
     return await prisma.sys_user_role.deleteMany({
       where: {
         userId: {
@@ -465,8 +456,7 @@ export class Service {
 
   async insertAuthUsers(body) {
     const insertRowIdUsers = body.userIds ? body.userIds.split(',') : []
-    // 有条目更新
-    const insertRows = insertRowIdUsers.map((e) => {
+    const insertRows = insertRowIdUsers.map((e) => { // 有条目更新
       return {
         roleId: Number(body.roleId),
         userId: Number(e),

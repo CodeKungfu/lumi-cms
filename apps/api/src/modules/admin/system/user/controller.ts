@@ -68,7 +68,7 @@ export class MyController {
 
   @ApiCreate('', permissionsPrefix, `新增${keyStr}`)
   // @ts-ignore ← Ignore type error, Swagger can generate fields normally
-  async create(@Body() body: tableDTO, @AdminUser() user: IAdminUser): Promise<void> {
+  async create(@Body() body: tableDTO & { postIds: number[], roleIds: number[] }, @AdminUser() user: IAdminUser): Promise<void> {
     await this.userService.create(body, user.userName);
   }
 
