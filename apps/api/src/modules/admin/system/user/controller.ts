@@ -58,8 +58,6 @@ export class MyController {
     };
   }
 
-  
-
   @ApiInfo(':id', permissionsPrefix, `查询${keyStr}详情`)
   async infoUser(@Param() params: InfoDto, @AdminUser() user: IAdminUser): Promise<any> {
     if (params.id) {
@@ -77,7 +75,7 @@ export class MyController {
 
   @ApiUpdate('',permissionsPrefix, `修改${keyStr}`)
   // @ts-ignore ← Ignore type error, Swagger can generate fields normally
-  async update(@Body() dto: tableDTO, @AdminUser() user: IAdminUser): Promise<void> {
+  async update(@Body() dto: tableDTO & { postIds: number[], roleIds: number[] }, @AdminUser() user: IAdminUser): Promise<void> {
     await this.userService.update(dto, user.userName);
     await this.menuService.refreshPerms(dto.id);
   }

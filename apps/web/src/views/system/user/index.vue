@@ -135,7 +135,11 @@
                <el-table-column label="用户编号" align="center" key="userId" prop="userId" v-if="columns[0].visible" />
                <el-table-column label="用户名称" align="center" key="userName" prop="userName" v-if="columns[1].visible" :show-overflow-tooltip="true" />
                <el-table-column label="用户昵称" align="center" key="nickName" prop="nickName" v-if="columns[2].visible" :show-overflow-tooltip="true" />
-               <el-table-column label="部门" align="center" key="deptName" prop="dept.deptName" v-if="columns[3].visible" :show-overflow-tooltip="true" />
+               <el-table-column label="部门" align="center" key="deptName" prop="dept.deptName" v-if="columns[3].visible" :show-overflow-tooltip="true" >
+                  <template #default="scope">
+                     <span>{{ getDeptNameById(scope.row.deptId) }}</span>
+                  </template>
+               </el-table-column>
                <el-table-column label="手机号码" align="center" key="phonenumber" prop="phonenumber" v-if="columns[4].visible" width="120" />
                <el-table-column label="状态" align="center" key="status" v-if="columns[5].visible">
                   <template #default="scope">
@@ -415,6 +419,28 @@ function getDeptTree() {
     deptOptions.value = response.data;
   });
 };
+// 递归查找部门名称的辅助函数
+function findDeptLabelRecursive(nodes, id) {
+  if (!nodes || nodes.length === 0) {
+    return null;
+  }
+  for (const node of nodes) {
+    if (node.id === id) {
+      return node.label;
+    }
+    if (node.children && node.children.length > 0) {
+      const foundLabel = findDeptLabelRecursive(node.children, id);
+      if (foundLabel !== null) {
+        return foundLabel; // 如果在子节点中找到，立即返回
+      }
+    }
+  }
+  return null; // 当前层级和所有子节点都未找到
+};
+function getDeptNameById(id) {
+   if (id == null || !deptOptions.value) return null;
+   return findDeptLabelRecursive(deptOptions.value, id);
+};
 /** 查询用户列表 */
 function getList() {
   loading.value = true;
@@ -572,11 +598,11 @@ function handleUpdate(row) {
   reset();
   const userId = row.userId || ids.value;
   getUser(userId).then(response => {
-    form.value = response.data;
-    postOptions.value = response.posts;
-    roleOptions.value = response.roles;
-    form.value.postIds = response.postIds;
-    form.value.roleIds = response.roleIds;
+    form.value = response.data.data;
+    postOptions.value = response.data.posts;
+    roleOptions.value = response.data.roles;
+    form.value.postIds = response.data.postIds;
+    form.value.roleIds = response.data.roleIds;
     open.value = true;
     title.value = "修改用户";
     form.password = "";
