@@ -43,7 +43,7 @@ export class MyController {
   async authRoleById(@AdminUser() user: IAdminUser, @Param() params: any): Promise<any> {
     const list: any = await this.userService.infoUser0(params.id);
     const role = await this.userService.infoUserRole(params.id);
-    list.roles = role;
+    // list.roles = role;
     return {
       user: list,
       roles: role,

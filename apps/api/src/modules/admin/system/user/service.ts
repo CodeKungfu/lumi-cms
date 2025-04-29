@@ -156,16 +156,18 @@ export class Service {
    * 根据获取信息
    */
   async infoUserRole(id: number): Promise<any> {
-    const userRole: any = await prisma.sys_user_role.findFirst({
+    const userRole: any = await prisma.sys_user_role.findMany({
       where: {
         userId: Number(id),
       },
     });
     let resultInfo: any = [];
-    if (userRole) {
+    if (userRole.length > 0) {
       resultInfo = await prisma.sys_role.findMany({
         where: {
-          roleId: userRole.role_id,
+          roleId: {
+            in: userRole.map((e) => Number(e.roleId)),
+          },
           delFlag: '0',
         },
       });
