@@ -1,11 +1,7 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Optional } from '@nestjs/common';
 import { Type } from 'class-transformer';
-import * as parser from 'cron-parser';
-import {
-  ArrayNotEmpty, IsArray, IsInt, IsOptional, IsString, Matches, Min, MinLength, ArrayMaxSize, ArrayMinSize, IsEmail, IsIn, MaxLength, ValidateIf,
-  IsDateString, Validate, ValidationArguments, ValidatorConstraint, ValidatorConstraintInterface,
-} from 'class-validator';
+import { ArrayNotEmpty, IsArray, IsInt, IsOptional, IsString, Matches, Min, MinLength, ArrayMaxSize, ArrayMinSize, IsEmail, IsIn, MaxLength, ValidateIf } from 'class-validator';
 import { isEmpty } from 'lodash';
 
 import { sys_role_dept, sys_role_menu, sys_role, sys_menu } from '@repo/database';

@@ -1,6 +1,5 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common';
 import { FastifyReply } from 'fastify';
-// import { isDev } from 'src/config/env';
 import { ApiException } from '../exceptions/api.exception';
 import { ResponseDto } from '../class/res.class';
 
