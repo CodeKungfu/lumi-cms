@@ -68,11 +68,13 @@ export class BaseService {
    * 创建记录
    */
   async create(data: any, userName: string) {
-    return (prisma as any)[this.tableName].create({ 
-      ...data,
-      createTime: new Date(), 
-      updateTime: new Date(),
-      createBy: userName,
+    return (prisma as any)[this.tableName].create({
+      data: {
+        ...data,
+        createTime: new Date(),
+        updateTime: new Date(),
+        createBy: userName,
+      }
     });
   }
 
