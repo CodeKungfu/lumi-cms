@@ -6,6 +6,22 @@ import * as fs from 'fs';
 // https://4sii.tistory.com/693
 @Injectable()
 export class ExcelService {
+  private toPlainForExcel(input: any): any {
+    if (typeof input === 'bigint') return input.toString();
+    if (input instanceof Date) return input;
+    if (typeof Buffer !== 'undefined' && (Buffer as any).isBuffer && (Buffer as any).isBuffer(input)) {
+      return (input as Buffer).toString('base64');
+    }
+    if (Array.isArray(input)) return input.map((v) => this.toPlainForExcel(v));
+    if (input && typeof input === 'object') {
+      const out: any = {};
+      for (const [k, v] of Object.entries(input)) {
+        out[k] = this.toPlainForExcel(v);
+      }
+      return out;
+    }
+    return input;
+  }
   async createExcelFile(prefix: string, data: Array<string | Buffer>) {
     // 파일 작명
     const currentDate = new Date();
@@ -18,7 +34,9 @@ export class ExcelService {
 
     // filePath 위치에 엑셀 다운로드
     const wb = XLSX.utils.book_new();
-    const newWorksheet = XLSX.utils.json_to_sheet(data);
+    const rows = Array.isArray(data) ? data : [data];
+    const plain = rows.map((row) => this.toPlainForExcel(row));
+    const newWorksheet = XLSX.utils.json_to_sheet(plain);
     XLSX.utils.book_append_sheet(wb, newWorksheet, 'Sheet1');
     const wbOptions: any = { bookType: 'xlsx', type: 'binary' };
     XLSX.writeFile(wb, filePath, wbOptions);

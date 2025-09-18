@@ -40,29 +40,6 @@ export class BaseService {
     }
   }
 
-  private toPlainForExcel(input: any): any {
-    // BigInt -> string，避免 xlsx 空值
-    if (typeof input === 'bigint') return input.toString();
-    // 日期原样保留（xlsx 支持 Date）
-    if (input instanceof Date) return input;
-    // Buffer -> base64 字符串，避免空值
-    if (typeof Buffer !== 'undefined' && Buffer.isBuffer && Buffer.isBuffer(input)) {
-      return input.toString('base64');
-    }
-    // 数组递归处理
-    if (Array.isArray(input)) return input.map((v) => this.toPlainForExcel(v));
-    // 对象递归处理
-    if (input && typeof input === 'object') {
-      const out: any = {};
-      for (const [k, v] of Object.entries(input)) {
-        out[k] = this.toPlainForExcel(v);
-      }
-      return out;
-    }
-    // 其他类型直接返回（string/number/boolean/null/undefined）
-    return input;
-  }
-
   /**
    * 导出
    */
@@ -72,9 +49,7 @@ export class BaseService {
       where: processedQuery,
       orderBy,
     });
-    // 将 BigInt/Buffer 等不可直接写入单元格的值转换为可写类型
-    const plain = result.map((row: any) => this.toPlainForExcel(row));
-    return this.excelService.createExcelFile('target', plain);
+    return this.excelService.createExcelFile('target', result);
   }
 
   /**
