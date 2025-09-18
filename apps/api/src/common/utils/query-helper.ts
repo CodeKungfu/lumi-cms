@@ -58,7 +58,7 @@ export function processPageQuery(tableName: string, dto: any) {
     
     return {
       processedQuery: processQueryObject(tableName, rest),
-      orderBy: orderByColumn ? { [orderByColumn]: isAsc === 'ascending' ? 'asc' : 'desc' } : {},
+      orderBy: orderByColumn ? { [orderByColumn]: isAsc === 'ascending' ? 'asc' : 'desc' } : undefined,
       pageNum: Number(pageNum),
       pageSize: Number(pageSize)
     };
