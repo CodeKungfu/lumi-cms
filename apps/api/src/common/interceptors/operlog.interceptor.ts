@@ -81,7 +81,7 @@ export class OperlogInterceptor implements NestInterceptor {
       const ip = this.getClientIp(request);
 
       // 确定业务类型
-      const businessType = this.getBusinessType(method);
+      const businessType = this.getBusinessType(method, url);
       if (body) { // 只针对POST/PUT请求
         // 保存操作日志 - 使用驼峰命名法匹配Prisma模型
         await prisma.sys_oper_log.create({
@@ -104,6 +104,30 @@ export class OperlogInterceptor implements NestInterceptor {
             costTime: costTime,
           },
         });
+      } else {
+        if (method.toLocaleLowerCase()!== 'get') {
+          // 保存操作日志 - 使用驼峰命名法匹配Prisma模型
+          await prisma.sys_oper_log.create({
+            data: {
+              title: url.split('?')[0] || '',
+              businessType: businessType,
+              method: request.route ? request.route.path : url,
+              requestMethod: method,
+              operatorType: 1,
+              operName: operName,
+              deptName: deptName,
+              operUrl: url,
+              operIp: ip,
+              operLocation: '',
+              operParam: '',
+              jsonResult: data ? (JSON.stringify(data).length > 1900 ? JSON.stringify(data).substring(0, 1900) : JSON.stringify(data)) : '',
+              status,
+              errorMsg: errorMsg,
+              operTime: new Date(),
+              costTime: costTime,
+            },
+          });
+        }
       }
       
     } catch (error) {
@@ -111,9 +135,13 @@ export class OperlogInterceptor implements NestInterceptor {
     }
   }
 
-  private getBusinessType(method: string): number {
+  private getBusinessType(method: string, url: string): number {
+    // 1：新增 2：修改 3：删除 4：授权 5：导出 6：导入 7：强退 8：生成代码 9: 清空数据
     switch (method.toUpperCase()) {
       case 'POST':
+        if (url.includes('/export')) {
+          return 5; // 导出
+        }
         return 1; // 新增
       case 'PUT':
       case 'PATCH':
