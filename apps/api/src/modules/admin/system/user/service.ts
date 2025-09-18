@@ -322,7 +322,7 @@ export class Service {
         },
       });
       if (!isEmpty(existsU)) {
-        throw new ApiException(10001);
+        throw new ApiException(10022);
       }
     }
     // 所有用户初始密码为123456
@@ -422,7 +422,7 @@ export class Service {
         },
       });
       if (!isEmpty(existsU)) {
-        throw new ApiException(10001);
+        throw new ApiException(10022);
       }
     }
     await prisma.$transaction(async (prisma) => {
