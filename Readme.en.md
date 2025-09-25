@@ -176,6 +176,11 @@ npx prisma migrate dev --name <migration-name>
 ## 📞 Contact
 - Author: CodeKungfu
 - Email:
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=codeKungfu/lumi-cms&type=Date)](https://star-history.com/#codeKungfu/lumi-cms&Date)
+
 ## 📄 License
 MIT License
 
