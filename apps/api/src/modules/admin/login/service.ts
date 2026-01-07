@@ -9,7 +9,7 @@ import { buildTreeData } from 'src/shared/services/util.service';
 import { ImageCaptchaDto, ImageCaptcha, PermMenuInfo } from 'src/common/dto';
 import { Service as SysUserService } from '../system/user/service';
 import * as SysMenuService from '../system/menu/service';
-import { prisma } from 'src/prisma';
+import { prisma } from '@repo/database';
 import { UAParser } from 'ua-parser-js';
 
 function mapToRouteFormat(node: any): any {

@@ -584,13 +584,13 @@ export class Service {
   /**
    * 查找超管的用户ID
    */
-  async findRootUserId(): Promise<bigint> {
+  async findRootUserId(): Promise<number> {
     const result = await prisma.sys_user_role.findMany({
       where: {
         roleId: this.rootRoleId,
       },
     });
-    return result[0].userId;
+    return Number(result[0].userId);
   }
 
   

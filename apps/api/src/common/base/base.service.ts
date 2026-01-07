@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { prisma } from 'src/prisma';
+import { prisma } from '@repo/database';
 import { isEmpty, map } from 'lodash';
 import { ExcelService } from 'src/shared/services/excel.service';
 import { ApiException } from 'src/common/exceptions/api.exception';

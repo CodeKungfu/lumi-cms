@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { prisma } from 'src/prisma';
+import { prisma } from '@repo/database';
 import { tableName } from './config';
 import { BaseService } from 'src/common/base/base.service';
 

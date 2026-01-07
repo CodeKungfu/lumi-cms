@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { tableName } from './config';
-import { prisma } from 'src/prisma';
+import { prisma } from '@repo/database';
 import { BaseService } from 'src/common/base/base.service';
 import { buildTreeData } from 'src/shared/services/util.service';
 

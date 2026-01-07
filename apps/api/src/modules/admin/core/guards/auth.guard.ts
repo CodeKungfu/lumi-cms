@@ -1,12 +1,12 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, Logger } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { JwtService } from '@nestjs/jwt';
 import { FastifyRequest } from 'fastify';
 import { isEmpty } from 'lodash';
 import { ApiException } from 'src/common/exceptions/api.exception';
-import { REQUIRES_PERMISSIONS_METADATA } from 'src/common/contants/decorator.contants';
-import { ADMIN_USER, PERMISSION_OPTIONAL_KEY_METADATA, AUTHORIZE_KEY_METADATA } from 'src/modules/admin/admin.constants';
+import { AUTHORIZE_KEY_METADATA, ADMIN_USER, PERMISSION_OPTIONAL_KEY_METADATA } from 'src/modules/admin/admin.constants';
 import { Service as LoginService } from 'src/modules/admin/login/service';
+import { JwtService } from '@nestjs/jwt';
+import { REQUIRES_PERMISSIONS_METADATA } from 'src/common/contants/decorator.contants';
 
 /**
  * admin perm check guard
@@ -31,22 +31,29 @@ export class AuthGuard implements CanActivate {
     try {
       token = token.split(' ').pop();
       // 挂载对象到当前请求上
-      request[ADMIN_USER] = this.jwtService.verify(token);
+      const decoded = this.jwtService.verify(token);
+      request[ADMIN_USER] = decoded;
+      Logger.log(`AuthGuard: User verified. UID: ${decoded.uid}, PV: ${decoded.pv}`, 'AuthGuard');
     } catch (e) {
       // 无法通过token校验
+      Logger.error(`AuthGuard: Token verification failed. Error: ${e.message}`, 'AuthGuard');
       throw new ApiException(11001);
     }
     if (isEmpty(request[ADMIN_USER])) {
       throw new ApiException(11001);
     }
     const pv = await this.loginService.getRedisPasswordVersionById(request[ADMIN_USER].uid);
-    if (pv !== `${request[ADMIN_USER].pv}`) {
+    Logger.log(`AuthGuard: Redis PV: ${pv} (type: ${typeof pv}), Token PV: ${request[ADMIN_USER].pv}`, 'AuthGuard');
+    if (`${pv}` !== `${request[ADMIN_USER].pv}`) {
       // 密码版本不一致，登录期间已更改过密码
+      Logger.warn(`AuthGuard: Password version mismatch.`, 'AuthGuard');
       throw new ApiException(11002);
     }
     const redisToken = await this.loginService.getRedisTokenById(request[ADMIN_USER].uid);
+    Logger.log(`AuthGuard: Redis Token found: ${!isEmpty(redisToken)}`, 'AuthGuard');
     if (token !== redisToken) {
       // 与redis保存不一致
+      Logger.warn(`AuthGuard: Token mismatch with Redis.`, 'AuthGuard');
       throw new ApiException(11002);
     }
     // 注册该注解，Api则放行检测

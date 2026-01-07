@@ -4,7 +4,7 @@ import { tap } from 'rxjs/operators';
 import { Request, Response } from 'express';
 import { Reflector } from '@nestjs/core';
 import { LOG_DISABLED_KEY_METADATA } from 'src/modules/admin/admin.constants';
-import { prisma } from 'src/prisma';
+import { prisma } from '@repo/database';
 
 @Injectable()
 export class OperlogInterceptor implements NestInterceptor {

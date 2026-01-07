@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { prisma } from 'src/prisma';
+import { prisma } from '@repo/database';
 import { tableName } from './config';
 import { isEmpty } from 'lodash';
 import { ApiException } from 'src/common/exceptions/api.exception';

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { concat, includes, isEmpty, omit } from 'lodash';
-import { prisma } from 'src/prisma';
+import { prisma } from '@repo/database';
 import { ROOT_ROLE_ID } from 'src/modules/admin/admin.constants';
 import { ApiException } from 'src/common/exceptions/api.exception';
 import { RedisService } from 'src/shared/services/redis.service';

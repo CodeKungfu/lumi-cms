@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { Transform } from 'class-transformer';
 import { IsInt, Min, IsOptional, IsString, IsNumber, IsArray, IsDate } from 'class-validator';
-import { prisma } from 'src/prisma';
+import { getModelFields } from './query-helper';
 
 export function generatePageDto(tableName: string) {
   class DynamicDto {
@@ -36,7 +36,7 @@ export function generatePageDto(tableName: string) {
     ).join('')}PageDto`,
   });
 
-  const prismaFields = prisma[tableName].fields;
+  const prismaFields = getModelFields(tableName);
 
   for (const key of Object.keys(prismaFields)) {
     const fieldType = prismaFields[key].typeName;
@@ -97,7 +97,7 @@ export function generateDto(tableName: string) {
       .join('')}Dto`,
   });
 
-  const prismaFields = prisma[tableName].fields;
+  const prismaFields = getModelFields(tableName);
 
   for (const fieldName of Object.keys(prismaFields)) {
     const fieldType = prismaFields[fieldName].typeName;

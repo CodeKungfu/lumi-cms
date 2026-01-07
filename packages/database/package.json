@@ -5,7 +5,7 @@
   "exports": {
     ".": {
       "types": "./index.d.ts",
-      "default": "./src/client.ts"
+      "default": "./dist/client.js"
     }
   },
   "scripts": {
@@ -17,7 +17,11 @@
     "db:seed": "tsx src/seed.ts",
     "dev": "tsup src/* --watch",
     "format": "prisma format",
-    "db:gen": "prisma generate",
+    "db:gen": "pnpm db:gen:sqlite",
+    "db:gen:mysql": "prisma generate",
+    "db:gen:sqlite": "tsx scripts/generate-sqlite-schema.ts && prisma generate --schema=./prisma/schema.sqlite.prisma",
+    "db:push:sql": "pnpm --filter @repo/database db:push:sqlite",
+    "db:push:sqlite": "prisma db push --schema=./prisma/schema.sqlite.prisma",
     "lint": "eslint . --max-warnings 0",
     "prebuild": "pnpm db:gen",
     "predev": "pnpm db:gen",

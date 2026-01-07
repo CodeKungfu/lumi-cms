@@ -67,8 +67,8 @@ create table sys_user (
 -- ----------------------------
 -- 初始化-用户信息表数据
 -- ----------------------------
-insert into sys_user values(1,  103, 'admin', 'lumi', '00', 'ry@163.com', '15888888888', '1', '', '0192023a7bbd73250516f069df18b500', '0', '0', '127.0.0.1', sysdate(), 'admin', sysdate(), '', null, '管理员');
-insert into sys_user values(2,  105, 'lumi',    'lumi', '00', 'ry@qq.com',  '15666666666', '1', '', '0192023a7bbd73250516f069df18b500', '0', '0', '127.0.0.1', sysdate(), 'admin', sysdate(), '', null, '测试员');
+insert into sys_user values(1,  103, 'admin', 'lumi', '00', 'ry@163.com', '15888888888', '1', '', 'e10adc3949ba59abbe56e057f20f883e', '0', '0', '127.0.0.1', sysdate(), 'admin', sysdate(), '', null, '管理员');
+insert into sys_user values(2,  105, 'lumi',    'lumi', '00', 'ry@qq.com',  '15666666666', '1', '', 'e10adc3949ba59abbe56e057f20f883e', '0', '0', '127.0.0.1', sysdate(), 'admin', sysdate(), '', null, '测试员');
 
 
 -- ----------------------------

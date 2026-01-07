@@ -28,8 +28,8 @@ This project is a modern full-stack application framework that combines:
 
 - **Frontend**: Vue management system based on RuoYi
 - **Backend**: API service built with Nest.js
-- **Database**: MySQL database connected via Prisma ORM
-- **Cache**: Redis for caching and session management
+- **Database**: MySQL database connected via Prisma ORM (Supports SQLite for local development)
+- **Cache**: Redis for caching and session management (Supports MockRedis for local development)
 
 The project uses a pnpm workspace managed monorepo structure for easy code sharing and unified management.
 
@@ -98,7 +98,8 @@ pnpm install
 ```
 
 ## Development Environment Setup
-1. 1. Start the database and Redis (using Docker)
+1. 1. Start the database and Redis (using Docker, optional)
+> If using SQLite and MockRedis (default configuration), you can skip this step.
 
 ```bash
 docker-compose up mysql redis -d

@@ -1,4 +1,26 @@
-import { prisma } from 'src/prisma';
+import { prisma, Prisma } from '@repo/database';
+
+/**
+ * 获取模型的字段信息
+ * @param tableName 表名
+ * @returns 字段信息对象
+ */
+export function getModelFields(tableName: string) {
+  // @ts-ignore: Prisma.dmmf is not typed but available at runtime
+  const dmmf = Prisma.dmmf;
+  if (!dmmf) {
+    console.warn('Prisma.dmmf not available, cannot get fields for', tableName);
+    return {};
+  }
+  const model = dmmf.datamodel.models.find((m: any) => m.name === tableName);
+  if (!model) return {};
+
+  const fields: Record<string, any> = {};
+  model.fields.forEach((f: any) => {
+    fields[f.name] = { typeName: f.type, ...f };
+  });
+  return fields;
+}
 
 /**
  * 处理查询对象，转换数字类型字段
@@ -7,14 +29,16 @@ import { prisma } from 'src/prisma';
  * @returns 处理后的查询对象
  */
 export function processQueryObject(tableName: string, queryObj: Record<string, any>): Record<string, any> {
+  const fields = getModelFields(tableName);
+  
   // 获取数字类型字段
-  const numericFields = Object.keys(prisma[tableName].fields).filter(field => 
-    ['Int', 'BigInt', 'Float', 'Decimal'].includes(prisma[tableName].fields[field].typeName)
+  const numericFields = Object.keys(fields).filter(field => 
+    ['Int', 'BigInt', 'Float', 'Decimal'].includes(fields[field].typeName)
   );
 
   // 获取数字类型字段
-  const dataTimeFields = Object.keys(prisma[tableName].fields).filter(field => 
-    ['DateTime'].includes(prisma[tableName].fields[field].typeName)
+  const dataTimeFields = Object.keys(fields).filter(field => 
+    ['DateTime'].includes(fields[field].typeName)
   );
   
   // 转换数字类型字段

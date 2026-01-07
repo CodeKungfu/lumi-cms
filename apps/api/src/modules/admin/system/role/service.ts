@@ -5,7 +5,7 @@ import { ExcelService } from 'src/shared/services/excel.service';
 import { UpdateRoleDto } from 'src/common/dto';
 import { RoleInfo } from 'src/common/dto';
 import { sys_role } from '@repo/database';
-import { prisma } from 'src/prisma';
+import { prisma } from '@repo/database';
 import { omit } from 'lodash';
 import { processPageQuery } from 'src/common/utils/query-helper';
 import { buildTreeData } from 'src/shared/services/util.service';
