@@ -77,6 +77,14 @@ lumi-cms/
 - Jest Testing Framework
 </details>
 
+## ⚡️ Zero Dependency Quick Start
+
+This project is configured with **SQLite** and **MockRedis** by default, allowing developers to **run the project immediately without installing MySQL or Redis**.
+
+- **Instant Setup**: Just clone the repo and install dependencies. No database setup required.
+- **Out of the Box**: Perfect for quickly previewing features, learning the codebase, or simple development.
+- **Seamless Switch**: Easily switch back to MySQL and Redis for production or higher performance needs via environment variables.
+
 ## 📋 Requirements
 
 - Node.js 18+
