@@ -57,7 +57,7 @@ services:
       - 3366:3306
     volumes:
       - ./mysql-data:/var/lib/mysql
-      - ./apps/api/deploy/sql:/docker-entrypoint-initdb.d
+      - ./packages/database/sql:/docker-entrypoint-initdb.d
     networks:
       - app_network
 
