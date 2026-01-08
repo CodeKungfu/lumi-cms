@@ -47,3 +47,7 @@ redis-data
 mysql-data
 
 .turbo
+
+# SQLite
+*.db
+*.db-journal
