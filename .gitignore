@@ -34,7 +34,6 @@ coverage/
 
 =======
 # Local
-.env
 dist
 .webpack
 .serverless/**/*.zip

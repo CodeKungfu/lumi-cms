@@ -95,7 +95,7 @@ This project is configured with **SQLite** and **MockRedis** by default, allowin
 
 ## 🚀 Quick Start
 
-### Install Dependencies
+### Development Environment Run (Zero Dependency)
 
 ```bash
 # Install pnpm (if not already installed)
@@ -103,9 +103,24 @@ npm install -g pnpm
 
 # Install project dependencies
 pnpm install
+
+# Start project (Starts both backend and frontend)
+pnpm dev
 ```
 
-## Development Environment Setup
+#### Run Services Separately (Optional)
+
+Start backend service:
+```bash
+pnpm --filter api dev
+```
+
+Start frontend service:
+```bash
+pnpm --filter web dev
+```
+
+## Development Environment Run (Requires Redis and MySQL)
 1. 1. Start the database and Redis (using Docker, optional)
 > If using SQLite and MockRedis (default configuration), you can skip this step.
 

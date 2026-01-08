@@ -5,7 +5,7 @@ import { ValidationError } from 'class-validator';
 import { AppModule } from './app.module';
 import { setupSwagger } from './setup-swagger';
 
-const SERVER_PORT = process.env.SERVER_PORT;
+const SERVER_PORT = process.env.SERVER_PORT || 7001;
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter(), {

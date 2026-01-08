@@ -95,7 +95,7 @@ lumi-cms/
 
 ## 🚀 快速开始
 
-### 安装依赖
+### 开发环境运行 (Zero Dependency)
 
 ```bash
 # 安装 pnpm (如果尚未安装)
@@ -103,9 +103,24 @@ npm install -g pnpm
 
 # 安装项目依赖
 pnpm install
+
+# 启动项目 (同时启动前后端)
+pnpm dev
 ```
 
-## 开发环境运行
+#### 分别启动服务 (可选)
+
+启动后端服务:
+```bash
+pnpm --filter api dev
+```
+
+启动前端服务:
+```bash
+pnpm --filter web dev
+```
+
+## 开发环境运行(需要redis 和 mysql)
 1. 启动数据库和 Redis (使用 Docker，可选)
 > 如果使用 SQLite 和 MockRedis (默认配置)，可跳过此步骤。
 ```bash
