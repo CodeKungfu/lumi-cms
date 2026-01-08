@@ -5,7 +5,7 @@
   "author": "Lumi",
   "license": "MIT",
   "scripts": {
-    "dev": "vite",
+    "dev": "wait-on tcp:127.0.0.1:7071 && vite",
     "build:prod": "vite build",
     "build:stage": "vite build --mode staging",
     "build:docker": "vite build --mode docker",

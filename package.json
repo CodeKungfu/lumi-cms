@@ -18,7 +18,8 @@
   "devDependencies": {
     "@types/lodash": "^4.17.16",
     "prettier": "^3.0.0",
-    "turbo": "latest"
+    "turbo": "latest",
+    "wait-on": "^9.0.3"
   },
   "packageManager": "pnpm@8.10.0",
   "dependencies": {
