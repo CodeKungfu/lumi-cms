@@ -1,3 +1,4 @@
+packages/database/prisma/dev.db
 node_modules
 dist
 .vscode
