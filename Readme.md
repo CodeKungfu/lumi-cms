@@ -203,7 +203,7 @@ npx prisma migrate dev --name <migration-name>
 
 ## 💴 捐赠支持
 <div align="center">
-    <img src="https://raw.githubusercontent.com/CodeKungfu/lumi-cms/main/apps/web/src/assets/images/pay.jpgs" alt="Donate" width="300" />
+    <img src="https://raw.githubusercontent.com/CodeKungfu/lumi-cms/main/apps/web/src/assets/images/pay.jpg" alt="Donate" width="300" />
     <p>你可以请作者喝杯咖啡表示鼓励</p>
 </div>
 
