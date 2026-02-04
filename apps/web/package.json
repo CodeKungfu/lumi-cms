@@ -9,7 +9,8 @@
     "build:prod": "vite build",
     "build:stage": "vite build --mode staging",
     "build:docker": "vite build --mode docker",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy:cf": "vite build && wrangler pages deploy dist"
   },
   "repository": {
     "type": "git",

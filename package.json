@@ -19,7 +19,8 @@
     "@types/lodash": "^4.17.16",
     "prettier": "^3.0.0",
     "turbo": "latest",
-    "wait-on": "^9.0.3"
+    "wait-on": "^9.0.3",
+    "wrangler": "^4.62.0"
   },
   "packageManager": "pnpm@8.10.0",
   "dependencies": {
