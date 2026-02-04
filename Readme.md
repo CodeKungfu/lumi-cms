@@ -49,7 +49,7 @@ lumi-cms/
 ```
 ## 🛠️ 技术栈
 
-<details>
+<details open>
 <summary><b>前端 (apps/web)</b></summary>
 
 - Vue.js
@@ -58,7 +58,7 @@ lumi-cms/
 - Axios
 </details>
 
-<details>
+<details open>
 <summary><b>后端 (apps/api)</b></summary>
 
 - Nest.js
@@ -68,7 +68,7 @@ lumi-cms/
 
 </details>
 
-<details>
+<details open>
 <summary><b>开发工具</b></summary>
 
 - TypeScript

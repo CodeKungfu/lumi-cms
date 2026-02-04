@@ -48,7 +48,7 @@ lumi-cms/
 ```
 ## 🛠️ Technology Stack
 
-<details>
+<details open>
 <summary><b>Frontend (apps/web)</b></summary>
 
 - Vue.js
@@ -57,7 +57,7 @@ lumi-cms/
 - Axios
 </details>
 
-<details>
+<details open>
 <summary><b>Backend (apps/api)</b></summary>
 
 - Nest.js
@@ -68,7 +68,7 @@ lumi-cms/
 - Winston Logger
 </details>
 
-<details>
+<details open>
 <summary><b>Development Tools</b></summary>
 
 - TypeScript
