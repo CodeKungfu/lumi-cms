@@ -16,11 +16,9 @@
 
 ## 🏢 Platform Introduction
 
-Special thanks to the original RuoYi developers for their open-source contributions and to my partners for their support. This has greatly motivated me to develop a Node.js version of RuoYi. The project is still in its early stages (WIP), and I welcome suggestions, issues, and pull requests.
+Lumi CMS is dedicated to building an independent, modern Node.js content management system brand. Moving beyond being just a replica of the Java version, we combine cutting-edge technologies like NestJS, Prisma, and Vue3 to explore the best practices in full-stack development.
 
-The Java version of RuoYi is a popular rapid development platform, but this project serves as a learning reference for developers who are more familiar with Node.js or frontend development rather than Java.
-
-This project is developed by an individual and has not undergone extensive or professional testing, so it is not recommended for production environments. For this reason, I've restructured the project to place both frontend and backend code in the same repository while maintaining a frontend-backend separation model. Future features will primarily be developed and upgraded here.
+We warmly welcome everyone to **Star** and use Lumi CMS. The project is actively maintained, and if you find any bugs or have suggestions, please feel free to submit an Issue. We will fix them promptly and continuously improve the platform together with the community.
 
 ## 📖 Project Introduction
 
