@@ -201,6 +201,12 @@ npx prisma migrate dev --name <migration-name>
 - 作者: CodeKungfu
 - 邮箱:
 
+## 💴 捐赠支持
+<div align="center">
+    <img src="https://raw.githubusercontent.com/CodeKungfu/lumi-cms/main/apps/web/src/assets/images/pay.png" alt="Donate" width="300" />
+    <p>你可以请作者喝杯咖啡表示鼓励</p>
+</div>
+
 ## 项目 Star 历史
 
 [![Star History Chart](https://api.star-history.com/svg?repos=codeKungfu/lumi-cms&type=Date)](https://star-history.com/#codeKungfu/lumi-cms&Date)
