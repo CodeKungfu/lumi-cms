@@ -15,6 +15,7 @@
     "db:push": "prisma db push",
     "db:pull": "prisma db pull",
     "db:seed": "tsx src/seed.ts",
+    "build": "tsup src/* --dts",
     "dev": "tsup src/* --watch",
     "format": "prisma format",
     "db:gen": "pnpm db:gen:sqlite",
@@ -28,13 +29,13 @@
     "studio": "prisma studio"
   },
   "dependencies": {
-    "@prisma/client": "^6.5.0",
-    "prisma": "^6.5.0",
+    "@prisma/client": "^6.19.2",
     "dotenv": "^16.3.1"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "eslint": "^8.57.0",
+    "prisma": "^6.19.2",
     "rimraf": "^5.0.5",
     "tsup": "^8.0.2",
     "tsx": "4.19.1",

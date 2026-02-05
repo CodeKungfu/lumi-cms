@@ -1,6 +1,7 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["relationJoins"]
+  engineType      = "wasm"
+  previewFeatures = ["relationJoins", "driverAdapters"]
 }
 
 datasource db {
@@ -38,6 +39,7 @@ model sys_dept {
   createTime DateTime? @map("create_time") 
   updateBy   String?   @default("") @map("update_by") 
   updateTime DateTime? @map("update_time") 
+  users      sys_user[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -201,6 +203,7 @@ model sys_role_menu {
 model sys_user {
   userId      Int    @id @default(autoincrement()) @map("user_id")
   deptId      Int?   @map("dept_id")
+  dept        sys_dept? @relation(fields: [deptId], references: [deptId])
   userName    String    @map("user_name") 
   nickName    String    @map("nick_name") 
   userType    String?   @default("00") @map("user_type") 

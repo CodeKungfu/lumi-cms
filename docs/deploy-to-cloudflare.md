@@ -88,9 +88,14 @@ Lumi CMS 支持将前端应用部署到 Cloudflare Pages。由于后端架构特
     ```
 
 3.  **配置前端**:
-    复制上面的 `https://....trycloudflare.com` 地址，设置为前端部署时的 `VITE_APP_BASE_API` 环境变量。
+    在 Cloudflare Pages 的 **Environment variables** 中，设置 `VITE_APP_BASE_API` 为您的 Hono 后端地址：
+    `https://lumi-cms-hono.mike473091010.workers.dev`
 
-> **提示**: 生产环境建议申请一个固定域名并在 Cloudflare Zero Trust 面板中配置 Tunnel，以获得永久不变的访问地址。
+    或者在本地构建时：
+    ```bash
+    export VITE_APP_BASE_API=https://lumi-cms-hono.mike473091010.workers.dev
+    pnpm --filter web deploy:cf
+    ```
 
 ---
 

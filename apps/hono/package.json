@@ -1,0 +1,25 @@
+{
+  "name": "hono-api",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "pnpm --filter @repo/database build && wrangler deploy",
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings",
+    "gen:client": "pnpm --filter @repo/database db:gen"
+  },
+  "dependencies": {
+    "@prisma/adapter-d1": "^6.19.2",
+    "@repo/database": "workspace:*",
+    "@prisma/client": "^6.19.2",
+    "crypto-js": "^4.2.0",
+    "hono": "^4.6.3",
+    "hono-pino": "^0.3.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240925.0",
+    "@types/crypto-js": "^4.2.2",
+    "prisma": "^6.19.2",
+    "typescript": "^5.6.2",
+    "wrangler": "^3.114.17"
+  }
+}

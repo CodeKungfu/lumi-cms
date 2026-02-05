@@ -10,6 +10,14 @@ let schema = fs.readFileSync(schemaPath, 'utf-8');
 schema = schema.replace('provider = "mysql"', 'provider = "sqlite"');
 schema = schema.replace('url      = env("DATABASE_URL")', 'url      = "file:./dev.db"');
 
+// 1.1 Add wasm engineType and driverAdapters
+if (!schema.includes('engineType')) {
+  schema = schema.replace('provider        = "prisma-client-js"', 'provider        = "prisma-client-js"\n  engineType      = "wasm"');
+}
+if (!schema.includes('"driverAdapters"')) {
+  schema = schema.replace('previewFeatures = ["relationJoins"]', 'previewFeatures = ["relationJoins", "driverAdapters"]');
+}
+
 // 2. Remove MySQL specific attributes
 // Remove @db.VarChar(x), @db.Char(x), @db.DateTime(x)
 schema = schema.replace(/@db\.VarChar\(\d+\)/g, '');
