@@ -12,6 +12,8 @@
 <div align="center">
    <p>A full-stack application based on Nest.js, Hono, Prisma, and Vue3, using a monorepo structure to manage multiple applications and packages.</p>
    <p>Official Website: <a href="https://lumi-cms-web.pages.dev/">https://lumi-cms-web.pages.dev/</a></p>
+   <p>Default Username: admin Password: 123456</p>
+   <p>Default Username: lumi Password: 123456</p>
 </div>
 
 <span> English | [简体中文](https://github.com/CodeKungfu/lumi-cms/blob/main/Readme.md)</span>

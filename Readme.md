@@ -12,6 +12,8 @@
 <div align="center">
   <p>Lumi-CMS 是一个基于 Nest.js、Prisma 和 Vue3 的现代化内容管理系统，采用 monorepo 结构管理多个应用和包。</p>
   <p>官网：<a href="https://lumi-cms-web.pages.dev/">https://lumi-cms-web.pages.dev/</a></p>
+  <p>默认用户名: lumi 密码: 123456</p>
+  <p>默认用户名: admin 密码: 123456</p>
 </div>
 
 
