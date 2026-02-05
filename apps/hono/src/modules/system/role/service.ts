@@ -1,6 +1,7 @@
 import { Context } from 'hono'
 import { getPrisma } from '../../../lib/prisma'
 import { Result } from '../../../common/result'
+import { Utils } from '../../../common/utils'
 
 export class RoleService {
   static async list(c: Context) {
@@ -57,6 +58,54 @@ export class RoleService {
     ))
 
     return Result.ok(c, { data: safeRole })
+  }
+
+  static async deptTree(c: Context) {
+    const roleId = Number(c.req.param('id'))
+    const env = c.env as any
+    const db = getPrisma(env.DB)
+
+    // 1. 获取所有部门
+    const deptList = await db.sys_dept.findMany({
+      where: {
+        delFlag: '0'
+      },
+      orderBy: { orderNum: 'asc' }
+    })
+
+    const deptArr = deptList.map((item: any) => ({
+      parentId: Number(item.parentId ?? 0),
+      id: Number(item.deptId),
+      label: item.deptName
+    }))
+
+    const depts = Utils.buildTreeData(deptArr, 'id', 'parentId', 'children')
+
+    // 2. 获取角色拥有的部门ID (checkedKeys)
+    // 注意：Prisma $queryRaw 返回的字段名可能是数据库的列名 (snake_case)
+    const result: any[] = await db.$queryRaw`
+      select d.dept_id 
+      from sys_dept d 
+      left join sys_role_dept rd on d.dept_id = rd.dept_id 
+      where rd.role_id = ${roleId} 
+      and d.dept_id not in (
+        select d.parent_id 
+        from sys_dept d 
+        inner join sys_role_dept rd on d.dept_id = rd.dept_id 
+        and rd.role_id = ${roleId}
+      ) 
+      order by d.parent_id, d.order_num
+    `
+
+    const checkedKeys = result.map((item: any) => Number(item.dept_id || item.deptId))
+
+    // Match apps/api response structure exactly
+    return c.json({
+      code: 200,
+      msg: '操作成功',
+      checkedKeys,
+      depts
+    })
   }
 
   static async add(c: Context) {
