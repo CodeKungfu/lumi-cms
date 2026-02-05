@@ -69,9 +69,9 @@
           <div class="body">
             <p>
               <i class="el-icon-s-promotion"></i> 官网：<el-link
-                href="http://www.ruoyi.vip"
+                href="https://lumi-cms-web.pages.dev"
                 target="_blank"
-                >http://www.ruoyi.vip</el-link
+                >https://lumi-cms-web.pages.dev</el-link
               >
             </p>
             <p>
@@ -112,7 +112,7 @@
                 <li>兼容性：保留 RuoYi 核心功能设计，降低上手成本</li>
               </ol>
             </el-collapse-item>
-            <el-collapse-item title="v1.0.0 - 2026-01-01">
+            <el-collapse-item title="v0.1.0 - 2026-01-01">
               <ol>
                 <li>Lumi前后端分离系统正式发布</li>
               </ol>
@@ -144,7 +144,7 @@
 </template>
 
 <script setup name="Index">
-const version = ref('3.8.6')
+const version = ref('0.1.0')
 
 function goTarget(url) {
   window.open(url, '__blank')
