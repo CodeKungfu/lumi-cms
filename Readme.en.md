@@ -6,17 +6,19 @@
   <img src="https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white" alt="Prisma" />
   <img src="https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL" />
   <img src="https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white" alt="Redis" />
+  <img src="https://img.shields.io/badge/cloudflare-%23F38020.svg?style=for-the-badge&logo=cloudflare&logoColor=white" alt="Cloudflare" />
 </div>
 
 <div align="center">
-   <p>A full-stack application based on Nest.js, Prisma, and RuoYi, using a monorepo structure to manage multiple applications and packages.</p>
+   <p>A full-stack application based on Nest.js, Hono, Prisma, and Vue3, using a monorepo structure to manage multiple applications and packages.</p>
+   <p>Official Website: <a href="https://lumi-cms-web.pages.dev/">https://lumi-cms-web.pages.dev/</a></p>
 </div>
 
 <span> English | [简体中文](https://github.com/CodeKungfu/lumi-cms/blob/main/Readme.md)</span>
 
 ## 🏢 Platform Introduction
 
-Lumi CMS is dedicated to building an independent, modern Node.js content management system brand. Moving beyond being just a replica of the Java version, we combine cutting-edge technologies like NestJS, Prisma, and Vue3 to explore the best practices in full-stack development.
+Lumi CMS is dedicated to building an independent, modern Node.js content management system. Moving beyond being just a replica of the Java version, we combine cutting-edge technologies like NestJS, Prisma, and Vue3 to explore the best practices in full-stack development.
 
 We warmly welcome everyone to **Star** and use Lumi CMS. The project is actively maintained, and if you find any bugs or have suggestions, please feel free to submit an Issue. We will fix them promptly and continuously improve the platform together with the community.
 
@@ -24,9 +26,11 @@ We warmly welcome everyone to **Star** and use Lumi CMS. The project is actively
 
 This project is a modern full-stack application framework that combines:
 
-- **Frontend**: Vue management system based on RuoYi
-- **Backend**: API service built with Nest.js
-- **Database**: MySQL database connected via Prisma ORM (Supports SQLite for local development)
+- **Frontend**: Modern Vue management system
+- **Backend**: 
+  - **Node.js**: API service built with Nest.js
+  - **Serverless**: Cloudflare Workers service built with Hono
+- **Database**: MySQL database connected via Prisma ORM (Supports SQLite/Cloudflare D1 for local development)
 - **Cache**: Redis for caching and session management (Supports MockRedis for local development)
 
 The project uses a pnpm workspace managed monorepo structure for easy code sharing and unified management.
@@ -35,14 +39,15 @@ The project uses a pnpm workspace managed monorepo structure for easy code shari
 ```
 lumi-cms/
 ├── apps/                      # Applications directory
-│   ├── api/                   # Backend Nest.js application
+│   ├── api/                   # Backend Nest.js application (Node.js)
+│   ├── hono/                  # Backend Hono application (Cloudflare Workers)
 │   └── web/                   # Frontend Vue application
 ├── packages/                  # Shared packages directory
-│   ├── database/              # risma database models and client
+│   ├── database/              # Prisma database models and client
 │   └── eslint-config/         # Shared ESLint configuration
 ├── docker-compose.all.yml     # Docker Compose configuration file
 ├── pnpm-workspace.yaml        # pnpm workspace configuration
-└── README.en.md                  # Project documentation
+└── README.en.md               # Project documentation
 ```
 ## 🛠️ Technology Stack
 
@@ -56,14 +61,15 @@ lumi-cms/
 </details>
 
 <details open>
-<summary><b>Backend (apps/api)</b></summary>
+<summary><b>Backend (apps/api & apps/hono)</b></summary>
 
-- Nest.js
+- Nest.js (Node.js Runtime)
+- Hono (Cloudflare Workers Runtime)
 - Prisma ORM
 - JWT Authentication
 - Redis Cache
-- Bull Queue
-- Winston Logger
+- Cloudflare D1 (Serverless Database)
+
 </details>
 
 <details open>
@@ -87,9 +93,10 @@ This project is configured with **SQLite** and **MockRedis** by default, allowin
 
 - Node.js 18+
 - pnpm 7+
-- MySQL 8.0+
-- Redis 6.2+
-- Docker & Docker Compose (optional, for containerized deployment)
+- MySQL 8.0+ (Optional, SQLite available for local dev)
+- Redis 6.2+ (Optional, MockRedis available for local dev)
+- Cloudflare Wrangler (Optional, for Cloudflare deployment)
+- Docker & Docker Compose (Optional, for containerized deployment)
 
 ## 🚀 Quick Start
 
@@ -99,116 +106,133 @@ This project is configured with **SQLite** and **MockRedis** by default, allowin
 # Install pnpm (if not already installed)
 npm install -g pnpm
 
-# Install project dependencies
+# Install dependencies
 pnpm install
 
-# Start project (Starts both backend and frontend)
+# Start all services (Frontend + Backend API)
 pnpm dev
 ```
 
-#### Run Services Separately (Optional)
+#### Start Services Separately (Optional)
 
-Start backend service:
+Start Backend Service:
 ```bash
 pnpm --filter api dev
 ```
 
-Start frontend service:
+Start Frontend Service:
 ```bash
 pnpm --filter web dev
 ```
 
-## Development Environment Run (Requires Redis and MySQL)
-1. 1. Start the database and Redis (using Docker, optional)
-> If using SQLite and MockRedis (default configuration), you can skip this step.
+### Cloudflare Workers Development
 
+```bash
+# Start Hono backend (Workers)
+cd apps/hono
+pnpm dev
+
+# Start frontend (Connect to Workers backend)
+cd apps/web
+pnpm dev:cf
+```
+
+### Development Environment Run (Requires Redis & MySQL)
+
+1. Start Database and Redis (Using Docker, Optional)
+> If using SQLite and MockRedis (default config), skip this step.
 ```bash
 docker-compose up mysql redis -d
 ```
-2. Start the backend service
+
+2. Start Backend Service
 ```bash
 pnpm --filter api dev
 ```
-3.  Start the frontend service
+
+3. Start Frontend Service
 ```bash
 pnpm --filter web dev
 ```
-## Production Deployment
-Deploy all services with Docker Compose:
 
+## 📦 Production Deployment
+
+Deploy all services with one click using Docker Compose:
 ```bash
 docker-compose -f docker-compose.all.yml up -d
 ```
-## ⚙️ Configuration
-### 环境变量
 
-Backend service (apps/api) supports the following environment variables:
+## ⚙️ Configuration
+### Environment Variables
+
+Backend Service (apps/api):
 
 - NODE_ENV: Environment mode (development/production)
-- JWT_SECRET: JWT secret key
+- JWT_SECRET: JWT Secret
 - DATABASE_URL: Database connection URL
 - SERVER_PORT: API service port
 - MYSQL_*: MySQL database configuration
 - REDIS_*: Redis configuration
 
-Frontend service (apps/web) supports the following environment variables:：
+Frontend Service (apps/web) supports:
 
 - VITE_APP_BASE_API: API base path
 
 ## 👨‍💻 Development Guide
 ### Database Migration
 
-Use Prisma for database migrations:
+Run database migrations using Prisma:
 ```bash
 cd packages/database
 npx prisma migrate dev --name <migration-name>
 ```
 
-## ✨ Project Features
-- Frontend-backend separation architecture
-- Vue.js-based frontend management system
-- Nest.js-based backend API service
-- Prisma ORM-based database operations
-- Redis-based caching and session management
-- Bull-based queue management
-- Winston-based logging
-- TypeScript-based development
-- ESLint and Prettier code standards
-- Jest unit testing
-- Docker and Docker Compose containerized deployment
-## 📝 Built-in Features (reproduced RuoYi features, current version support)
-1.  User Management: System operators, mainly for system user configuration. (Supported)
-2.  Department Management: Configure system organizational structure (company, department, team), tree structure with data permission support. (Supported)
-3.  Position Management: Configure system user positions. (Supported)
-4.  Menu Management: Configure system menus, operation permissions, button permission identifiers, etc. (Supported)
-5.  Role Management: Role menu permission assignment, setting role data scope permissions by organization. (Supported)
-6.  Dictionary Management: Maintain relatively fixed data frequently used in the system. (Supported)
-7.  Parameter Management: Configure common dynamic system parameters. (Supported)
-8.  Notifications: System notification publishing and maintenance. (Supported)
-9.  Operation Logs: Record and query system normal operation logs and exception logs.
-10.  Login Logs: Record and query system login logs including login exceptions.
-11.  Online Users: Monitor active user status in the current system.
-12.  System Interfaces: Automatically generate relevant API documentation based on business code. (Supported)
-## 🤝 Contribution Guidelines
-1. Fork the repository
+✨ Project Features
+- Separated Frontend and Backend Architecture
+- Frontend Management System based on Vue.js
+- Backend API Service based on Nest.js
+- Database Operations based on Prisma ORM
+- Caching and Session Management based on Redis
+- Authentication based on JWT
+- Logging based on Winston
+- Development based on TypeScript
+- Code Standards based on ESLint and Prettier
+- Unit Testing based on Jest
+- Containerized Deployment based on Docker and Docker Compose
+
+## 📝 Built-in Features (Lumi CMS Capabilities)
+1. User Management: System operators management and configuration. (Supported)
+2. Department Management: Organizational structure configuration (companies, departments, groups), tree structure display with data permissions. (Supported)
+3. Post Management: Configuration of positions held by system users. (Supported)
+4. Menu Management: Configuration of system menus, operation permissions, button permission identifiers, etc. (Supported)
+5. Role Management: Role menu permission assignment, setting role data scope permissions by organization. (Supported)
+6. Dictionary Management: Maintenance of fixed data frequently used in the system. (Supported)
+7. Parameter Management: Dynamic configuration of common system parameters. (Supported)
+8. Notice/Announcement: System notice and announcement publishing and maintenance. (Supported)
+9. Operation Log: System normal operation log recording and querying; system exception information log recording and querying. (Supported)
+10. Login Log: System login log recording and querying, including login exceptions. (Supported)
+11. System Interface: Automatically generate related API documentation based on business code. (Supported)
+
+## 🤝 Contribution
+1. Fork this repository
 2. Create a feature branch (git checkout -b feature/amazing-feature)
 3. Commit your changes (git commit -m 'Add some amazing feature')
 4. Push to the branch (git push origin feature/amazing-feature)
-5. Open a Pull Request
+5. Create a Pull Request
+
 ## 📞 Contact
 - Author: CodeKungfu
 - Email:
 
-## � Donate
+## 💴 Donation
 <div align="center">
     <img src="https://raw.githubusercontent.com/CodeKungfu/lumi-cms/main/apps/web/src/assets/images/pay.jpg" alt="Donate" width="300" />
     <p>You can buy the author a coffee to show your support</p>
 </div>
 
-## Star History
+## Project Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=codeKungfu/lumi-cms&type=Date)](https://star-history.com/#codeKungfu/lumi-cms&Date)
 
-## �📄 License
+## 📄 License
 MIT License
-

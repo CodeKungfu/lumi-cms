@@ -6,10 +6,12 @@
   <img src="https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white" alt="Prisma" />
   <img src="https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL" />
   <img src="https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white" alt="Redis" />
+  <img src="https://img.shields.io/badge/cloudflare-%23F38020.svg?style=for-the-badge&logo=cloudflare&logoColor=white" alt="Cloudflare" />
 </div>
 
 <div align="center">
   <p>Lumi-CMS 是一个基于 Nest.js、Prisma 和 Vue3 的现代化内容管理系统，采用 monorepo 结构管理多个应用和包。</p>
+  <p>官网：<a href="https://lumi-cms-web.pages.dev/">https://lumi-cms-web.pages.dev/</a></p>
 </div>
 
 
@@ -25,10 +27,12 @@ Lumi CMS 致力于打造一个独立、现代化的 Node.js 内容管理系统�
 
 本项目是一个现代化的全栈应用框架，结合了：
 
-- **前端**：基于 RuoYi 的 Vue 管理系统
-- **后端**：使用 Nest.js 构建的 API 服务
-- **数据库**：通过 Prisma ORM 连接 MySQL 数据库 (支持 SQLite 本地开发)
-- **缓存**：Redis 用于缓存和会话管理 (支持 MockRedis 本地开发)
+- **前端**：基于 Vue3 的现代化管理系统
+- **后端**：
+  - **Node.js**: 使用 Nest.js 构建的 API 服务
+  - **Serverless**: 使用 Hono 构建的 Cloudflare Workers 服务
+- **数据库**：通过 Prisma ORM 连接 MySQL 数据库 (支持 SQLite/Cloudflare D1)
+- **缓存**：Redis 用于缓存和会话管理 (支持 MockRedis)
 
 项目采用 pnpm workspace 管理的 monorepo 结构，便于代码共享和统一管理。
 
@@ -36,7 +40,8 @@ Lumi CMS 致力于打造一个独立、现代化的 Node.js 内容管理系统�
 ```
 lumi-cms/
 ├── apps/                      # 应用目录
-│   ├── api/                   # 后端 Nest.js 应用
+│   ├── api/                   # 后端 Nest.js 应用 (Node.js 环境)
+│   ├── hono/                  # 后端 Hono 应用 (Cloudflare Workers 环境)
 │   └── web/                   # 前端 Vue 应用
 ├── packages/                  # 共享包目录
 │   ├── database/              # Prisma 数据库模型和客户端
@@ -57,12 +62,14 @@ lumi-cms/
 </details>
 
 <details open>
-<summary><b>后端 (apps/api)</b></summary>
+<summary><b>后端 (apps/api & apps/hono)</b></summary>
 
-- Nest.js
+- Nest.js (Node.js Runtime)
+- Hono (Cloudflare Workers Runtime)
 - Prisma ORM
 - JWT 认证
 - Redis 缓存
+- Cloudflare D1 (Serverless Database)
 
 </details>
 
@@ -89,6 +96,7 @@ lumi-cms/
 - pnpm 7+
 - MySQL 8.0+ (可选，本地开发可使用 SQLite)
 - Redis 6.2+ (可选，本地开发可使用 MockRedis)
+- Cloudflare Wrangler (可选，用于部署到 Cloudflare)
 - Docker & Docker Compose (可选，用于容器化部署)
 
 ## 🚀 快速开始
