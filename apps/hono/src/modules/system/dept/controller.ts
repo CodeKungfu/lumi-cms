@@ -4,7 +4,7 @@ import { DeptService } from './service'
 const app = new Hono()
 
 app.get('/list', DeptService.list)
-app.get('/exclude/:id', DeptService.exclude)
+app.get('/list/exclude/:id', DeptService.exclude)
 app.get('/:id', DeptService.get)
 app.post('/', DeptService.add)
 app.put('/', DeptService.update)

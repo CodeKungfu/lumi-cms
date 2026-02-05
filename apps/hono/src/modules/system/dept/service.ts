@@ -44,7 +44,8 @@ export class DeptService {
       typeof value === 'bigint' ? value.toString() : value
     ))
 
-    return Result.ok(c, safeList)
+    // return Result.ok(c, safeList)
+    return Result.ok(c, { total: safeList.length, rows: safeList })
   }
 
   static async deptTree(c: Context) {
