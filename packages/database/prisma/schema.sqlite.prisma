@@ -117,7 +117,7 @@ model sys_notice {
   noticeId      Int       @id @default(autoincrement()) @map("notice_id")
   noticeTitle   String    @map("notice_title") 
   noticeType    String    @map("notice_type") 
-  noticeContent Bytes?    @map("notice_content")
+  noticeContent String?   @map("notice_content") 
   status        String?   @default("0") 
   createBy      String?   @default("") @map("create_by") 
   createTime    DateTime? @map("create_time") 

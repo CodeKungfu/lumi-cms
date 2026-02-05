@@ -59,7 +59,7 @@
     </el-form>
     <!--  底部  -->
     <div class="el-login-footer">
-      <span>Copyright © 2024-2025 lumicms.vip All Rights Reserved.</span>
+      <span>Copyright © 2025-2026 https://lumi-cms-web.pages.dev All Rights Reserved.</span>
     </div>
   </div>
 </template>

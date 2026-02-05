@@ -6,6 +6,7 @@ const app = new Hono()
 
 // 公开接口
 app.post('/login', AuthService.login)
+app.post('/logout', AuthService.logout)
 app.get('/captchaImage', AuthService.getCaptcha)
 
 // 需要认证的接口

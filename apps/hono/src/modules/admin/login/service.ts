@@ -65,6 +65,10 @@ export class AuthService {
     return Result.ok(c, { token })
   }
 
+  static async logout(c: Context) {
+    return Result.ok(c, null, '退出成功')
+  }
+
   static async getCaptcha(c: Context) {
     // 生成随机 4 位验证码
     const code = CaptchaGenerator.randomCode(4)
