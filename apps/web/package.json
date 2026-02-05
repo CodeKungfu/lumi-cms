@@ -6,6 +6,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "wait-on tcp:127.0.0.1:7071 && vite",
+    "dev:cf": "cross-env VITE_USER_NODE_ENV=cf vite",
     "build:prod": "vite build",
     "build:stage": "vite build --mode staging",
     "build:docker": "vite build --mode docker",
@@ -37,6 +38,7 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "3.1.0",
     "@vue/compiler-sfc": "3.2.45",
+    "cross-env": "^7.0.3",
     "sass": "1.56.1",
     "unplugin-auto-import": "0.11.4",
     "unplugin-vue-setup-extend-plus": "0.4.9",

@@ -330,6 +330,9 @@ importers:
       '@vue/compiler-sfc':
         specifier: 3.2.45
         version: 3.2.45
+      cross-env:
+        specifier: ^7.0.3
+        version: 7.0.3
       sass:
         specifier: 1.56.1
         version: 1.56.1

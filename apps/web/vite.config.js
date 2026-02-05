@@ -31,7 +31,7 @@ export default defineConfig(({ mode, command }) => {
       proxy: {
         // https://cn.vitejs.dev/config/#server-proxy
         '/dev-api': {
-          target: 'http://127.0.0.1:7071',
+          target: process.env.VITE_USER_NODE_ENV === 'cf' ? 'https://lumi-cms-hono.mike473091010.workers.dev' : 'http://127.0.0.1:7071',
           changeOrigin: true,
           rewrite: (p) => p.replace(/^\/dev-api/, '')
         }

@@ -61,7 +61,7 @@ export class MenuService {
       orderNum: item.orderNum
     }))
 
-    return Result.ok(c, safeList)
+    return Result.ok(c, { result: safeList })
   }
 
   static async get(c: Context) {
