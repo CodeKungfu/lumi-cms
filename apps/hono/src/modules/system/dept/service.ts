@@ -19,11 +19,13 @@ export class DeptService {
       orderBy: { orderNum: 'asc' }
     })
 
+    const total = await db.sys_dept.count({ where })
+    
     const safeList = JSON.parse(JSON.stringify(list, (key, value) =>
       typeof value === 'bigint' ? value.toString() : value
     ))
 
-    return Result.ok(c, safeList)
+    return Result.ok(c, { total, rows: safeList })
   }
 
   static async exclude(c: Context) {
