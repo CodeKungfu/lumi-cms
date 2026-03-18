@@ -5,6 +5,11 @@
   "description": "Nest Prisma repository",
   "license": "MIT",
   "scripts": {
+    "prestart": "pnpm --filter @repo/database db:init:sqlite",
+    "prestart:dev": "pnpm --filter @repo/database db:init:sqlite",
+    "predev": "pnpm --filter @repo/database db:init:sqlite",
+    "pretest": "pnpm --filter @repo/database db:init:sqlite",
+    "pretest:e2e": "pnpm --filter @repo/database db:init:sqlite",
     "build": "cross-env NODE_ENV=production nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "cross-env NODE_ENV=development nest start",
@@ -17,7 +22,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:e2e": "jest --config ./test/jest-e2e.json --runInBand",
+    "test:p0": "pnpm test:e2e",
     "db:gen": "npx prisma generate",
     "db:pull": "npx prisma db pull"
   },
@@ -99,7 +105,10 @@
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
+      "^.+\\.ts$": "ts-jest"
+    },
+    "moduleNameMapper": {
+      "^src/(.*)$": "<rootDir>/$1"
     },
     "collectCoverageFrom": [
       "**/*.(t|j)s"

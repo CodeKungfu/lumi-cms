@@ -8,6 +8,7 @@ import { setupSwagger } from './setup-swagger';
 const SERVER_PORT = process.env.SERVER_PORT || 7071;
 
 async function bootstrap() {
+  const swaggerPath = process.env.SWAGGER_PATH || 'swagger-api';
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter(), {
     bufferLogs: true,
   });
@@ -38,8 +39,11 @@ async function bootstrap() {
   // start
   await app.listen(SERVER_PORT, '0.0.0.0');
   const serverUrl = await app.getUrl();
+  Logger.log('Mode: local-dev');
+  Logger.log(`Database: ${process.env.DATABASE_URL ? 'MySQL' : 'SQLite'}`);
+  Logger.log(`Cache: ${process.env.USE_REAL_REDIS === 'true' ? 'Redis' : 'MockRedis'}`);
   Logger.log(`api服务已经启动,请访问: ${serverUrl}`);
-  Logger.log(`API文档已生成,请访问: ${serverUrl}/${process.env.SWAGGER_PATH}/`);
+  Logger.log(`API文档已生成,请访问: ${serverUrl}/${swaggerPath}/`);
 }
 
 bootstrap();

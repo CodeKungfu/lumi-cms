@@ -13,7 +13,13 @@
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "db:gen": "pnpm --filter @repo/database db:gen",
-    "db:pull": "pnpm --filter @repo/database db:pull"
+    "db:pull": "pnpm --filter @repo/database db:pull",
+    "db:init": "pnpm --filter @repo/database db:init:sqlite",
+    "db:reset": "pnpm --filter @repo/database db:reset:sqlite",
+    "db:check": "pnpm --filter @repo/database db:check:sqlite",
+    "test:api": "pnpm --filter api test",
+    "test:api:e2e": "pnpm --filter api test:e2e",
+    "test:p0": "pnpm --filter api test:p0"
   },
   "devDependencies": {
     "@types/lodash": "^4.17.16",

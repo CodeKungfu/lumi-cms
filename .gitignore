@@ -3,54 +3,40 @@ wrangler.toml
 packages/database/prisma/dev.db
 node_modules
 dist
-.vscode
+coverage
+.turbo
 
-# Visual Studio Trace Files
-*.e2e
+# Local build output
+.webpack
+.serverless/**/*.zip
 app-test
-# Click-Once directory
 publish/
 
-# Node.js Tools for Visual Studio
-.ntvs_analysis.dat
-node_modules/
+# Package manager
+package-lock.json
+yarn.lock
 
-# Typescript v1 declaration files
-typings/
-
-# IDE - VSCode
+# IDE
+.vscode
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+.ntvs_analysis.dat
+typings/
 
-# OpenCover UI analysis results
-OpenCover/
-coverage/
-
-### macOS template
-# General
-.DS_Store
-.AppleDouble
-.LSOverride
-
-=======
-# Local
-dist
-.webpack
-.serverless/**/*.zip
-
-package-lock.json
-yarn.lock
-
-.vscode
-
+# Local services
 redis-data
 mysql-data
-
-.turbo
+.env
+apps/api/.env
 
 # SQLite
 *.db
 *.db-journal
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride

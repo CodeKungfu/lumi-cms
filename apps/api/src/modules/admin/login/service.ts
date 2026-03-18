@@ -63,6 +63,9 @@ export class Service {
   }
 
   async checkImgCaptcha(id: string, code: string): Promise<void> {
+    if (process.env.NODE_ENV === 'test' && process.env.DISABLE_CAPTCHA_FOR_TEST === 'true') {
+      return;
+    }
     const result = await this.redisService.getRedis().get(`admin:captcha:img:${id}`);
     if (isEmpty(result) || code.toLowerCase() !== result.toLowerCase()) throw new ApiException(10002);
     await this.redisService.getRedis().del(`admin:captcha:img:${id}`);

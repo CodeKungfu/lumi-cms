@@ -26,6 +26,7 @@ class MockRedis {
         MockRedis.store.delete(key);
         MockRedis.timers.delete(key);
       }, duration * 1000);
+      timer.unref?.();
       MockRedis.timers.set(key, timer);
     }
     return 'OK';

@@ -36,7 +36,8 @@ const useUserStore = defineStore(
         return new Promise((resolve, reject) => {
           getInfo().then(res => {
             const user = res.data.user
-            const avatar = (user.avatar == "" || user.avatar == null) ? defAva : import.meta.env.VITE_APP_BASE_API + user.avatar;
+            const avatarPath = user.avatar ?? user.headImg ?? ''
+            const avatar = (avatarPath === "" || avatarPath == null) ? defAva : import.meta.env.VITE_APP_BASE_API + avatarPath;
 
             if (res.data.roles && res.data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
               this.roles = res.data.roles
@@ -44,8 +45,8 @@ const useUserStore = defineStore(
             } else {
               this.roles = ['ROLE_DEFAULT']
             }
-            this.id = user.userId
-            this.name = user.userName
+            this.id = user.userId ?? user.id ?? ''
+            this.name = user.userName ?? user.name ?? ''
             this.avatar = avatar
             resolve(res)
           }).catch(error => {

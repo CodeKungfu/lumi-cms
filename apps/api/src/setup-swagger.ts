@@ -16,8 +16,8 @@ export function setupSwagger(app: INestApplication): void {
   }
 
   const swaggerConfig = new DocumentBuilder()
-    .setTitle(configService.get<string>('swagger.title'))
-    .setDescription(configService.get<string>('swagger.desc'))
+    .setTitle(configService.get<string>('swagger.title', 'Lumi CMS API'))
+    .setDescription(configService.get<string>('swagger.desc', 'Lumi CMS local development API docs'))
     .setLicense('MIT', 'https://github.com/CodeKungfu/lumi-cms')
     // JWT鉴权
     .addSecurity(ADMIN_PREFIX, {
@@ -29,5 +29,5 @@ export function setupSwagger(app: INestApplication): void {
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);
 
-  SwaggerModule.setup(configService.get<string>('swagger.path', '/swagger-api'), app, document);
+  SwaggerModule.setup(configService.get<string>('swagger.path', process.env.SWAGGER_PATH || 'swagger-api'), app, document);
 }
