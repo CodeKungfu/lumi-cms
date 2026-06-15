@@ -15,16 +15,16 @@ create table sys_dept (
   update_by         TEXT     default ''                 ,
   update_time       TEXT                                   
 );
-insert into sys_dept values(100,  0,   '0',          'Lumi科技',   0, 'Lumi', '15888888888', 'ry@qq.com', '0', '0', 'admin', datetime('now'), '', null);
-insert into sys_dept values(101,  100, '0,100',      '深圳总公司', 1, 'Lumi', '15888888888', 'ry@qq.com', '0', '0', 'admin', datetime('now'), '', null);
-insert into sys_dept values(102,  100, '0,100',      '长沙分公司', 2, 'Lumi', '15888888888', 'ry@qq.com', '0', '0', 'admin', datetime('now'), '', null);
-insert into sys_dept values(103,  101, '0,100,101',  '研发部门',   1, 'Lumi', '15888888888', 'ry@qq.com', '0', '0', 'admin', datetime('now'), '', null);
-insert into sys_dept values(104,  101, '0,100,101',  '市场部门',   2, 'Lumi', '15888888888', 'ry@qq.com', '0', '0', 'admin', datetime('now'), '', null);
-insert into sys_dept values(105,  101, '0,100,101',  '测试部门',   3, 'Lumi', '15888888888', 'ry@qq.com', '0', '0', 'admin', datetime('now'), '', null);
-insert into sys_dept values(106,  101, '0,100,101',  '财务部门',   4, 'Lumi', '15888888888', 'ry@qq.com', '0', '0', 'admin', datetime('now'), '', null);
-insert into sys_dept values(107,  101, '0,100,101',  '运维部门',   5, 'Lumi', '15888888888', 'ry@qq.com', '0', '0', 'admin', datetime('now'), '', null);
-insert into sys_dept values(108,  102, '0,100,102',  '市场部门',   1, 'Lumi', '15888888888', 'ry@qq.com', '0', '0', 'admin', datetime('now'), '', null);
-insert into sys_dept values(109,  102, '0,100,102',  '财务部门',   2, 'Lumi', '15888888888', 'ry@qq.com', '0', '0', 'admin', datetime('now'), '', null);
+insert into sys_dept values(100,  0,   '0',          'Lumi科技',   0, 'Lumi', '15888888888', 'ry@qq.com', '0', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null);
+insert into sys_dept values(101,  100, '0,100',      '深圳总公司', 1, 'Lumi', '15888888888', 'ry@qq.com', '0', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null);
+insert into sys_dept values(102,  100, '0,100',      '长沙分公司', 2, 'Lumi', '15888888888', 'ry@qq.com', '0', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null);
+insert into sys_dept values(103,  101, '0,100,101',  '研发部门',   1, 'Lumi', '15888888888', 'ry@qq.com', '0', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null);
+insert into sys_dept values(104,  101, '0,100,101',  '市场部门',   2, 'Lumi', '15888888888', 'ry@qq.com', '0', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null);
+insert into sys_dept values(105,  101, '0,100,101',  '测试部门',   3, 'Lumi', '15888888888', 'ry@qq.com', '0', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null);
+insert into sys_dept values(106,  101, '0,100,101',  '财务部门',   4, 'Lumi', '15888888888', 'ry@qq.com', '0', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null);
+insert into sys_dept values(107,  101, '0,100,101',  '运维部门',   5, 'Lumi', '15888888888', 'ry@qq.com', '0', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null);
+insert into sys_dept values(108,  102, '0,100,102',  '市场部门',   1, 'Lumi', '15888888888', 'ry@qq.com', '0', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null);
+insert into sys_dept values(109,  102, '0,100,102',  '财务部门',   2, 'Lumi', '15888888888', 'ry@qq.com', '0', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null);
 drop table if exists sys_user;
 create table sys_user (
   user_id           INTEGER PRIMARY KEY AUTOINCREMENT    ,
@@ -47,8 +47,8 @@ create table sys_user (
   update_time       TEXT                                   ,
   remark            TEXT    default null               
 );
-insert into sys_user values(1,  103, 'admin', 'lumi', '00', 'ry@163.com', '15888888888', '1', '', 'e10adc3949ba59abbe56e057f20f883e', '0', '0', '127.0.0.1', datetime('now'), 'admin', datetime('now'), '', null, '管理员');
-insert into sys_user values(2,  105, 'lumi',    'lumi', '00', 'ry@qq.com',  '15666666666', '1', '', 'e10adc3949ba59abbe56e057f20f883e', '0', '0', '127.0.0.1', datetime('now'), 'admin', datetime('now'), '', null, '测试员');
+insert into sys_user values(1,  103, 'admin', 'lumi', '00', 'ry@163.com', '15888888888', '1', '', 'e10adc3949ba59abbe56e057f20f883e', '0', '0', '127.0.0.1', strftime('%Y-%m-%dT%H:%M:%fZ','now'), 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '管理员');
+insert into sys_user values(2,  105, 'lumi',    'lumi', '00', 'ry@qq.com',  '15666666666', '1', '', 'e10adc3949ba59abbe56e057f20f883e', '0', '0', '127.0.0.1', strftime('%Y-%m-%dT%H:%M:%fZ','now'), 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '测试员');
 drop table if exists sys_post;
 create table sys_post
 (
@@ -63,10 +63,10 @@ create table sys_post
   update_time   TEXT                                   ,
   remark        TEXT    default null               
 );
-insert into sys_post values(1, 'ceo',  '董事长',    1, '0', 'admin', datetime('now'), '', null, '');
-insert into sys_post values(2, 'se',   '项目经理',  2, '0', 'admin', datetime('now'), '', null, '');
-insert into sys_post values(3, 'hr',   '人力资源',  3, '0', 'admin', datetime('now'), '', null, '');
-insert into sys_post values(4, 'user', '普通员工',  4, '0', 'admin', datetime('now'), '', null, '');
+insert into sys_post values(1, 'ceo',  '董事长',    1, '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_post values(2, 'se',   '项目经理',  2, '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_post values(3, 'hr',   '人力资源',  3, '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_post values(4, 'user', '普通员工',  4, '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
 drop table if exists sys_role;
 create table sys_role (
   role_id              INTEGER PRIMARY KEY AUTOINCREMENT    ,
@@ -84,8 +84,8 @@ create table sys_role (
   update_time          TEXT                                   ,
   remark               TEXT    default null               
 );
-insert into sys_role values('1', '超级管理员',  'admin',  1, 1, 1, 1, '0', '0', 'admin', datetime('now'), '', null, '超级管理员');
-insert into sys_role values('2', '普通角色',    'common', 2, 2, 1, 1, '0', '0', 'admin', datetime('now'), '', null, '普通角色');
+insert into sys_role values('1', '超级管理员',  'admin',  1, 1, 1, 1, '0', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '超级管理员');
+insert into sys_role values('2', '普通角色',    'common', 2, 2, 1, 1, '0', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '普通角色');
 drop table if exists sys_menu;
 create table sys_menu (
   menu_id           INTEGER PRIMARY KEY AUTOINCREMENT    ,
@@ -108,68 +108,68 @@ create table sys_menu (
   update_time       TEXT                                   ,
   remark            TEXT    default ''                 
 );
-insert into sys_menu values('1', '系统管理', '0', '1', 'system',           null, '', 1, 0, 'M', '0', '0', '', 'system',   'admin', datetime('now'), '', null, '系统管理目录');
-insert into sys_menu values('2', '系统监控', '0', '2', 'monitor',          null, '', 1, 0, 'M', '0', '0', '', 'monitor',  'admin', datetime('now'), '', null, '系统监控目录');
-insert into sys_menu values('3', '系统工具', '0', '3', 'tool',             null, '', 1, 0, 'M', '0', '0', '', 'tool',     'admin', datetime('now'), '', null, '系统工具目录');
-insert into sys_menu values('4', 'Lumi官网', '0', '4', 'https://lumi-cms-web.pages.dev', null, '', 0, 0, 'M', '0', '0', '', 'guide',    'admin', datetime('now'), '', null, 'Lumi官网地址');
-insert into sys_menu values('100',  '用户管理',       '1',   '1', 'user',       'system/user/index',                 '', 1, 0, 'C', '0', '0', 'system:user:list',        'user',          'admin', datetime('now'), '', null, '用户管理菜单');
-insert into sys_menu values('101',  '角色管理',       '1',   '2', 'role',       'system/role/index',                 '', 1, 0, 'C', '0', '0', 'system:role:list',        'peoples',       'admin', datetime('now'), '', null, '角色管理菜单');
-insert into sys_menu values('102',  '菜单管理',       '1',   '3', 'menu',       'system/menu/index',                 '', 1, 0, 'C', '0', '0', 'system:menu:list',        'tree-table',    'admin', datetime('now'), '', null, '菜单管理菜单');
-insert into sys_menu values('103',  '部门管理',       '1',   '4', 'dept',       'system/dept/index',                 '', 1, 0, 'C', '0', '0', 'system:dept:list',        'tree',          'admin', datetime('now'), '', null, '部门管理菜单');
-insert into sys_menu values('104',  '岗位管理',       '1',   '5', 'post',       'system/post/index',                 '', 1, 0, 'C', '0', '0', 'system:post:list',        'post',          'admin', datetime('now'), '', null, '岗位管理菜单');
-insert into sys_menu values('105',  '字典管理',       '1',   '6', 'dict',       'system/dict/index',                 '', 1, 0, 'C', '0', '0', 'system:dict:list',        'dict',          'admin', datetime('now'), '', null, '字典管理菜单');
-insert into sys_menu values('106',  '参数设置',       '1',   '7', 'config',     'system/config/index',               '', 1, 0, 'C', '0', '0', 'system:config:list',      'edit',          'admin', datetime('now'), '', null, '参数设置菜单');
-insert into sys_menu values('107',  '通知公告',       '1',   '8', 'notice',     'system/notice/index',               '', 1, 0, 'C', '0', '0', 'system:notice:list',      'message',       'admin', datetime('now'), '', null, '通知公告菜单');
-insert into sys_menu values('108',  '日志管理',       '1',   '9', 'log',        '',                                  '', 1, 0, 'M', '0', '0', '',                        'log',           'admin', datetime('now'), '', null, '日志管理菜单');
-insert into sys_menu values('116',  '系统接口',       '3',   '3', 'http://localhost:8080/swagger-ui/index.html', '', '', 0, 0, 'C', '0', '0', 'tool:swagger:list',       'swagger',       'admin', datetime('now'), '', null, '系统接口菜单');
-insert into sys_menu values('500',  '操作日志', '108', '1', 'operlog',    'monitor/operlog/index',    '', 1, 0, 'C', '0', '0', 'monitor:operlog:list',    'form',          'admin', datetime('now'), '', null, '操作日志菜单');
-insert into sys_menu values('501',  '登录日志', '108', '2', 'logininfor', 'monitor/logininfor/index', '', 1, 0, 'C', '0', '0', 'monitor:logininfor:list', 'logininfor',    'admin', datetime('now'), '', null, '登录日志菜单');
-insert into sys_menu values('1000', '用户查询', '100', '1',  '', '', '', 1, 0, 'F', '0', '0', 'system:user:query',          '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1001', '用户新增', '100', '2',  '', '', '', 1, 0, 'F', '0', '0', 'system:user:add',            '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1002', '用户修改', '100', '3',  '', '', '', 1, 0, 'F', '0', '0', 'system:user:edit',           '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1003', '用户删除', '100', '4',  '', '', '', 1, 0, 'F', '0', '0', 'system:user:remove',         '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1004', '用户导出', '100', '5',  '', '', '', 1, 0, 'F', '0', '0', 'system:user:export',         '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1005', '用户导入', '100', '6',  '', '', '', 1, 0, 'F', '0', '0', 'system:user:import',         '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1006', '重置密码', '100', '7',  '', '', '', 1, 0, 'F', '0', '0', 'system:user:resetPwd',       '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1007', '角色查询', '101', '1',  '', '', '', 1, 0, 'F', '0', '0', 'system:role:query',          '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1008', '角色新增', '101', '2',  '', '', '', 1, 0, 'F', '0', '0', 'system:role:add',            '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1009', '角色修改', '101', '3',  '', '', '', 1, 0, 'F', '0', '0', 'system:role:edit',           '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1010', '角色删除', '101', '4',  '', '', '', 1, 0, 'F', '0', '0', 'system:role:remove',         '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1011', '角色导出', '101', '5',  '', '', '', 1, 0, 'F', '0', '0', 'system:role:export',         '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1012', '菜单查询', '102', '1',  '', '', '', 1, 0, 'F', '0', '0', 'system:menu:query',          '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1013', '菜单新增', '102', '2',  '', '', '', 1, 0, 'F', '0', '0', 'system:menu:add',            '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1014', '菜单修改', '102', '3',  '', '', '', 1, 0, 'F', '0', '0', 'system:menu:edit',           '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1015', '菜单删除', '102', '4',  '', '', '', 1, 0, 'F', '0', '0', 'system:menu:remove',         '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1016', '部门查询', '103', '1',  '', '', '', 1, 0, 'F', '0', '0', 'system:dept:query',          '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1017', '部门新增', '103', '2',  '', '', '', 1, 0, 'F', '0', '0', 'system:dept:add',            '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1018', '部门修改', '103', '3',  '', '', '', 1, 0, 'F', '0', '0', 'system:dept:edit',           '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1019', '部门删除', '103', '4',  '', '', '', 1, 0, 'F', '0', '0', 'system:dept:remove',         '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1020', '岗位查询', '104', '1',  '', '', '', 1, 0, 'F', '0', '0', 'system:post:query',          '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1021', '岗位新增', '104', '2',  '', '', '', 1, 0, 'F', '0', '0', 'system:post:add',            '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1022', '岗位修改', '104', '3',  '', '', '', 1, 0, 'F', '0', '0', 'system:post:edit',           '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1023', '岗位删除', '104', '4',  '', '', '', 1, 0, 'F', '0', '0', 'system:post:remove',         '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1024', '岗位导出', '104', '5',  '', '', '', 1, 0, 'F', '0', '0', 'system:post:export',         '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1025', '字典查询', '105', '1', '#', '', '', 1, 0, 'F', '0', '0', 'system:dict:query',          '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1026', '字典新增', '105', '2', '#', '', '', 1, 0, 'F', '0', '0', 'system:dict:add',            '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1027', '字典修改', '105', '3', '#', '', '', 1, 0, 'F', '0', '0', 'system:dict:edit',           '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1028', '字典删除', '105', '4', '#', '', '', 1, 0, 'F', '0', '0', 'system:dict:remove',         '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1029', '字典导出', '105', '5', '#', '', '', 1, 0, 'F', '0', '0', 'system:dict:export',         '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1030', '参数查询', '106', '1', '#', '', '', 1, 0, 'F', '0', '0', 'system:config:query',        '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1031', '参数新增', '106', '2', '#', '', '', 1, 0, 'F', '0', '0', 'system:config:add',          '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1032', '参数修改', '106', '3', '#', '', '', 1, 0, 'F', '0', '0', 'system:config:edit',         '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1033', '参数删除', '106', '4', '#', '', '', 1, 0, 'F', '0', '0', 'system:config:remove',       '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1034', '参数导出', '106', '5', '#', '', '', 1, 0, 'F', '0', '0', 'system:config:export',       '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1035', '公告查询', '107', '1', '#', '', '', 1, 0, 'F', '0', '0', 'system:notice:query',        '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1036', '公告新增', '107', '2', '#', '', '', 1, 0, 'F', '0', '0', 'system:notice:add',          '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1037', '公告修改', '107', '3', '#', '', '', 1, 0, 'F', '0', '0', 'system:notice:edit',         '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1038', '公告删除', '107', '4', '#', '', '', 1, 0, 'F', '0', '0', 'system:notice:remove',       '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1039', '操作查询', '500', '1', '#', '', '', 1, 0, 'F', '0', '0', 'system:operlog:query',       '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1040', '操作删除', '500', '2', '#', '', '', 1, 0, 'F', '0', '0', 'system:operlog:remove',      '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1041', '日志导出', '500', '3', '#', '', '', 1, 0, 'F', '0', '0', 'system:operlog:export',      '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1042', '登录查询', '501', '1', '#', '', '', 1, 0, 'F', '0', '0', 'system:logininfor:query',    '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1043', '登录删除', '501', '2', '#', '', '', 1, 0, 'F', '0', '0', 'system:logininfor:remove',   '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1044', '日志导出', '501', '3', '#', '', '', 1, 0, 'F', '0', '0', 'system:logininfor:export',   '#', 'admin', datetime('now'), '', null, '');
-insert into sys_menu values('1045', '账户解锁', '501', '4', '#', '', '', 1, 0, 'F', '0', '0', 'system:logininfor:unlock',   '#', 'admin', datetime('now'), '', null, '');
+insert into sys_menu values('1', '系统管理', '0', '1', 'system',           null, '', 1, 0, 'M', '0', '0', '', 'system',   'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '系统管理目录');
+insert into sys_menu values('2', '系统监控', '0', '2', 'monitor',          null, '', 1, 0, 'M', '0', '0', '', 'monitor',  'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '系统监控目录');
+insert into sys_menu values('3', '系统工具', '0', '3', 'tool',             null, '', 1, 0, 'M', '0', '0', '', 'tool',     'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '系统工具目录');
+insert into sys_menu values('4', 'Lumi官网', '0', '4', 'https://lumi-cms-web.pages.dev', null, '', 0, 0, 'M', '0', '0', '', 'guide',    'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, 'Lumi官网地址');
+insert into sys_menu values('100',  '用户管理',       '1',   '1', 'user',       'system/user/index',                 '', 1, 0, 'C', '0', '0', 'system:user:list',        'user',          'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '用户管理菜单');
+insert into sys_menu values('101',  '角色管理',       '1',   '2', 'role',       'system/role/index',                 '', 1, 0, 'C', '0', '0', 'system:role:list',        'peoples',       'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '角色管理菜单');
+insert into sys_menu values('102',  '菜单管理',       '1',   '3', 'menu',       'system/menu/index',                 '', 1, 0, 'C', '0', '0', 'system:menu:list',        'tree-table',    'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '菜单管理菜单');
+insert into sys_menu values('103',  '部门管理',       '1',   '4', 'dept',       'system/dept/index',                 '', 1, 0, 'C', '0', '0', 'system:dept:list',        'tree',          'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '部门管理菜单');
+insert into sys_menu values('104',  '岗位管理',       '1',   '5', 'post',       'system/post/index',                 '', 1, 0, 'C', '0', '0', 'system:post:list',        'post',          'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '岗位管理菜单');
+insert into sys_menu values('105',  '字典管理',       '1',   '6', 'dict',       'system/dict/index',                 '', 1, 0, 'C', '0', '0', 'system:dict:list',        'dict',          'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '字典管理菜单');
+insert into sys_menu values('106',  '参数设置',       '1',   '7', 'config',     'system/config/index',               '', 1, 0, 'C', '0', '0', 'system:config:list',      'edit',          'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '参数设置菜单');
+insert into sys_menu values('107',  '通知公告',       '1',   '8', 'notice',     'system/notice/index',               '', 1, 0, 'C', '0', '0', 'system:notice:list',      'message',       'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '通知公告菜单');
+insert into sys_menu values('108',  '日志管理',       '1',   '9', 'log',        '',                                  '', 1, 0, 'M', '0', '0', '',                        'log',           'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '日志管理菜单');
+insert into sys_menu values('116',  '系统接口',       '3',   '3', 'http://localhost:8080/swagger-ui/index.html', '', '', 0, 0, 'C', '0', '0', 'tool:swagger:list',       'swagger',       'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '系统接口菜单');
+insert into sys_menu values('500',  '操作日志', '108', '1', 'operlog',    'monitor/operlog/index',    '', 1, 0, 'C', '0', '0', 'monitor:operlog:list',    'form',          'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '操作日志菜单');
+insert into sys_menu values('501',  '登录日志', '108', '2', 'logininfor', 'monitor/logininfor/index', '', 1, 0, 'C', '0', '0', 'monitor:logininfor:list', 'logininfor',    'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '登录日志菜单');
+insert into sys_menu values('1000', '用户查询', '100', '1',  '', '', '', 1, 0, 'F', '0', '0', 'system:user:query',          '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1001', '用户新增', '100', '2',  '', '', '', 1, 0, 'F', '0', '0', 'system:user:add',            '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1002', '用户修改', '100', '3',  '', '', '', 1, 0, 'F', '0', '0', 'system:user:edit',           '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1003', '用户删除', '100', '4',  '', '', '', 1, 0, 'F', '0', '0', 'system:user:remove',         '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1004', '用户导出', '100', '5',  '', '', '', 1, 0, 'F', '0', '0', 'system:user:export',         '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1005', '用户导入', '100', '6',  '', '', '', 1, 0, 'F', '0', '0', 'system:user:import',         '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1006', '重置密码', '100', '7',  '', '', '', 1, 0, 'F', '0', '0', 'system:user:resetPwd',       '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1007', '角色查询', '101', '1',  '', '', '', 1, 0, 'F', '0', '0', 'system:role:query',          '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1008', '角色新增', '101', '2',  '', '', '', 1, 0, 'F', '0', '0', 'system:role:add',            '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1009', '角色修改', '101', '3',  '', '', '', 1, 0, 'F', '0', '0', 'system:role:edit',           '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1010', '角色删除', '101', '4',  '', '', '', 1, 0, 'F', '0', '0', 'system:role:remove',         '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1011', '角色导出', '101', '5',  '', '', '', 1, 0, 'F', '0', '0', 'system:role:export',         '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1012', '菜单查询', '102', '1',  '', '', '', 1, 0, 'F', '0', '0', 'system:menu:query',          '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1013', '菜单新增', '102', '2',  '', '', '', 1, 0, 'F', '0', '0', 'system:menu:add',            '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1014', '菜单修改', '102', '3',  '', '', '', 1, 0, 'F', '0', '0', 'system:menu:edit',           '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1015', '菜单删除', '102', '4',  '', '', '', 1, 0, 'F', '0', '0', 'system:menu:remove',         '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1016', '部门查询', '103', '1',  '', '', '', 1, 0, 'F', '0', '0', 'system:dept:query',          '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1017', '部门新增', '103', '2',  '', '', '', 1, 0, 'F', '0', '0', 'system:dept:add',            '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1018', '部门修改', '103', '3',  '', '', '', 1, 0, 'F', '0', '0', 'system:dept:edit',           '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1019', '部门删除', '103', '4',  '', '', '', 1, 0, 'F', '0', '0', 'system:dept:remove',         '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1020', '岗位查询', '104', '1',  '', '', '', 1, 0, 'F', '0', '0', 'system:post:query',          '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1021', '岗位新增', '104', '2',  '', '', '', 1, 0, 'F', '0', '0', 'system:post:add',            '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1022', '岗位修改', '104', '3',  '', '', '', 1, 0, 'F', '0', '0', 'system:post:edit',           '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1023', '岗位删除', '104', '4',  '', '', '', 1, 0, 'F', '0', '0', 'system:post:remove',         '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1024', '岗位导出', '104', '5',  '', '', '', 1, 0, 'F', '0', '0', 'system:post:export',         '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1025', '字典查询', '105', '1', '#', '', '', 1, 0, 'F', '0', '0', 'system:dict:query',          '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1026', '字典新增', '105', '2', '#', '', '', 1, 0, 'F', '0', '0', 'system:dict:add',            '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1027', '字典修改', '105', '3', '#', '', '', 1, 0, 'F', '0', '0', 'system:dict:edit',           '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1028', '字典删除', '105', '4', '#', '', '', 1, 0, 'F', '0', '0', 'system:dict:remove',         '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1029', '字典导出', '105', '5', '#', '', '', 1, 0, 'F', '0', '0', 'system:dict:export',         '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1030', '参数查询', '106', '1', '#', '', '', 1, 0, 'F', '0', '0', 'system:config:query',        '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1031', '参数新增', '106', '2', '#', '', '', 1, 0, 'F', '0', '0', 'system:config:add',          '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1032', '参数修改', '106', '3', '#', '', '', 1, 0, 'F', '0', '0', 'system:config:edit',         '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1033', '参数删除', '106', '4', '#', '', '', 1, 0, 'F', '0', '0', 'system:config:remove',       '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1034', '参数导出', '106', '5', '#', '', '', 1, 0, 'F', '0', '0', 'system:config:export',       '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1035', '公告查询', '107', '1', '#', '', '', 1, 0, 'F', '0', '0', 'system:notice:query',        '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1036', '公告新增', '107', '2', '#', '', '', 1, 0, 'F', '0', '0', 'system:notice:add',          '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1037', '公告修改', '107', '3', '#', '', '', 1, 0, 'F', '0', '0', 'system:notice:edit',         '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1038', '公告删除', '107', '4', '#', '', '', 1, 0, 'F', '0', '0', 'system:notice:remove',       '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1039', '操作查询', '500', '1', '#', '', '', 1, 0, 'F', '0', '0', 'system:operlog:query',       '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1040', '操作删除', '500', '2', '#', '', '', 1, 0, 'F', '0', '0', 'system:operlog:remove',      '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1041', '日志导出', '500', '3', '#', '', '', 1, 0, 'F', '0', '0', 'system:operlog:export',      '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1042', '登录查询', '501', '1', '#', '', '', 1, 0, 'F', '0', '0', 'system:logininfor:query',    '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1043', '登录删除', '501', '2', '#', '', '', 1, 0, 'F', '0', '0', 'system:logininfor:remove',   '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1044', '日志导出', '501', '3', '#', '', '', 1, 0, 'F', '0', '0', 'system:logininfor:export',   '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
+insert into sys_menu values('1045', '账户解锁', '501', '4', '#', '', '', 1, 0, 'F', '0', '0', 'system:logininfor:unlock',   '#', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '');
 drop table if exists sys_user_role;
 create table sys_user_role (
   user_id   INTEGER not null ,
@@ -319,14 +319,14 @@ create table sys_dict_type
   update_time      TEXT                                   ,
   remark           TEXT    default null               
 );
-insert into sys_dict_type values(1,  '用户性别', 'sys_user_sex',        '0', 'admin', datetime('now'), '', null, '用户性别列表');
-insert into sys_dict_type values(2,  '菜单状态', 'sys_show_hide',       '0', 'admin', datetime('now'), '', null, '菜单状态列表');
-insert into sys_dict_type values(3,  '系统开关', 'sys_normal_disable',  '0', 'admin', datetime('now'), '', null, '系统开关列表');
-insert into sys_dict_type values(6,  '系统是否', 'sys_yes_no',          '0', 'admin', datetime('now'), '', null, '系统是否列表');
-insert into sys_dict_type values(7,  '通知类型', 'sys_notice_type',     '0', 'admin', datetime('now'), '', null, '通知类型列表');
-insert into sys_dict_type values(8,  '通知状态', 'sys_notice_status',   '0', 'admin', datetime('now'), '', null, '通知状态列表');
-insert into sys_dict_type values(9,  '操作类型', 'sys_oper_type',       '0', 'admin', datetime('now'), '', null, '操作类型列表');
-insert into sys_dict_type values(10, '系统状态', 'sys_common_status',   '0', 'admin', datetime('now'), '', null, '登录状态列表');
+insert into sys_dict_type values(1,  '用户性别', 'sys_user_sex',        '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '用户性别列表');
+insert into sys_dict_type values(2,  '菜单状态', 'sys_show_hide',       '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '菜单状态列表');
+insert into sys_dict_type values(3,  '系统开关', 'sys_normal_disable',  '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '系统开关列表');
+insert into sys_dict_type values(6,  '系统是否', 'sys_yes_no',          '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '系统是否列表');
+insert into sys_dict_type values(7,  '通知类型', 'sys_notice_type',     '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '通知类型列表');
+insert into sys_dict_type values(8,  '通知状态', 'sys_notice_status',   '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '通知状态列表');
+insert into sys_dict_type values(9,  '操作类型', 'sys_oper_type',       '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '操作类型列表');
+insert into sys_dict_type values(10, '系统状态', 'sys_common_status',   '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '登录状态列表');
 drop table if exists sys_dict_data;
 create table sys_dict_data
 (
@@ -345,31 +345,31 @@ create table sys_dict_data
   update_time      TEXT                                   ,
   remark           TEXT    default null               
 );
-insert into sys_dict_data values(1,  1,  '男',       '0',       'sys_user_sex',        '',   '',        'Y', '0', 'admin', datetime('now'), '', null, '性别男');
-insert into sys_dict_data values(2,  2,  '女',       '1',       'sys_user_sex',        '',   '',        'N', '0', 'admin', datetime('now'), '', null, '性别女');
-insert into sys_dict_data values(3,  3,  '未知',     '2',       'sys_user_sex',        '',   '',        'N', '0', 'admin', datetime('now'), '', null, '性别未知');
-insert into sys_dict_data values(4,  1,  '显示',     '0',       'sys_show_hide',       '',   'primary', 'Y', '0', 'admin', datetime('now'), '', null, '显示菜单');
-insert into sys_dict_data values(5,  2,  '隐藏',     '1',       'sys_show_hide',       '',   'danger',  'N', '0', 'admin', datetime('now'), '', null, '隐藏菜单');
-insert into sys_dict_data values(6,  1,  '正常',     '0',       'sys_normal_disable',  '',   'primary', 'Y', '0', 'admin', datetime('now'), '', null, '正常状态');
-insert into sys_dict_data values(7,  2,  '停用',     '1',       'sys_normal_disable',  '',   'danger',  'N', '0', 'admin', datetime('now'), '', null, '停用状态');
-insert into sys_dict_data values(12, 1,  '是',       'Y',       'sys_yes_no',          '',   'primary', 'Y', '0', 'admin', datetime('now'), '', null, '系统默认是');
-insert into sys_dict_data values(13, 2,  '否',       'N',       'sys_yes_no',          '',   'danger',  'N', '0', 'admin', datetime('now'), '', null, '系统默认否');
-insert into sys_dict_data values(14, 1,  '通知',     '1',       'sys_notice_type',     '',   'warning', 'Y', '0', 'admin', datetime('now'), '', null, '通知');
-insert into sys_dict_data values(15, 2,  '公告',     '2',       'sys_notice_type',     '',   'success', 'N', '0', 'admin', datetime('now'), '', null, '公告');
-insert into sys_dict_data values(16, 1,  '正常',     '0',       'sys_notice_status',   '',   'primary', 'Y', '0', 'admin', datetime('now'), '', null, '正常状态');
-insert into sys_dict_data values(17, 2,  '关闭',     '1',       'sys_notice_status',   '',   'danger',  'N', '0', 'admin', datetime('now'), '', null, '关闭状态');
-insert into sys_dict_data values(18, 99, '其他',     '0',       'sys_oper_type',       '',   'info',    'N', '0', 'admin', datetime('now'), '', null, '其他操作');
-insert into sys_dict_data values(19, 1,  '新增',     '1',       'sys_oper_type',       '',   'info',    'N', '0', 'admin', datetime('now'), '', null, '新增操作');
-insert into sys_dict_data values(20, 2,  '修改',     '2',       'sys_oper_type',       '',   'info',    'N', '0', 'admin', datetime('now'), '', null, '修改操作');
-insert into sys_dict_data values(21, 3,  '删除',     '3',       'sys_oper_type',       '',   'danger',  'N', '0', 'admin', datetime('now'), '', null, '删除操作');
-insert into sys_dict_data values(22, 4,  '授权',     '4',       'sys_oper_type',       '',   'primary', 'N', '0', 'admin', datetime('now'), '', null, '授权操作');
-insert into sys_dict_data values(23, 5,  '导出',     '5',       'sys_oper_type',       '',   'warning', 'N', '0', 'admin', datetime('now'), '', null, '导出操作');
-insert into sys_dict_data values(24, 6,  '导入',     '6',       'sys_oper_type',       '',   'warning', 'N', '0', 'admin', datetime('now'), '', null, '导入操作');
-insert into sys_dict_data values(25, 7,  '强退',     '7',       'sys_oper_type',       '',   'danger',  'N', '0', 'admin', datetime('now'), '', null, '强退操作');
-insert into sys_dict_data values(26, 8,  '生成代码', '8',       'sys_oper_type',       '',   'warning', 'N', '0', 'admin', datetime('now'), '', null, '生成操作');
-insert into sys_dict_data values(27, 9,  '清空数据', '9',       'sys_oper_type',       '',   'danger',  'N', '0', 'admin', datetime('now'), '', null, '清空操作');
-insert into sys_dict_data values(28, 1,  '成功',     '0',       'sys_common_status',   '',   'primary', 'N', '0', 'admin', datetime('now'), '', null, '正常状态');
-insert into sys_dict_data values(29, 2,  '失败',     '1',       'sys_common_status',   '',   'danger',  'N', '0', 'admin', datetime('now'), '', null, '停用状态');
+insert into sys_dict_data values(1,  1,  '男',       '0',       'sys_user_sex',        '',   '',        'Y', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '性别男');
+insert into sys_dict_data values(2,  2,  '女',       '1',       'sys_user_sex',        '',   '',        'N', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '性别女');
+insert into sys_dict_data values(3,  3,  '未知',     '2',       'sys_user_sex',        '',   '',        'N', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '性别未知');
+insert into sys_dict_data values(4,  1,  '显示',     '0',       'sys_show_hide',       '',   'primary', 'Y', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '显示菜单');
+insert into sys_dict_data values(5,  2,  '隐藏',     '1',       'sys_show_hide',       '',   'danger',  'N', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '隐藏菜单');
+insert into sys_dict_data values(6,  1,  '正常',     '0',       'sys_normal_disable',  '',   'primary', 'Y', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '正常状态');
+insert into sys_dict_data values(7,  2,  '停用',     '1',       'sys_normal_disable',  '',   'danger',  'N', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '停用状态');
+insert into sys_dict_data values(12, 1,  '是',       'Y',       'sys_yes_no',          '',   'primary', 'Y', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '系统默认是');
+insert into sys_dict_data values(13, 2,  '否',       'N',       'sys_yes_no',          '',   'danger',  'N', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '系统默认否');
+insert into sys_dict_data values(14, 1,  '通知',     '1',       'sys_notice_type',     '',   'warning', 'Y', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '通知');
+insert into sys_dict_data values(15, 2,  '公告',     '2',       'sys_notice_type',     '',   'success', 'N', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '公告');
+insert into sys_dict_data values(16, 1,  '正常',     '0',       'sys_notice_status',   '',   'primary', 'Y', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '正常状态');
+insert into sys_dict_data values(17, 2,  '关闭',     '1',       'sys_notice_status',   '',   'danger',  'N', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '关闭状态');
+insert into sys_dict_data values(18, 99, '其他',     '0',       'sys_oper_type',       '',   'info',    'N', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '其他操作');
+insert into sys_dict_data values(19, 1,  '新增',     '1',       'sys_oper_type',       '',   'info',    'N', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '新增操作');
+insert into sys_dict_data values(20, 2,  '修改',     '2',       'sys_oper_type',       '',   'info',    'N', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '修改操作');
+insert into sys_dict_data values(21, 3,  '删除',     '3',       'sys_oper_type',       '',   'danger',  'N', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '删除操作');
+insert into sys_dict_data values(22, 4,  '授权',     '4',       'sys_oper_type',       '',   'primary', 'N', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '授权操作');
+insert into sys_dict_data values(23, 5,  '导出',     '5',       'sys_oper_type',       '',   'warning', 'N', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '导出操作');
+insert into sys_dict_data values(24, 6,  '导入',     '6',       'sys_oper_type',       '',   'warning', 'N', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '导入操作');
+insert into sys_dict_data values(25, 7,  '强退',     '7',       'sys_oper_type',       '',   'danger',  'N', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '强退操作');
+insert into sys_dict_data values(26, 8,  '生成代码', '8',       'sys_oper_type',       '',   'warning', 'N', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '生成操作');
+insert into sys_dict_data values(27, 9,  '清空数据', '9',       'sys_oper_type',       '',   'danger',  'N', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '清空操作');
+insert into sys_dict_data values(28, 1,  '成功',     '0',       'sys_common_status',   '',   'primary', 'N', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '正常状态');
+insert into sys_dict_data values(29, 2,  '失败',     '1',       'sys_common_status',   '',   'danger',  'N', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '停用状态');
 drop table if exists sys_config;
 create table sys_config (
   config_id         INTEGER PRIMARY KEY AUTOINCREMENT    ,
@@ -383,11 +383,11 @@ create table sys_config (
   update_time       TEXT                                   ,
   remark            TEXT    default null               
 );
-insert into sys_config values(1, '主框架页-默认皮肤样式名称',     'sys.index.skinName',       'skin-blue',     'Y', 'admin', datetime('now'), '', null, '蓝色 skin-blue、绿色 skin-green、紫色 skin-purple、红色 skin-red、黄色 skin-yellow' );
-insert into sys_config values(2, '用户管理-账号初始密码',         'sys.user.initPassword',    '123456',        'Y', 'admin', datetime('now'), '', null, '初始化密码 123456' );
-insert into sys_config values(3, '主框架页-侧边栏主题',           'sys.index.sideTheme',      'theme-dark',    'Y', 'admin', datetime('now'), '', null, '深色主题theme-dark，浅色主题theme-light' );
-insert into sys_config values(4, '账号自助-是否开启用户注册功能', 'sys.account.registerUser', 'false',         'Y', 'admin', datetime('now'), '', null, '是否开启注册用户功能（true开启，false关闭）');
-insert into sys_config values(5, '用户登录-黑名单列表',           'sys.login.blackIPList',    '',              'Y', 'admin', datetime('now'), '', null, '设置登录IP黑名单限制，多个匹配项以;分隔，支持匹配（*通配、网段）');
+insert into sys_config values(1, '主框架页-默认皮肤样式名称',     'sys.index.skinName',       'skin-blue',     'Y', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '蓝色 skin-blue、绿色 skin-green、紫色 skin-purple、红色 skin-red、黄色 skin-yellow' );
+insert into sys_config values(2, '用户管理-账号初始密码',         'sys.user.initPassword',    '123456',        'Y', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '初始化密码 123456' );
+insert into sys_config values(3, '主框架页-侧边栏主题',           'sys.index.sideTheme',      'theme-dark',    'Y', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '深色主题theme-dark，浅色主题theme-light' );
+insert into sys_config values(4, '账号自助-是否开启用户注册功能', 'sys.account.registerUser', 'false',         'Y', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '是否开启注册用户功能（true开启，false关闭）');
+insert into sys_config values(5, '用户登录-黑名单列表',           'sys.login.blackIPList',    '',              'Y', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '设置登录IP黑名单限制，多个匹配项以;分隔，支持匹配（*通配、网段）');
 drop table if exists sys_logininfor;
 create table sys_logininfor (
   info_id        INTEGER PRIMARY KEY AUTOINCREMENT   ,
@@ -413,5 +413,5 @@ create table sys_notice (
   update_time       TEXT                                   ,
   remark            TEXT    default null               
 );
-insert into sys_notice values('1', '温馨提醒：2026-01-01 Lumi新版本发布啦', '2', '新版本内容', '0', 'admin', datetime('now'), '', null, '管理员');
-insert into sys_notice values('2', '温馨提醒：2026-01-01 Lumi系统凌晨维护', '1', '维护内容',   '0', 'admin', datetime('now'), '', null, '管理员');
+insert into sys_notice values('1', '温馨提醒：2026-01-01 Lumi新版本发布啦', '2', '新版本内容', '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '管理员');
+insert into sys_notice values('2', '温馨提醒：2026-01-01 Lumi系统凌晨维护', '1', '维护内容',   '0', 'admin', strftime('%Y-%m-%dT%H:%M:%fZ','now'), '', null, '管理员');
