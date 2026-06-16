@@ -10,42 +10,24 @@
   },
   "scripts": {
     "postinstall": "pnpm db:gen",
-    "db:migrate:deploy": "prisma migrate deploy",
-    "db:migrate:dev": "prisma migrate dev",
-    "db:push": "prisma db push",
-    "db:pull": "prisma db pull",
-    "db:seed": "tsx src/seed.ts",
-    "build": "tsup src/* --dts",
-    "dev": "tsup src/* --watch",
-    "format": "prisma format",
-    "db:gen": "pnpm db:gen:sqlite",
-    "db:gen:mysql": "prisma generate",
-    "db:gen:sqlite": "tsx scripts/generate-sqlite-schema.ts && prisma generate --schema=./prisma/schema.sqlite.prisma",
-    "db:push:sql": "pnpm --filter @repo/database db:push:sqlite",
-    "db:push:sqlite": "prisma db push --schema=./prisma/schema.sqlite.prisma",
-    "db:init:sqlite": "node src/init-sqlite.mjs init",
-    "db:seed:sqlite": "node src/init-sqlite.mjs seed",
-    "db:check:sqlite": "node src/init-sqlite.mjs check",
-    "db:reset:sqlite": "node src/init-sqlite.mjs reset",
+    "db:gen": "prisma generate --schema=./prisma/schema.sqlite.prisma",
+    "build": "tsup src/client.ts --dts",
+    "dev": "tsup src/client.ts --watch",
+    "format": "prisma format --schema=./prisma/schema.sqlite.prisma",
     "lint": "eslint . --max-warnings 0",
     "prebuild": "pnpm db:gen",
     "predev": "pnpm db:gen",
-    "studio": "prisma studio"
+    "studio": "prisma studio --schema=./prisma/schema.sqlite.prisma"
   },
   "dependencies": {
-    "@prisma/adapter-better-sqlite3": "6.19.2",
-    "@prisma/client": "^6.19.2",
-    "better-sqlite3": "^12.10.1",
-    "dotenv": "^16.3.1"
+    "@prisma/client": "^6.19.2"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@types/node": "^20",
     "eslint": "^8.57.0",
     "prisma": "^6.19.2",
-    "rimraf": "^5.0.5",
     "tsup": "^8.0.2",
-    "tsx": "4.19.1",
     "typescript": "5.5.4"
   }
 }

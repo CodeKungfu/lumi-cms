@@ -1,104 +1,55 @@
 # Lumi-CMS
 
 <div align="center">
-  <p>Default local development path: SQLite + MockRedis + Nest API</p>
+  <p>Single backend: apps/hono (Cloudflare Workers + D1). Locally, wrangler emulates D1 with SQLite.</p>
   <p>Default users: admin / 123456, lumi / 123456</p>
 </div>
 
 <span>English | [简体中文](https://github.com/CodeKungfu/lumi-cms/blob/main/Readme.md)</span>
 
-## Default local workflow
-
-The repo now treats `SQLite` and `MockRedis` as the default local development path. You do not need MySQL or Redis installed to run the main API locally.
-
-Recommended startup sequence:
-
-```bash
-pnpm install
-pnpm db:init
-pnpm --filter api dev
-pnpm --filter web dev
-```
-
-Default local URLs:
-
-- API: `http://localhost:7071`
-- Swagger: `http://localhost:7071/swagger-api`
-- Web: `http://localhost:4080`
-
-## Repository layout
+## Architecture
 
 ```text
 lumi-cms/
-├── apps/api        # Default local backend, Nest.js + Fastify
-├── apps/hono       # Cloudflare Workers / D1 runtime path
+├── apps/hono       # The only backend: Hono + Cloudflare Workers + D1
 ├── apps/web        # Vue3 admin frontend
 ├── packages/database
 └── packages/eslint-config
 ```
 
-## SQLite and MockRedis
+> The old `apps/api` (NestJS) was merged into `apps/hono` and removed. For the previous version see the `no-agent` branch.
 
-- SQLite file: `packages/database/prisma/dev.db`
-- Seed source: `packages/database/sql/d1_seed.sql`
-- `apps/api` now checks SQLite initialization before startup
-- `USE_REAL_REDIS=false` keeps the repo on in-memory MockRedis
+## Local development
 
-Common commands:
+`apps/hono` runs locally via `wrangler dev`: Miniflare emulates the D1 binding with a
+local SQLite file — no remote D1 and no Cloudflare login required.
 
 ```bash
-pnpm db:init
-pnpm db:check
-pnpm db:reset
-pnpm test:p0
+pnpm install
+
+# 1) seed the local D1 (DDL + data; --local needs no login)
+cd apps/hono
+npx wrangler d1 execute DB --local --file=../../packages/database/sql/d1_seed.sql
+
+# 2) start the backend (http://localhost:8787)
+pnpm dev
+
+# 3) start the frontend (new terminal, http://localhost:4080)
+cd ../web && pnpm dev
 ```
 
-## Switch to MySQL / Redis
+- Backend API: `http://localhost:8787`
+- Web: `http://localhost:4080` (dev proxies `/dev-api` → `http://127.0.0.1:8787`)
 
-If you want the MySQL / Redis stack instead:
+The local D1 SQLite file lives under `apps/hono/.wrangler/state/v3/d1/`.
 
-```bash
-pnpm --filter @repo/database db:gen:mysql
-```
+## Data export / import
 
-Then provide:
-
-- `DATABASE_URL`
-- `USE_REAL_REDIS=true`
-- `REDIS_HOST`
-- `REDIS_PORT`
-- `REDIS_PASSWORD`
-- `REDIS_DB`
-
-After that, start your external MySQL / Redis services and run the API.
-
-## Hono runtime notes
-
-- `apps/api` is the only default local development and regression-test path
-- `apps/hono` targets Cloudflare Workers / D1
-- Hono does not use the local `dev.db`
-- Running Hono requires your own Wrangler D1 bindings
-
-## P0 acceptance path
-
-The local P0 validation flow is:
-
-1. `pnpm db:init`
-2. `pnpm --filter api dev`
-3. `GET /captchaImage`
-4. `POST /login`
-5. `GET /getInfo`
-6. `GET /getRouters`
-7. `GET /system/user/list`
-
-## Development notes
-
-- Prisma MySQL schema: `packages/database/prisma/schema.prisma`
-- Prisma SQLite schema: `packages/database/prisma/schema.sqlite.prisma`
-- API e2e coverage: `apps/api/test/app.e2e-spec.ts`
-- Hono deployment remains under `apps/hono`
+- Export: list exports are generated as **CSV on the client** (`apps/web/src/utils/exportCsv.js`), no backend export endpoint, no xlsx library.
+- Import: the user import parses a CSV in the browser and POSTs JSON to `POST /system/user/importData`.
 
 ## Deployment
 
-- Docker Compose: `docker-compose -f docker-compose.all.yml up -d`
-- Hono deployment uses the Wrangler workflow inside `apps/hono`
+- Backend hono: set a real D1 binding in `apps/hono/wrangler.toml` (`npx wrangler d1 list`) then `pnpm deploy` (`wrangler deploy`).
+- Frontend web: `pnpm --filter web deploy:cf` (`vite build --mode cf && wrangler pages deploy dist`).
+- `docker-compose.yml` only containerizes the web frontend, pointing its API at the deployed hono Worker.

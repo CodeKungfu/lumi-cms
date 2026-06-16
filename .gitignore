@@ -27,10 +27,7 @@ yarn.lock
 typings/
 
 # Local services
-redis-data
-mysql-data
 .env
-apps/api/.env
 
 # SQLite
 *.db

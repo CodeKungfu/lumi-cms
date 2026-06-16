@@ -109,6 +109,15 @@ export function uploadAvatar(data) {
   })
 }
 
+// 用户导入（前端解析 CSV 后提交 JSON）
+export function importUser(data) {
+  return request({
+    url: '/system/user/importData',
+    method: 'post',
+    data: data
+  })
+}
+
 // 查询授权角色
 export function getAuthRole(userId) {
   return request({

@@ -303,13 +303,9 @@
          <el-upload
             ref="uploadRef"
             :limit="1"
-            accept=".xlsx, .xls"
-            :headers="upload.headers"
-            :action="upload.url + '?updateSupport=' + upload.updateSupport"
-            :disabled="upload.isUploading"
-            :on-progress="handleFileUploadProgress"
-            :on-success="handleFileSuccess"
+            accept=".csv"
             :auto-upload="false"
+            :on-change="handleFileChange"
             drag
          >
             <el-icon class="el-icon--upload"><upload-filled /></el-icon>
@@ -319,7 +315,7 @@
                   <div class="el-upload__tip">
                      <el-checkbox v-model="upload.updateSupport" />是否更新已经存在的用户数据
                   </div>
-                  <span>仅允许导入xls、xlsx格式文件。</span>
+                  <span>仅允许导入 CSV 格式文件（UTF-8 编码，可用下方模板）。</span>
                   <el-link type="primary" :underline="false" style="font-size:12px;vertical-align: baseline;" @click="importTemplate">下载模板</el-link>
                </div>
             </template>
@@ -335,9 +331,8 @@
 </template>
 
 <script setup name="User">
-import { getToken } from "@/utils/auth";
-import { changeUserStatus, listUser, resetUserPwd, delUser, getUser, updateUser, addUser, deptTreeSelect } from "@/api/system/user";
-import { exportCsv } from "@/utils/exportCsv";
+import { changeUserStatus, listUser, resetUserPwd, delUser, getUser, updateUser, addUser, deptTreeSelect, importUser } from "@/api/system/user";
+import { exportCsv, parseCsv } from "@/utils/exportCsv";
 
 const router = useRouter();
 const { proxy } = getCurrentInstance();
@@ -364,15 +359,11 @@ const upload = reactive({
   open: false,
   // 弹出层标题（用户导入）
   title: "",
-  // 是否禁用上传
-  isUploading: false,
   // 是否更新已经存在的用户数据
-  updateSupport: 0,
-  // 设置上传的请求头部
-  headers: { Authorization: "Bearer " + getToken() },
-  // 上传的地址
-  url: import.meta.env.VITE_APP_BASE_API + "/system/user/importData"
+  updateSupport: 0
 });
+// 选中的待导入 CSV 文件（本地解析，不自动上传）
+const selectedFile = ref(null);
 // 列显隐信息
 const columns = ref([
   { key: 0, label: `用户编号`, visible: true },
@@ -547,26 +538,66 @@ function handleImport() {
   upload.title = "用户导入";
   upload.open = true;
 };
-/** 下载模板操作 */
+/** 下载导入模板（前端生成 CSV） */
 function importTemplate() {
-  proxy.download("system/user/importTemplate", {
-  }, `user_template_${new Date().getTime()}.xlsx`);
+  exportCsv([{}], [
+    { prop: "userName", label: "用户名称" },
+    { prop: "nickName", label: "用户昵称" },
+    { prop: "deptId", label: "部门编号" },
+    { prop: "phonenumber", label: "手机号码" },
+    { prop: "email", label: "邮箱" },
+    { prop: "sex", label: "性别(0男 1女 2未知)" },
+    { prop: "status", label: "状态(正常/停用)" },
+  ], `user_template_${new Date().getTime()}.csv`);
 };
-/**文件上传中处理 */
-const handleFileUploadProgress = (event, file, fileList) => {
-  upload.isUploading = true;
+/** 选中文件（不自动上传，缓存原始文件用于本地解析） */
+const handleFileChange = (file) => {
+  selectedFile.value = file.raw;
 };
-/** 文件上传成功处理 */
-const handleFileSuccess = (response, file, fileList) => {
-  upload.open = false;
-  upload.isUploading = false;
-  proxy.$refs["uploadRef"].handleRemove(file);
-  proxy.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + "</div>", "导入结果", { dangerouslyUseHTMLString: true });
-  getList();
-};
-/** 提交上传文件 */
+/** 提交导入：本地解析 CSV -> 提交 JSON */
 function submitFileForm() {
-  proxy.$refs["uploadRef"].submit();
+  if (!selectedFile.value) {
+    proxy.$modal.msgError("请先选择 CSV 文件");
+    return;
+  }
+  const headerMap = {
+    "用户名称": "userName",
+    "用户昵称": "nickName",
+    "部门编号": "deptId",
+    "手机号码": "phonenumber",
+    "邮箱": "email",
+    "性别": "sex",
+    "状态": "status",
+  };
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const rows = parseCsv(e.target.result);
+    if (rows.length < 2) {
+      proxy.$modal.msgError("CSV 内容为空");
+      return;
+    }
+    // 表头可能带括号说明（如 "性别(0男 1女 2未知)"），取括号前部分匹配
+    const header = rows[0].map(h => (h || "").trim().replace(/[（(].*$/, ""));
+    const users = rows.slice(1)
+      .filter(r => r.some(cell => cell && cell.trim()))
+      .map(r => {
+        const o = {};
+        header.forEach((h, i) => {
+          const key = headerMap[h];
+          if (key) o[key] = (r[i] ?? "").trim();
+        });
+        if (o.status) o.status = o.status === "停用" ? "1" : "0";
+        return o;
+      });
+    importUser({ users, updateSupport: upload.updateSupport ? 1 : 0 }).then(res => {
+      upload.open = false;
+      selectedFile.value = null;
+      proxy.$refs["uploadRef"]?.clearFiles();
+      proxy.$alert(res.msg, "导入结果");
+      getList();
+    });
+  };
+  reader.readAsText(selectedFile.value, "utf-8");
 };
 /** 重置操作表单 */
 function reset() {

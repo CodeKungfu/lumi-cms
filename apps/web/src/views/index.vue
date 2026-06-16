@@ -100,11 +100,11 @@
           <el-collapse accordion>
             <el-collapse-item title="最新版本">
               <ol>
-                <li>全栈重构：基于 NestJS + Vue3 的现代化架构</li>
+                <li>全栈架构：基于 Hono + Cloudflare Workers + Vue3 的现代化架构</li>
                 <li>Monorepo 管理：采用 pnpm workspace 统一管理前后端</li>
-                <li>高性能后端：使用 Fastify 替代 Express，性能大幅提升</li>
-                <li>ORM 升级：使用 Prisma 替代 MyBatis，支持类型安全</li>
-                <li>零依赖启动：默认支持 SQLite + MockRedis，开箱即用</li>
+                <li>边缘后端：Hono 运行在 Cloudflare Workers，全球低延迟</li>
+                <li>ORM 升级：使用 Prisma + D1，支持类型安全</li>
+                <li>本地零依赖：wrangler dev 用 SQLite 模拟 D1，开箱即用</li>
                 <li>前端升级：Vue3 + Vite + Element Plus + Pinia</li>
                 <li>类型安全：全链路 TypeScript 支持</li>
                 <li>代码规范：统一 ESLint + Prettier 配置</li>

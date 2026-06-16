@@ -420,4 +420,61 @@ export class UserService {
     await db.sys_user.update({ where: { userId }, data: { avatar: dataUri } })
     return c.json({ code: 200, msg: '操作成功', imgUrl: dataUri })
   }
+
+  // 用户导入：前端解析 CSV 后以 JSON 提交 { users: [...], updateSupport }
+  static async importData(c: Context) {
+    const env = c.env as any
+    const db = getPrisma(env.DB)
+    const body = await c.req.json()
+    const list: any[] = Array.isArray(body) ? body : (body.users || [])
+    const updateSupport = body.updateSupport === 1 || body.updateSupport === '1' || body.updateSupport === true
+
+    let success = 0
+    const failMsgs: string[] = []
+    for (const row of list) {
+      const userName = (row.userName || '').trim()
+      if (!userName) { failMsgs.push('存在用户名为空的记录'); continue }
+      try {
+        const existing = await db.sys_user.findFirst({ where: { userName } })
+        if (existing) {
+          if (!updateSupport) { failMsgs.push(`${userName} 已存在`); continue }
+          await db.sys_user.update({
+            where: { userId: existing.userId },
+            data: {
+              nickName: row.nickName || existing.nickName,
+              email: row.email ?? existing.email,
+              phonenumber: row.phonenumber ?? existing.phonenumber,
+              sex: row.sex ?? existing.sex,
+              deptId: row.deptId ? Number(row.deptId) : existing.deptId,
+              updateTime: new Date(),
+              updateBy: 'import'
+            }
+          })
+          success++
+        } else {
+          await db.sys_user.create({
+            data: {
+              userName,
+              nickName: row.nickName || userName,
+              password: Utils.md5('123456'),
+              email: row.email || '',
+              phonenumber: row.phonenumber || '',
+              sex: row.sex || '0',
+              deptId: row.deptId ? Number(row.deptId) : null,
+              status: row.status || '0',
+              delFlag: '0',
+              createTime: new Date(),
+              createBy: 'import'
+            }
+          })
+          success++
+        }
+      } catch (e) {
+        failMsgs.push(`${userName} 导入失败`)
+      }
+    }
+    const msg = `导入完成：成功 ${success} 条` +
+      (failMsgs.length ? `，失败 ${failMsgs.length} 条。${failMsgs.join('；')}` : '')
+    return c.json({ code: 200, msg })
+  }
 }
