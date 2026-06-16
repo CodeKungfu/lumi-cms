@@ -120,4 +120,9 @@ export class DictTypeService {
 
     return Result.ok(c, safeList)
   }
+
+  // 刷新字典缓存：无状态运行时无缓存，直接返回成功
+  static async refreshCache(c: Context) {
+    return Result.ok(c, null, '刷新成功')
+  }
 }

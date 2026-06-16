@@ -59,4 +59,9 @@ export class LoginInforService {
       return Result.fail(c, '清空失败')
     }
   }
+
+  // 解锁用户：无状态运行时无登录锁定缓存，直接返回成功
+  static async unlock(c: Context) {
+    return Result.ok(c, null, '解锁成功')
+  }
 }

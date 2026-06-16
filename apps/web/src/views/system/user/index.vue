@@ -337,6 +337,7 @@
 <script setup name="User">
 import { getToken } from "@/utils/auth";
 import { changeUserStatus, listUser, resetUserPwd, delUser, getUser, updateUser, addUser, deptTreeSelect } from "@/api/system/user";
+import { exportCsv } from "@/utils/exportCsv";
 
 const router = useRouter();
 const { proxy } = getCurrentInstance();
@@ -478,11 +479,19 @@ function handleDelete(row) {
     proxy.$modal.msgSuccess("删除成功");
   }).catch(() => {});
 };
-/** 导出按钮操作 */
+/** 导出按钮操作（前端生成 CSV） */
 function handleExport() {
-  proxy.download("system/user/export", {
-    ...queryParams.value,
-  },`user_${new Date().getTime()}.xlsx`);
+  listUser({ ...queryParams.value, pageNum: 1, pageSize: 100000 }).then(res => {
+    exportCsv(res.rows || [], [
+      { prop: "userId", label: "用户编号" },
+      { prop: "userName", label: "用户名称" },
+      { prop: "nickName", label: "用户昵称" },
+      { prop: "dept.deptName", label: "部门" },
+      { prop: "phonenumber", label: "手机号码" },
+      { prop: "status", label: "状态", formatter: v => (v === "0" ? "正常" : "停用") },
+      { prop: "createTime", label: "创建时间" },
+    ], `user_${new Date().getTime()}.csv`);
+  });
 };
 /** 用户状态修改  */
 function handleStatusChange(row) {

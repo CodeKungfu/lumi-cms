@@ -244,6 +244,7 @@
 
 <script setup name="Role">
 import { addRole, changeRoleStatus, dataScope, delRole, getRole, listRole, updateRole, deptTreeSelect } from "@/api/system/role";
+import { exportCsv } from "@/utils/exportCsv";
 import { roleMenuTreeselect, treeselect as menuTreeselect } from "@/api/system/menu";
 
 const router = useRouter();
@@ -329,9 +330,16 @@ function handleDelete(row) {
 }
 /** 导出按钮操作 */
 function handleExport() {
-  proxy.download("system/role/export", {
-    ...queryParams.value,
-  }, `role_${new Date().getTime()}.xlsx`);
+  listRole({ ...queryParams.value, pageNum: 1, pageSize: 100000 }).then(res => {
+    exportCsv(res.rows || [], [
+      { prop: "roleId", label: "角色编号" },
+      { prop: "roleName", label: "角色名称" },
+      { prop: "roleKey", label: "权限字符" },
+      { prop: "roleSort", label: "显示顺序" },
+      { prop: "status", label: "状态", formatter: v => (v === "0" ? "正常" : "停用") },
+      { prop: "createTime", label: "创建时间" },
+    ], `role_${new Date().getTime()}.csv`);
+  });
 }
 /** 多选框选中数据 */
 function handleSelectionChange(selection) {

@@ -102,10 +102,37 @@ export class AuthService {
     const env = c.env as any
     const db = getPrisma(env.DB)
 
+    const userId = Number(uid)
     const user = await db.sys_user.findUnique({
-      where: { userId: Number(uid) }
+      where: { userId }
     })
-    
+
+    // 计算真实的角色标识与权限（超管直接给全量）
+    let roles: string[]
+    let permissions: string[]
+    if (userId === 1) {
+      roles = ['admin']
+      permissions = ['*:*:*']
+    } else {
+      const userRoles = await db.sys_user_role.findMany({ where: { userId } })
+      const roleIds = userRoles.map((r: any) => Number(r.roleId))
+      const roleRows = roleIds.length
+        ? await db.sys_role.findMany({ where: { roleId: { in: roleIds }, status: '0' } })
+        : []
+      roles = roleRows.map((r: any) => r.roleKey).filter(Boolean)
+
+      const roleMenus = roleIds.length
+        ? await db.sys_role_menu.findMany({ where: { roleId: { in: roleIds } } })
+        : []
+      const menuIds = [...new Set(roleMenus.map((rm: any) => Number(rm.menuId)))]
+      const menus = menuIds.length
+        ? await db.sys_menu.findMany({ where: { menuId: { in: menuIds } } })
+        : []
+      permissions = [...new Set(
+        menus.map((m: any) => m.perms).filter((p: any) => p && String(p).trim())
+      )]
+    }
+
     // 转换 BigInt 为 string/number 以避免 JSON 序列化错误
     const safeUser = JSON.parse(JSON.stringify(user, (key, value) =>
       typeof value === 'bigint' ? value.toString() : value
@@ -113,9 +140,50 @@ export class AuthService {
 
     return Result.ok(c, {
       user: safeUser,
-      roles: ['admin'], // 简化：暂时硬编码
-      permissions: ['*:*:*'] // 简化：暂时硬编码
+      roles,
+      permissions
     })
+  }
+
+  static async register(c: Context) {
+    const body = await c.req.json()
+    const username = body.username
+    const password = body.password
+    const code = body.code || body.verifyCode
+    const uuid = body.uuid || body.captchaId
+
+    const env = c.env as any
+    const db = getPrisma(env.DB)
+
+    // 校验验证码（与登录一致，无状态 JWT）
+    if (uuid) {
+      try {
+        const payload = await verify(uuid, env.JWT_SECRET || 'supersecretkey', 'HS256')
+        if ((payload.code as string).toLowerCase() !== (code || '').toLowerCase()) {
+          return Result.fail(c, '验证码错误', 500)
+        }
+      } catch (e) {
+        return Result.fail(c, '验证码无效或已过期', 500)
+      }
+    }
+
+    if (!username || !password) return Result.fail(c, '用户名或密码不能为空')
+
+    const exists = await db.sys_user.findFirst({ where: { userName: username } })
+    if (exists) return Result.fail(c, '注册失败，用户已存在')
+
+    await db.sys_user.create({
+      data: {
+        userName: username,
+        nickName: username,
+        password: Utils.md5(password),
+        status: '0',
+        delFlag: '0',
+        createTime: new Date(),
+        createBy: username
+      }
+    })
+    return Result.ok(c, null, '注册成功')
   }
 }
 

@@ -5,7 +5,7 @@
   "author": "Lumi",
   "license": "MIT",
   "scripts": {
-    "dev": "wait-on tcp:127.0.0.1:7071 && vite",
+    "dev": "wait-on tcp:127.0.0.1:8787 && vite",
     "dev:cf": "cross-env VITE_USER_NODE_ENV=cf vite",
     "build:prod": "vite build",
     "build:stage": "vite build --mode staging",

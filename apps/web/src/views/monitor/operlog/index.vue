@@ -199,6 +199,7 @@
 
 <script setup name="Operlog">
 import { list, delOperlog, cleanOperlog } from "@/api/monitor/operlog";
+import { exportCsv } from "@/utils/exportCsv";
 
 const { proxy } = getCurrentInstance();
 const { sys_oper_type, sys_common_status } = proxy.useDict("sys_oper_type","sys_common_status");
@@ -292,9 +293,17 @@ function handleClean() {
 }
 /** 导出按钮操作 */
 function handleExport() {
-  proxy.download("monitor/operlog/export",{
-    ...queryParams.value,
-  }, `config_${new Date().getTime()}.xlsx`);
+  list({ ...queryParams.value, pageNum: 1, pageSize: 100000 }).then(res => {
+    exportCsv(res.rows || [], [
+      { prop: "operId", label: "日志编号" },
+      { prop: "title", label: "系统模块" },
+      { prop: "businessType", label: "操作类型" },
+      { prop: "operName", label: "操作人员" },
+      { prop: "operIp", label: "操作地址" },
+      { prop: "status", label: "操作状态", formatter: v => (v === 0 || v === "0" ? "正常" : "异常") },
+      { prop: "operTime", label: "操作时间" },
+    ], `operlog_${new Date().getTime()}.csv`);
+  });
 }
 
 getList();

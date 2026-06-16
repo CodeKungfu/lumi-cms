@@ -219,4 +219,153 @@ export class RoleService {
       return Result.fail(c, '删除失败')
     }
   }
+
+  // 修改角色状态
+  static async changeStatus(c: Context) {
+    const body = await c.req.json()
+    const env = c.env as any
+    const db = getPrisma(env.DB)
+    try {
+      await db.sys_role.update({
+        where: { roleId: Number(body.roleId) },
+        data: { status: body.status, updateTime: new Date() }
+      })
+      return Result.ok(c, null, '修改成功')
+    } catch (e) {
+      return Result.fail(c, '修改失败')
+    }
+  }
+
+  // 分配数据权限
+  static async dataScope(c: Context) {
+    const body = await c.req.json()
+    const env = c.env as any
+    const db = getPrisma(env.DB)
+    if (!body.roleId) return Result.fail(c, 'ID不能为空')
+    try {
+      await db.$transaction(async (tx: any) => {
+        await tx.sys_role.update({
+          where: { roleId: Number(body.roleId) },
+          data: { dataScope: body.dataScope, updateTime: new Date() }
+        })
+        await tx.sys_role_dept.deleteMany({ where: { roleId: Number(body.roleId) } })
+        if (body.dataScope === '2' && Array.isArray(body.deptIds) && body.deptIds.length) {
+          for (const deptId of body.deptIds) {
+            await tx.sys_role_dept.create({
+              data: { roleId: Number(body.roleId), deptId: Number(deptId) }
+            })
+          }
+        }
+      })
+      return Result.ok(c, null, '修改成功')
+    } catch (e) {
+      return Result.fail(c, '修改失败: ' + (e as Error).message)
+    }
+  }
+
+  // 已分配该角色的用户列表
+  static async allocatedList(c: Context) {
+    const env = c.env as any
+    const db = getPrisma(env.DB)
+    const { roleId, userName, phonenumber, pageNum, pageSize } = c.req.query()
+
+    const userRoles = await db.sys_user_role.findMany({ where: { roleId: Number(roleId) } })
+    const userIds = userRoles.map((ur: any) => Number(ur.userId))
+
+    const where: any = { delFlag: '0', userId: { in: userIds.length ? userIds : [-1] } }
+    if (userName) where.userName = { contains: userName }
+    if (phonenumber) where.phonenumber = { contains: phonenumber }
+
+    const page = Number(pageNum || 1)
+    const limit = Number(pageSize || 10)
+    const skip = (page - 1) * limit
+
+    const [total, rows] = await Promise.all([
+      db.sys_user.count({ where }),
+      db.sys_user.findMany({ where, skip, take: limit, include: { dept: true } })
+    ])
+    const safeRows = JSON.parse(JSON.stringify(rows, (k, v) =>
+      typeof v === 'bigint' ? v.toString() : v
+    ))
+    return Result.ok(c, { rows: safeRows, total })
+  }
+
+  // 未分配该角色的用户列表
+  static async unallocatedList(c: Context) {
+    const env = c.env as any
+    const db = getPrisma(env.DB)
+    const { roleId, userName, phonenumber, pageNum, pageSize } = c.req.query()
+
+    const userRoles = await db.sys_user_role.findMany({ where: { roleId: Number(roleId) } })
+    const userIds = userRoles.map((ur: any) => Number(ur.userId))
+
+    const where: any = { delFlag: '0' }
+    if (userIds.length) where.userId = { notIn: userIds }
+    if (userName) where.userName = { contains: userName }
+    if (phonenumber) where.phonenumber = { contains: phonenumber }
+
+    const page = Number(pageNum || 1)
+    const limit = Number(pageSize || 10)
+    const skip = (page - 1) * limit
+
+    const [total, rows] = await Promise.all([
+      db.sys_user.count({ where }),
+      db.sys_user.findMany({ where, skip, take: limit, include: { dept: true } })
+    ])
+    const safeRows = JSON.parse(JSON.stringify(rows, (k, v) =>
+      typeof v === 'bigint' ? v.toString() : v
+    ))
+    return Result.ok(c, { rows: safeRows, total })
+  }
+
+  // 批量授权用户
+  static async selectAll(c: Context) {
+    const env = c.env as any
+    const db = getPrisma(env.DB)
+    const { roleId, userIds } = c.req.query()
+    const rid = Number(roleId)
+    const ids = (userIds || '').split(',').filter(Boolean).map(Number)
+    try {
+      await db.$transaction(async (tx: any) => {
+        for (const uid of ids) {
+          const exists = await tx.sys_user_role.findFirst({ where: { roleId: rid, userId: uid } })
+          if (!exists) await tx.sys_user_role.create({ data: { roleId: rid, userId: uid } })
+        }
+      })
+      return Result.ok(c, null, '操作成功')
+    } catch (e) {
+      return Result.fail(c, '操作失败')
+    }
+  }
+
+  // 取消单个用户授权
+  static async cancel(c: Context) {
+    const body = await c.req.json()
+    const env = c.env as any
+    const db = getPrisma(env.DB)
+    try {
+      await db.sys_user_role.deleteMany({
+        where: { roleId: Number(body.roleId), userId: Number(body.userId) }
+      })
+      return Result.ok(c, null, '取消授权成功')
+    } catch (e) {
+      return Result.fail(c, '取消授权失败')
+    }
+  }
+
+  // 批量取消用户授权
+  static async cancelAll(c: Context) {
+    const env = c.env as any
+    const db = getPrisma(env.DB)
+    const { roleId, userIds } = c.req.query()
+    const ids = (userIds || '').split(',').filter(Boolean).map(Number)
+    try {
+      await db.sys_user_role.deleteMany({
+        where: { roleId: Number(roleId), userId: { in: ids.length ? ids : [-1] } }
+      })
+      return Result.ok(c, null, '取消授权成功')
+    } catch (e) {
+      return Result.fail(c, '取消授权失败')
+    }
+  }
 }

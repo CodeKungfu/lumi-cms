@@ -37,7 +37,9 @@ const useUserStore = defineStore(
           getInfo().then(res => {
             const user = res.data.user
             const avatarPath = user.avatar ?? user.headImg ?? ''
-            const avatar = (avatarPath === "" || avatarPath == null) ? defAva : import.meta.env.VITE_APP_BASE_API + avatarPath;
+            const avatar = (avatarPath === "" || avatarPath == null)
+              ? defAva
+              : (avatarPath.startsWith('data:') ? avatarPath : import.meta.env.VITE_APP_BASE_API + avatarPath);
 
             if (res.data.roles && res.data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
               this.roles = res.data.roles

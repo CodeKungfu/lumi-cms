@@ -1,104 +1,66 @@
 # Lumi-CMS
 
 <div align="center">
-  <p>默认本地开发路径: SQLite + MockRedis + Nest API</p>
+  <p>单一后端：apps/hono（Cloudflare Workers + D1），本地用 wrangler 模拟 D1（SQLite）</p>
   <p>默认用户: admin / 123456, lumi / 123456</p>
 </div>
 
 <span>[English](https://github.com/CodeKungfu/lumi-cms/blob/main/Readme.en.md) | 简体中文</span>
 
-## 默认本地开发路径
-
-本仓库默认用 `SQLite` 和 `MockRedis` 跑通本地开发，不要求安装 MySQL 或 Redis。
-
-推荐启动顺序:
-
-```bash
-pnpm install
-pnpm db:init
-pnpm --filter api dev
-pnpm --filter web dev
-```
-
-默认本地地址:
-
-- API: `http://localhost:7071`
-- Swagger: `http://localhost:7071/swagger-api`
-- Web: `http://localhost:4080`
-
-## 仓库结构
+## 架构
 
 ```text
 lumi-cms/
-├── apps/api        # 默认本地开发主后端，Nest.js + Fastify
-├── apps/hono       # Cloudflare Workers / D1 路径，非默认本地开发主线
+├── apps/hono       # 唯一后端：Hono + Cloudflare Workers + D1
 ├── apps/web        # Vue3 管理端
 ├── packages/database
 └── packages/eslint-config
 ```
 
-## SQLite 与 MockRedis
+> 旧的 `apps/api`（NestJS）已合并进 `apps/hono` 并删除；如需旧版本，见 `no-agent` 分支。
 
-- SQLite 文件默认位于 `packages/database/prisma/dev.db`
-- 初始化命令会自动建表并导入 `packages/database/sql/d1_seed.sql`
-- `apps/api` 启动前会自动确保 SQLite 已初始化
-- 默认不开启真实 Redis，`USE_REAL_REDIS=false` 时走内存 MockRedis
+## 本地开发
 
-常用命令:
+`apps/hono` 通过 `wrangler dev` 在本地运行：Miniflare 会用本地 SQLite 模拟 D1，无需远程 D1、也无需登录 Cloudflare。
 
 ```bash
-pnpm db:init
-pnpm db:check
-pnpm db:reset
-pnpm test:p0
+pnpm install
+
+# 1) 初始化本地 D1（建表 + 种子，--local 不需要登录）
+cd apps/hono
+npx wrangler d1 execute DB --local --file=../../packages/database/sql/d1_seed.sql
+
+# 2) 启动后端（http://localhost:8787）
+pnpm dev
+
+# 3) 启动前端（另开终端，http://localhost:4080）
+cd ../web && pnpm dev
 ```
 
-## 切换到 MySQL / Redis
+默认地址：
 
-如果你需要切回真实 MySQL 和 Redis:
+- 后端 API: `http://localhost:8787`
+- Web: `http://localhost:4080`（dev 代理 `/dev-api` → `http://127.0.0.1:8787`）
 
-```bash
-pnpm --filter @repo/database db:gen:mysql
-```
+本地 D1 的 SQLite 文件位于 `apps/hono/.wrangler/state/v3/d1/`。
 
-然后配置环境变量:
+## 数据导出
 
-- `DATABASE_URL`
-- `USE_REAL_REDIS=true`
-- `REDIS_HOST`
-- `REDIS_PORT`
-- `REDIS_PASSWORD`
-- `REDIS_DB`
+列表导出已改为**前端生成 CSV**（`apps/web/src/utils/exportCsv.js`），不依赖后端导出接口，也不需要 xlsx 库。
 
-最后启动外部 MySQL / Redis 服务，再运行 API。
+## 默认账号
 
-## Hono 路径说明
+- `admin / 123456`、`lumi / 123456`
+- 登录需输入图形验证码（验证码为无状态实现：答案签入 JWT，登录时验签比对）。
 
-- `apps/api` 是默认本地开发和回归测试主线
-- `apps/hono` 用于 Cloudflare Workers / D1 运行时
-- Hono 不依赖本地 `dev.db`
-- 若要运行 Hono，需要你自己提供 Wrangler D1 绑定配置
+## 部署
 
-## 验收路径
-
-P0 本地验收至少覆盖:
-
-1. `pnpm db:init` 成功
-2. `pnpm --filter api dev` 成功
-3. `GET /captchaImage`
-4. `POST /login`
-5. `GET /getInfo`
-6. `GET /getRouters`
-7. `GET /system/user/list`
+- 后端 hono：在 `apps/hono` 配置好真实的 D1 绑定（`wrangler.toml` 的 `database_name` / `database_id`，`npx wrangler d1 list`）后，`pnpm deploy`（即 `wrangler deploy`）。
+- 前端 web：`pnpm --filter web deploy:cf`（`vite build --mode cf && wrangler pages deploy dist`）。
+- `docker-compose.yml` 仅用于容器化前端 web，其 API 指向已部署的 hono Worker。
 
 ## 开发说明
 
-- Prisma MySQL schema: `packages/database/prisma/schema.prisma`
-- Prisma SQLite schema: `packages/database/prisma/schema.sqlite.prisma`
-- SQLite seed: `packages/database/sql/d1_seed.sql`
-- API e2e: `apps/api/test/app.e2e-spec.ts`
-
-## 生产与部署
-
-- Docker 一键部署: `docker-compose -f docker-compose.all.yml up -d`
-- Hono 部署请使用 `apps/hono` 内的 Wrangler 工作流
+- Prisma SQLite/D1 schema: `packages/database/prisma/schema.sqlite.prisma`
+- D1 建表 + 种子: `packages/database/sql/d1_seed.sql`（时间戳为 RFC3339，Prisma 读取所需）
+- `apps/hono` 仅使用 `@repo/database` 导出的 `PrismaClient` 类，配合 `PrismaD1` adapter

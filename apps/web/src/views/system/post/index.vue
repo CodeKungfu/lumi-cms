@@ -146,6 +146,7 @@
 
 <script setup name="Post">
 import { listPost, addPost, delPost, getPost, updatePost } from "@/api/system/post";
+import { exportCsv } from "@/utils/exportCsv";
 
 const { proxy } = getCurrentInstance();
 const { sys_normal_disable } = proxy.useDict("sys_normal_disable");
@@ -268,9 +269,16 @@ function handleDelete(row) {
 }
 /** 导出按钮操作 */
 function handleExport() {
-  proxy.download("system/post/export", {
-    ...queryParams.value
-  }, `post_${new Date().getTime()}.xlsx`);
+  listPost({ ...queryParams.value, pageNum: 1, pageSize: 100000 }).then(res => {
+    exportCsv(res.rows || [], [
+      { prop: "postId", label: "岗位编号" },
+      { prop: "postCode", label: "岗位编码" },
+      { prop: "postName", label: "岗位名称" },
+      { prop: "postSort", label: "岗位排序" },
+      { prop: "status", label: "状态", formatter: v => (v === "0" ? "正常" : "停用") },
+      { prop: "createTime", label: "创建时间" },
+    ], `post_${new Date().getTime()}.csv`);
+  });
 }
 
 getList();

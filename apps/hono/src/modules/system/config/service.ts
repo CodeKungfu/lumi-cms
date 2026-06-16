@@ -109,4 +109,18 @@ export class ConfigService {
       return Result.fail(c, '删除失败')
     }
   }
+
+  // 根据参数键名查询参数值（RuoYi 约定：值放在 msg 字段返回）
+  static async getConfigKey(c: Context) {
+    const env = c.env as any
+    const db = getPrisma(env.DB)
+    const configKey = c.req.param('configKey')
+    const config = await db.sys_config.findFirst({ where: { configKey } })
+    return c.json({ code: 200, msg: config?.configValue ?? '' })
+  }
+
+  // 刷新参数缓存：无状态运行时无缓存，直接返回成功
+  static async refreshCache(c: Context) {
+    return Result.ok(c, null, '刷新成功')
+  }
 }

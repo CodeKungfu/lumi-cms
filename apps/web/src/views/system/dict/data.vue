@@ -179,6 +179,7 @@
 import useDictStore from '@/store/modules/dict'
 import { optionselect as getDictOptionselect, getType } from "@/api/system/dict/type";
 import { listData, getData, delData, addData, updateData } from "@/api/system/dict/data";
+import { exportCsv } from "@/utils/exportCsv";
 
 const { proxy } = getCurrentInstance();
 const { sys_normal_disable } = proxy.useDict("sys_normal_disable");
@@ -340,9 +341,16 @@ function handleDelete(row) {
 }
 /** 导出按钮操作 */
 function handleExport() {
-  proxy.download("system/dict/data/export", {
-    ...queryParams.value
-  }, `dict_data_${new Date().getTime()}.xlsx`);
+  listData({ ...queryParams.value, pageNum: 1, pageSize: 100000 }).then(res => {
+    exportCsv(res.rows || [], [
+      { prop: "dictCode", label: "字典编码" },
+      { prop: "dictLabel", label: "字典标签" },
+      { prop: "dictValue", label: "字典键值" },
+      { prop: "dictSort", label: "字典排序" },
+      { prop: "status", label: "状态", formatter: v => (v === "0" ? "正常" : "停用") },
+      { prop: "createTime", label: "创建时间" },
+    ], `dict_data_${new Date().getTime()}.csv`);
+  });
 }
 
 getTypes(route.params && route.params.dictId);

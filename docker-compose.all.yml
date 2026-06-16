@@ -1,5 +1,8 @@
 version: "3"
 
+# 后端已迁移到 apps/hono（Cloudflare Workers + D1），通过 wrangler 部署，不在本 compose 内。
+# 本文件仅用于容器化前端 web，其 API 指向已部署的 hono Worker。
+
 services:
   web:
     container_name: web
@@ -10,66 +13,7 @@ services:
     ports:
       - 3000:80
     environment:
-      - VITE_APP_BASE_API=/prod-api
-    networks:
-      - app_network
-  api:
-    container_name: api
-    build:
-      context: .
-      dockerfile: ./apps/api/Dockerfile
-    restart: always
-    ports:
-      - 3001:7071
-      - 3002:7072
-    environment:
-      - NODE_ENV=production
-      - JWT_SECRET=123456
-      - DATABASE_URL=mysql://root:123456@mysql:3306/lumi-cms
-      - SERVER_PORT=7071
-      - SWAGGER_PATH=swagger-api
-      - MYSQL_HOST=mysql
-      # 修正 MySQL 容器内部端口
-      - MYSQL_PORT=3306
-      - MYSQL_DATABASE=lumi-cms
-      - MYSQL_USERNAME=root
-      - MYSQL_PASSWORD=123456
-      - MYSQL_ROOT_PASSWORD=123456
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - REDIS_PASSWORD=123456
-      - REDIS_DB=0
-    depends_on:
-      - mysql
-      - redis
-    networks:
-      - app_network
-
-  mysql:
-    container_name: mysql
-    image: mysql:8.0
-    command: --default-authentication-plugin=mysql_native_password
-    restart: always
-    environment:
-      - MYSQL_ROOT_PASSWORD=123456
-      - MYSQL_DATABASE=lumi-cms
-    ports:
-      - 3366:3306
-    volumes:
-      - ./mysql-data:/var/lib/mysql
-      - ./packages/database/sql:/docker-entrypoint-initdb.d
-    networks:
-      - app_network
-
-  redis:
-    container_name: redis
-    image: redis:6.2
-    restart: always
-    command: redis-server --requirepass 123456
-    ports:
-      - 6379:6379
-    volumes:
-      - ./redis-data:/data
+      - VITE_APP_BASE_API=https://lumi-cms-hono.mike473091010.workers.dev
     networks:
       - app_network
 

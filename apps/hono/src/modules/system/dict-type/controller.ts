@@ -5,6 +5,7 @@ const app = new Hono()
 
 app.get('/list', DictTypeService.list)
 app.get('/optionselect', DictTypeService.optionselect)
+app.delete('/refreshCache', DictTypeService.refreshCache)
 app.get('/:id', DictTypeService.get)
 app.post('/', DictTypeService.add)
 app.put('/', DictTypeService.update)

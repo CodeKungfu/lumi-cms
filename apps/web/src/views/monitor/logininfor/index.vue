@@ -126,6 +126,7 @@
 
 <script setup name="Logininfor">
 import { list, delLogininfor, cleanLogininfor, unlockLogininfor } from "@/api/monitor/logininfor";
+import { exportCsv } from "@/utils/exportCsv";
 
 const { proxy } = getCurrentInstance();
 const { sys_common_status } = proxy.useDict("sys_common_status");
@@ -216,9 +217,18 @@ function handleUnlock() {
 }
 /** 导出按钮操作 */
 function handleExport() {
-  proxy.download("monitor/logininfor/export", {
-    ...queryParams.value,
-  }, `config_${new Date().getTime()}.xlsx`);
+  list({ ...queryParams.value, pageNum: 1, pageSize: 100000 }).then(res => {
+    exportCsv(res.rows || [], [
+      { prop: "infoId", label: "访问编号" },
+      { prop: "userName", label: "用户名称" },
+      { prop: "ipaddr", label: "登录地址" },
+      { prop: "browser", label: "浏览器" },
+      { prop: "os", label: "操作系统" },
+      { prop: "status", label: "登录状态", formatter: v => (v === "0" ? "成功" : "失败") },
+      { prop: "msg", label: "操作信息" },
+      { prop: "loginTime", label: "登录日期" },
+    ], `logininfor_${new Date().getTime()}.csv`);
+  });
 }
 
 getList();

@@ -339,4 +339,85 @@ export class UserService {
       return Result.fail(c, '授权失败')
     }
   }
+
+  // 个人中心：查询当前登录用户信息（含角色/岗位分组名）
+  static async getProfile(c: Context) {
+    const env = c.env as any
+    const db = getPrisma(env.DB)
+    const payload = c.get('jwtPayload')
+    const userId = Number(payload.uid)
+
+    const user = await db.sys_user.findUnique({
+      where: { userId },
+      include: { dept: true }
+    })
+    if (!user) return Result.fail(c, '用户不存在')
+
+    const userRoles = await db.sys_user_role.findMany({ where: { userId } })
+    const roleIds = userRoles.map((r: any) => Number(r.roleId))
+    const roles = roleIds.length
+      ? await db.sys_role.findMany({ where: { roleId: { in: roleIds } } })
+      : []
+
+    const userPosts = await db.sys_user_post.findMany({ where: { userId } })
+    const postIds = userPosts.map((p: any) => Number(p.postId))
+    const posts = postIds.length
+      ? await db.sys_post.findMany({ where: { postId: { in: postIds } } })
+      : []
+
+    const safeUser = JSON.parse(JSON.stringify(user, (key, value) =>
+      typeof value === 'bigint' ? value.toString() : value
+    ))
+
+    return c.json({
+      code: 200,
+      msg: '操作成功',
+      data: safeUser,
+      roleGroup: roles.map((r: any) => r.roleName).join(','),
+      postGroup: posts.map((p: any) => p.postName).join(',')
+    })
+  }
+
+  // 个人中心：修改密码（前端通过 query 传 oldPassword/newPassword）
+  static async updatePwd(c: Context) {
+    const env = c.env as any
+    const db = getPrisma(env.DB)
+    const payload = c.get('jwtPayload')
+    const userId = Number(payload.uid)
+    const { oldPassword, newPassword } = c.req.query()
+
+    const user = await db.sys_user.findUnique({ where: { userId } })
+    if (!user) return Result.fail(c, '用户不存在')
+    if (user.password !== Utils.md5(oldPassword || '')) {
+      return Result.fail(c, '修改密码失败，旧密码错误')
+    }
+    if (Utils.md5(newPassword || '') === user.password) {
+      return Result.fail(c, '新密码不能与旧密码相同')
+    }
+
+    await db.sys_user.update({ where: { userId }, data: { password: Utils.md5(newPassword) } })
+    return Result.ok(c, null, '修改成功')
+  }
+
+  // 个人中心：上传头像。Workers 无文件系统，这里把图片以 base64 data URI 存入 sys_user.avatar。
+  static async uploadAvatar(c: Context) {
+    const env = c.env as any
+    const db = getPrisma(env.DB)
+    const payload = c.get('jwtPayload')
+    const userId = Number(payload.uid)
+
+    const body = await c.req.parseBody()
+    const file = body['avatarfile'] as File
+    if (!file || typeof (file as any).arrayBuffer !== 'function') {
+      return Result.fail(c, '请选择头像文件')
+    }
+
+    const buf = await file.arrayBuffer()
+    const base64 = Buffer.from(buf).toString('base64')
+    const mime = (file as any).type || 'image/png'
+    const dataUri = `data:${mime};base64,${base64}`
+
+    await db.sys_user.update({ where: { userId }, data: { avatar: dataUri } })
+    return c.json({ code: 200, msg: '操作成功', imgUrl: dataUri })
+  }
 }

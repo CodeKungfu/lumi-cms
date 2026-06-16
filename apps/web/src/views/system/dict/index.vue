@@ -175,6 +175,7 @@
 <script setup name="Dict">
 import useDictStore from '@/store/modules/dict'
 import { listType, getType, delType, addType, updateType, refreshCache } from "@/api/system/dict/type";
+import { exportCsv } from "@/utils/exportCsv";
 
 const { proxy } = getCurrentInstance();
 const { sys_normal_disable } = proxy.useDict("sys_normal_disable");
@@ -297,9 +298,15 @@ function handleDelete(row) {
 }
 /** 导出按钮操作 */
 function handleExport() {
-  proxy.download("system/dict/type/export", {
-    ...queryParams.value
-  }, `dict_${new Date().getTime()}.xlsx`);
+  listType({ ...queryParams.value, pageNum: 1, pageSize: 100000 }).then(res => {
+    exportCsv(res.rows || [], [
+      { prop: "dictId", label: "字典编号" },
+      { prop: "dictName", label: "字典名称" },
+      { prop: "dictType", label: "字典类型" },
+      { prop: "status", label: "状态", formatter: v => (v === "0" ? "正常" : "停用") },
+      { prop: "createTime", label: "创建时间" },
+    ], `dict_${new Date().getTime()}.csv`);
+  });
 }
 /** 刷新缓存按钮操作 */
 function handleRefreshCache() {

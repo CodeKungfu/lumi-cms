@@ -4,6 +4,8 @@ import { ConfigService } from './service'
 const app = new Hono()
 
 app.get('/list', ConfigService.list)
+app.get('/configKey/:configKey', ConfigService.getConfigKey)
+app.delete('/refreshCache', ConfigService.refreshCache)
 app.get('/:id', ConfigService.get)
 app.post('/', ConfigService.add)
 app.put('/', ConfigService.update)

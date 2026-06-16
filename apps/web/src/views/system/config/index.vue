@@ -167,6 +167,7 @@
 
 <script setup name="Config">
 import { listConfig, getConfig, delConfig, addConfig, updateConfig, refreshCache } from "@/api/system/config";
+import { exportCsv } from "@/utils/exportCsv";
 
 const { proxy } = getCurrentInstance();
 const { sys_yes_no } = proxy.useDict("sys_yes_no");
@@ -291,9 +292,16 @@ function handleDelete(row) {
 }
 /** 导出按钮操作 */
 function handleExport() {
-  proxy.download("system/config/export", {
-    ...queryParams.value
-  }, `config_${new Date().getTime()}.xlsx`);
+  listConfig({ ...queryParams.value, pageNum: 1, pageSize: 100000 }).then(res => {
+    exportCsv(res.rows || [], [
+      { prop: "configId", label: "参数主键" },
+      { prop: "configName", label: "参数名称" },
+      { prop: "configKey", label: "参数键名" },
+      { prop: "configValue", label: "参数键值" },
+      { prop: "configType", label: "系统内置", formatter: v => (v === "Y" ? "是" : "否") },
+      { prop: "createTime", label: "创建时间" },
+    ], `config_${new Date().getTime()}.csv`);
+  });
 }
 /** 刷新缓存按钮操作 */
 function handleRefreshCache() {
